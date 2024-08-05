@@ -9,18 +9,24 @@ class UsersController < ApplicationController
     #similarly for other roles
     #
     #
-  
-    respond_to do |format|
-     
-      format.html { 
-      # For example, redirect to the root path
-      render plain:"Farhan"
-   
-       }
-      format.json { render plain: "subhan"  }
-      
-    end
 
+   # binding.pry
+  
+  #  if current_user.role == "owner" 
+  #   respond_to do |format|
+     
+  #     format.html { redirect_to user_path }
+  #     format.json { render plain: "subhan"  }
+      
+  #   end
+  # else
+  #   respond_to do |format|
+     
+  #     format.html { render plain:"you are at the dashboard of other Users " }
+  #     format.json { render plain: "subhan"  }
+      
+  #   end
+  # end
   end
 
   def new

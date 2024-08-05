@@ -13,17 +13,17 @@ class Users::RegistrationsController < Devise::RegistrationsController
     @user = User.new
   end
 
-  # # POST /resource
   def create
     @user = User.new(user_params)
-    binding.pry
+    
     respond_to do |format|
       if @user.save
-        # format.html { redirect_to user_url(@user), notice: 'User was successfully created.' }
-        format.html { render plain: "User created Successfully" }
+        # Redirect to the sign-in page
+        format.html { redirect_to new_user_session_path, notice: 'User was successfully created. Please sign in.' }
         format.json { render :show, status: :created, location: @user }
       else
-        format.html { render :new, status: :unprocessable_entity }
+        # Handle the case where the user could not be saved
+        format.html { render :new }
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end

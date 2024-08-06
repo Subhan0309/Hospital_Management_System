@@ -1,3 +1,66 @@
 // Place all the styles related to the user controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
+.navbar {
+  background-color: #0B74E4;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000; /* Ensure it's above other elements */
+}
+.navbar a {
+color: white;
+}
+.hero-section {
+background: url('hero-bg.jpg') no-repeat center center;
+background-size: cover;
+padding: 50px 0;
+color: #2C3E50;
+}
+.hero-section h1 {
+font-size: 50px;
+font-weight: bold;
+}
+.hero-section p {
+font-size: 18px;
+margin-bottom: 30px;
+}
+.card {
+border: none;
+border-radius: 10px;
+box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+.card h5 {
+font-weight: bold;
+}
+.about-us{
+  background: url('about.jpg') no-repeat center center;
+}
+.about-us .media-icon {
+  font-size: 2rem;
+  color: #007BFF;
+  margin-right: 15px;
+}
+.about-us h5 {
+  font-weight: 700;
+}
+.about-us p {
+  color: #6C757D;
+}
+.footer {
+  background: #F8F9FA;
+  padding: 60px 0;
+}
+.footer h4 {
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+.footer p, .footer a {
+  color: #6C757D;
+}
+.footer .social-icons a {
+  font-size: 1.5rem;
+  margin-right: 10px;
+  color: #6C757D;
+}

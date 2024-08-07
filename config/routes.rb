@@ -14,11 +14,13 @@ Rails.application.routes.draw do
 
   # Subdomain-specific routes
   constraints subdomain: /.*/ do
-  
+    resources :doctors, only: [:index, :show, :edit, :update, :destroy ,:new , :create ]
+    resources :patients, only: [:index, :show, :edit, :update, :destroy ,:new , :create ]
     resources :users, only: [:index, :show, :edit, :update, :destroy ,:new , :create ] do
       resources :appointments, only: [:index, :create, :update, :destroy]
       resources :medical_records, only: [:index, :show, :create, :update, :destroy]
     end
+    
 
     get 'dashboard', to: 'hospitals#dashboard', as: 'hospital_dashboard'
   end

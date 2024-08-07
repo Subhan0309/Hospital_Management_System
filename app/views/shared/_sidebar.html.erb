@@ -37,12 +37,15 @@
                     <li>
                         <a href="#" class="nav-link px-4 text-white"> * <span class="d-none d-sm-inline">Staff</span> </a>
                     </li>
+                   <li>
+            <%= link_to doctors_path, class: "nav-link px-4 text-white" do %>
+              <span class="d-none d-sm-inline">Doctors</span>
+            <% end %>
+          </li>
                     <li>
-                        <a href="#" class="nav-link px-4 text-white"> * <span class="d-none d-sm-inline">Doctors</span></a>
-                    </li>
-                    <li>
-                        <a href="#" class="nav-link px-4 text-white"> * <span class="d-none d-sm-inline">Patients</span></a>
-                    </li>
+ <%= link_to patients_path, class: "nav-link px-4 text-white" do %>
+              <span class="d-none d-sm-inline">Patients</span>
+            <% end %>                    </li>
                 </ul>
             </li>
             <li class="d-block d-md-none">

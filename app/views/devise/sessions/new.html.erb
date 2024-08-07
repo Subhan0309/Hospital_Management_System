@@ -2,29 +2,43 @@
   <div class="col-md-4">
     <h2 class="text-center mb-4 text-primary">Log in</h2>
 
-    <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "form-horizontal" }) do |f| %>
-      <div class="form-group">
-        <%= f.label :email, class: "form-label" %>
-        <%= f.email_field :email, class: "form-control", autofocus: true, autocomplete: "email" %>
-      </div>
+    <% if request.subdomain.present? %>
+      <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "form-horizontal" }) do |f| %>
+        <div class="form-group">
+          <%= f.label :email, class: "form-label" %>
+          <%= f.email_field :email, class: "form-control", autofocus: true, autocomplete: "email" %>
+        </div>
 
-      <div class="form-group">
-        <%= f.label :password, class: "form-label" %>
-        <%= f.password_field :password, class: "form-control", autocomplete: "current-password" %>
-      </div>
+        <div class="form-group">
+          <%= f.label :password, class: "form-label" %>
+          <%= f.password_field :password, class: "form-control", autocomplete: "current-password" %>
+        </div>
 
-      <% if devise_mapping.rememberable? %>
-        <div class="form-group form-check">
-          <%= f.check_box :remember_me, class: "form-check-input" %>
-          <%= f.label :remember_me, class: "form-check-label" %>
+        <% if devise_mapping.rememberable? %>
+          <div class="form-group form-check">
+            <%= f.check_box :remember_me, class: "form-check-input" %>
+            <%= f.label :remember_me, class: "form-check-label" %>
+          </div>
+        <% end %>
+
+        <div class="form-group text-center">
+          <%= f.submit "Log in", class: "btn btn-primary btn-block mt-4" %>
         </div>
       <% end %>
 
+     
+    <% else %>
+     <%= form_with(url: hospitals_path, method: :get, html: { class: "form-horizontal" }) do |f| %>
+      <div class="form-group">
+        <%= f.label :email, class: "form-label" %>
+        <%= f.email_field :email, class: "form-control", autofocus: true, autocomplete: "email" ,required: true%>
+      </div>
+
       <div class="form-group text-center">
-        <%= f.submit "Log in", class: "btn btn-primary btn-block mt-4" %>
+        <%= f.submit "Continue", class: "btn btn-primary btn-block mt-4" %>
       </div>
     <% end %>
-
-    <%= render "devise/shared/links" %>
+<%= render "devise/shared/links" %>
+    <% end %>
   </div>
 </div>

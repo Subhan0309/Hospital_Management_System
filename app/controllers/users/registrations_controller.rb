@@ -4,6 +4,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
  
   before_action :configure_sign_up_params, only: [:create]
   before_action :configure_account_update_params, only: [:update]
+  skip_before_action :require_no_authentication, only: [:new,:create]
 
   def index
   
@@ -15,6 +16,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def create
+    binding.pry
+    # if user_params[:role] == "owner"
     @hospital = Hospital.new(hospital_params)
     
     respond_to do |format|
@@ -37,14 +40,14 @@ class Users::RegistrationsController < Devise::RegistrationsController
             port: port,
             # path: new_user_session_path,  ADD THE ROUTE TO HOSPITAL DASHBOARD HERE
           ).to_s
-  
+          sign_in(@user)
           # Redirect to the sign-in page with the subdomain
           format.html { redirect_to url_with_subdomain, notice: 'User and hospital were successfully created.' }
           format.json { render :show, status: :created, location: @user }
         else
           # Rollback hospital creation if user creation fails
           @hospital.destroy
-          format.html { render :new, alert: 'Hospital was created, but user could not be saved.' }
+          format.html { render :new, alert: 'Hospital was created, but user could not be saved, so we destroy the hospital.' }
           format.json { render json: @user.errors, status: :unprocessable_entity }
         end
       else
@@ -93,6 +96,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
     subdomain = name.gsub(/[^0-9a-z]/i, '').downcase if name.present?
     return subdomain
   end
+
+
   
 end
 

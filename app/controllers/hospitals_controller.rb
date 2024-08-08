@@ -64,7 +64,7 @@ class HospitalsController < ApplicationController
     if @hospital.destroy
       redirect_to hospitals_path,notice: 'Hospital was successfully Destroyed.'
     else
-      redirect_to hospitals_path,notice: 'There is an error in deleting a user'
+      redirect_to hospitals_path,notice: 'There is an error in deleting a Hospital'
     end
   end
 

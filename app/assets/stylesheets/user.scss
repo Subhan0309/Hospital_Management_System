@@ -64,3 +64,19 @@ font-weight: bold;
   margin-right: 10px;
   color: #6C757D;
 }
+
+
+
+.sticky-sidebar {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto; /* Ensures the sidebar is scrollable if content overflows */
+}
+
+.main-content {
+  overflow-y: auto;
+  height: 100vh;
+  padding-left: 1rem;
+}

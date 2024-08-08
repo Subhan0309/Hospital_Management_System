@@ -3,8 +3,8 @@ class User < ApplicationRecord
   acts_as_tenant :hospital
   
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable
+         :recoverable, :rememberable , :validatable
          
   enum role: { owner: 'owner', admin: 'admin',staff: 'staff' }
-
+  validates :email, uniqueness: { scope: :hospital_id, message: "should be unique within the same hospital" }
 end

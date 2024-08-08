@@ -7,7 +7,8 @@ class LandingPagesController < ApplicationController
   private
 
   def redirect_if_subdomain_present
-    if request.subdomain.present? && valid_subdomain?(request.subdomain)
+    if request.subdomain.present? && valid_subdomain?(request.subdomain) && current_user
+      # Rails.logger.info "Current user is: #{current_user.inspect}"
       redirect_to hospital_dashboard_path
     end
   end

@@ -1,7 +1,7 @@
 module ApplicationHelper
-  def valid_subdomain?(subdomain)
+  # def valid_subdomain?(subdomain)
     
-    Hospital.exists?(slug: subdomain)
-    #binding.pry
-  end
+  #   Hospital.exists?(slug: subdomain)
+  #   #binding.pry
+  # end
 end

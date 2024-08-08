@@ -60,6 +60,8 @@ GEM
       minitest (>= 5.1)
       tzinfo (~> 2.0)
       zeitwerk (~> 2.3)
+    acts_as_tenant (1.0.1)
+      rails (>= 6.0)
     addressable (2.8.7)
       public_suffix (>= 2.0.2, < 7.0)
     base64 (0.2.0)
@@ -244,6 +246,7 @@ PLATFORMS
   arm64-darwin-23
 
 DEPENDENCIES
+  acts_as_tenant
   bootsnap (>= 1.4.4)
   byebug
   capybara (>= 3.26)

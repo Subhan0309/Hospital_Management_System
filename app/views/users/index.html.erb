@@ -1,13 +1,14 @@
-
 <%= render layout: "layouts/users" do %> 
       
 <!-- Flex container for header and button -->
-<div class="d-flex flex-row justify-content-between align-items-center mb-3">
+<div class="d-flex flex-row justify-content-between align-items-center mb-3 mt-5 border p-3">
   <!-- Heading -->
-  <h1 class="text-primary mb-0">Admin and Staff</h1>
+  <h3 class="text-primary mb-0">Admin and Staff</h3>
   
   <!-- Button to create a new user -->
-  <%= link_to 'Add New User', new_user_path, class: 'btn btn-primary' %>
+  <% if can?(:create, User.new(role: 'admin')) || can?(:create, User.new(role: 'staff')) %>
+    <%= link_to 'Add New User', new_user_path, class: 'btn btn-outline-primary' %>
+  <% end %>
 </div>
 
 <!-- Users table -->
@@ -30,27 +31,34 @@
             <td><%= user.name %></td>
             <td><%= user.email %></td>
             <td><%= user.role.capitalize %></td>
-            <td>
-            <!-- Edit Button with Icon -->
-                <%= link_to edit_user_path(user), class: 'btn btn-success btn-sm' do %>
+            <td class="d-flex flex-row justify-content-around">
+              <% if can?(:update, user) %>
+                <%= link_to edit_user_path(user), class: 'btn btn-outline-success btn-sm ' do %>
                   <i class="bi bi-pencil-square"></i> 
                 <% end %>
+              <% else %>
+                <p class="text-danger">Not allowed</p>
+              <% end %>
 
-                <!-- Delete Button with Icon -->
-                <%= button_to user_path(user), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm' do %>
+              <% if can?(:destroy, user) %>
+                <%= button_to user_path(user), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-outline-danger btn-sm ml-3' do %>
                   <i class="bi bi-trash"></i> 
-                <% end %>  
+                <% end %>
+              <% end %>
             </td>
           </tr>
         <% end %>
       </tbody>
     </table>
+    
+   
+    <%= will_paginate @collection, renderer: BootstrapPagination::Rails %>
+   
   </div>
 <% else %>
   <div class="alert alert-warning" role="alert">
     No users found.
   </div>
 <% end %>
-
 
 <% end %>

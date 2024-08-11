@@ -1,19 +1,24 @@
 class UsersController < ApplicationController
-before_action :authenticate_user!
+  load_and_authorize_resource
+  before_action :authenticate_user!
   before_action :find_user, only: [:update, :edit, :show, :destroy]
-  # layout 'users', only: [:index]
+  
   def index
-    # Fetch users with roles 'admin' and 'staff' belonging to the current tenant
-    @users = User.all.where(role: ['admin', 'staff'])
+        # Fetch users with roles 'admin' and 'staff' belonging to the current tenant
+      # if current_user.role == 'owner'
+      #    @users = User.all.where(role: ['admin', 'staff'])
+      # elsif current_user.role == 'admin'
+      #     @users = User.all.where(role:'staff')
+      # elsif current_user.role == 'staff'
+      #     @users = User.all.where(role: ['admin', 'staff'])
+      # end
+
+      @users = User.where(role: ['admin', 'staff']).paginate(page: params[:page],per_page:1)
+   
   end
 
   def show
-    respond_to do |format|
-     
-        format.html {render plain: "Hey you are at the show "}
-        format.json { render json: { error: 'No hospitals found' }, status: :not_found }
-     
-    end
+    
   end
   def new
     @user=User.new()
@@ -52,12 +57,22 @@ before_action :authenticate_user!
       redirect_to users_path,notice: 'There is an error in deleting a user'
     end
   end
+  # def destroy
+  #   # binding.pry
+  #   @user = User.find(params[:id])
+  #   @user.destroy
+  #   redirect_to users_path, notice: 'User was successfully deleted.'
+  # rescue CanCan::AccessDenied
+  #   redirect_to users_path, alert: 'Access denied. You are not authorized to delete this user.'
+  # end
+
+
 
   private
 
 
   def user_params
-    params.require(:user).permit(:name, :email, :gender,:role,:password)
+    params.require(:user).permit(:name, :email, :gender,:role,:password,:password_confirmation,:profile_picture)
   end
   def find_user
     @user = User.find(params[:id])

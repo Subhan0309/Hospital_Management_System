@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
 
 
+ 
   devise_for :users, controllers: {
       sessions: 'users/sessions'
     },only: [:sessions]
@@ -21,6 +22,8 @@ Rails.application.routes.draw do
         resources :medical_records, only: [:index, :show, :create, :update, :destroy]
       end
       get 'dashboard', to: 'hospitals#dashboard', as: 'hospital_dashboard'
+      # Search route
+      get 'search', to: 'search#index'
     end
 
   

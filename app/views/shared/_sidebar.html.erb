@@ -1,14 +1,19 @@
 
-<div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-primary ">
+<div class=" col-auto col-xl-2 px-sm-2 px-0 bg-primary mx-0 ">
   <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100 position-sticky top-0 bottom-0">
         <a href="/" class="d-flex align-items-center pt-3 pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-                <%= ActsAsTenant.current_tenant.name %>
+                <h3 class="mx-4">
+                    <span class="btn btn-outline-light">
+                        <%= current_user.role.capitalize %>
+                    </span>
+                </h3>
         </a>
         <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
             <li class="nav-item">
-                <a href="#" class="nav-link align-middle px-0 text-white">
-                    <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Home</span>
-                </a>
+                
+                 <%= link_to user_path(current_user), class: 'nav-link px-0 align-middle text-white' do %>
+               <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Profile</span>
+                <% end %>
             </li>
             <li>
                 <%= link_to hospital_dashboard_path, class: 'nav-link px-0 align-middle text-white' do %>
@@ -27,12 +32,17 @@
                     <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">People</span>
                 </a>
                 <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#menu">
-                    <li class="w-100">
-                        
-                        <%= link_to users_path , class: "nav-link px-4 text-white"  do %>
+
+                    <% if can?(:read, User.new(role: 'admin')) || can?(:read, User.new(role: 'staff')) %>
+                        <li class="w-100">
+                            <%= link_to users_path, class: "nav-link px-4 text-white" do %>
                             <span class="d-none d-sm-inline">Staff</span>
-                            <%end%>
-                    </li>
+                            <% end %>
+                        </li>
+                    <% end %>
+
+
+
                     <li>
                         <a href="#" class="nav-link px-4 text-white"><span class="d-none d-sm-inline">Doctors</span></a>
                     </li>
@@ -48,12 +58,13 @@
                     <span class="d-none d-sm-inline mx-1">People</span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+                        <% if can?(:read, User.new(role: 'admin')) || can?(:read, User.new(role: 'staff')) %>
                         <li class="w-100">
-                        
-                        <%= link_to users_path , class: "nav-link dropdown-item text-white"  do %>
-                            Staff
-                            <%end%>
+                            <%= link_to users_path, class: "nav-link px-4 text-white" do %>
+                            <span class="d-none d-sm-inline">Staff</span>
+                            <% end %>
                         </li>
+                    <% end %>
                         
                         <li>
                             <a href="#" class="nav-link dropdown-item  text-white"> Doctors </a>

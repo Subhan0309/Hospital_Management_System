@@ -5,8 +5,9 @@ class User < ApplicationRecord
   scope :patients, -> { where(role: 'patient') }
   scope :doctors, -> { where(role: 'doctor') }
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable
+         :recoverable, :rememberable , :validatable
          
-  enum role: { owner: 'owner', admin: 'admin',staff: 'staff',doctor: 'doctor',patient: 'patient' }
 
+  enum role: { owner: 'owner', admin: 'admin',staff: 'staff' }
+  validates :email, uniqueness: { scope: :hospital_id, message: "should be unique within the same hospital" }
 end

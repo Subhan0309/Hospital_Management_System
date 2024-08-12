@@ -1,18 +1,19 @@
 Rails.application.routes.draw do
 
-  root to: 'landing_pages#index'
-  
+
   devise_for :users, controllers: {
-    sessions: 'users/sessions',
-    registrations: 'users/registrations'
-  }
+      sessions: 'users/sessions'
+    },only: [:sessions]
 
-
-  resources :hospitals do
-    resources :admins, only: [:index, :create, :update, :destroy]
+  constraints subdomain: '' do
+   
+  
+    devise_for :users, controllers: {
+      registrations: 'users/registrations'
+    }, only: [:registrations]
+  
+    resources :hospitals
   end
-
-  # Subdomain-specific routes
   constraints subdomain: /.*/ do
     resources :doctors, only: [:index, :show, :edit, :update, :destroy ,:new , :create ]
     resources :patients, only: [:index, :show, :edit, :update, :destroy ,:new , :create ]
@@ -21,11 +22,15 @@ Rails.application.routes.draw do
       resources :medical_records, only: [:index, :show, :new, :create,:edit, :update, :destroy] do
         resources :comments, only: [:index, :show, :new, :create,:edit, :update, :destroy]
       end
+   
     end
     
 
-    get 'dashboard', to: 'hospitals#dashboard', as: 'hospital_dashboard'
-  end
- 
+  
+ root to: 'landing_pages#index'
 end
+
+
+
+
 

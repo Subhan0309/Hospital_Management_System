@@ -1,0 +1,11 @@
+<div class="container-fluid">
+  <div class="row flex-nowrap">
+    <!-- Render the sidebar partial -->
+    <%= render 'shared/sidebar' %>
+
+    <!-- Main content area -->
+    <div class="col py-3 vh-100 overflow-auto">
+      <%= render 'form', user: @user %>
+    </div>
+  </div>
+</div>

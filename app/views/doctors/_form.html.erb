@@ -1,10 +1,10 @@
 <div class="container d-flex justify-content-center mt-5 mb-5">
   <div class="col-md-8 col-lg-6">
     <div class="bg-white p-4 rounded shadow-sm">
-     <h1 class="text-center mb-4 text-primary">
-          <%= @doctor.new_record? ? 'Create New Doctor' : 'Edit Doctor' %>
-        </h1>
-      <%= form_with(model: @doctor ,local: true) do |f| %>
+      <h1 class="text-center mb-4 text-primary">
+        <%= @doctor.new_record? ? 'Create New Doctor' : 'Edit Doctor' %>
+      </h1>
+      <%= form_with(model: @doctor, local: true) do |f| %>
         <%= render "devise/shared/error_messages", resource: @doctor %>
         <div class="form-group">
           <%= f.label :name, class: "form-label" %>
@@ -30,13 +30,23 @@
           <%= f.label :gender, class: "form-label" %>
           <%= f.select :gender, options_for_select([['Male', 'male'], ['Female', 'female'], ['Other', 'other']]), {}, class: "form-control" %>
         </div>
-        <!-- Role selection for admin and staff -->
+        <!-- Specialization field -->
         <div class="form-group">
-          <%= f.label :role, class: "form-label" %>
-          <%= f.select :role, options_for_select([['Doctor', 'doctor']]), {}, class: "form-control" %>
+          <%= f.fields_for :detail do |detail_fields| %>
+            <%= detail_fields.label :specialization, class: "form-label" %>
+            <%= detail_fields.text_field :specialization, class: "form-control" %>
+          <% end %>
         </div>
+        <!-- Qualification field -->
+        <div class="form-group">
+          <%= f.fields_for :detail do |detail_fields| %>
+            <%= detail_fields.label :qualification, class: "form-label" %>
+            <%= detail_fields.text_field :qualification, class: "form-control" %>
+          <% end %>
+        </div>
+        <!-- Role selection for admin and staff -->
         <div class="form-group text-center">
-         <%= f.submit @doctor.new_record? ? 'Create User' : 'Update User', class: 'btn btn-primary btn-block' %>
+          <%= f.submit @doctor.new_record? ? 'Create Doctor' : 'Update Doctor', class: 'btn btn-primary btn-block' %>
         </div>
       <% end %>
     </div>

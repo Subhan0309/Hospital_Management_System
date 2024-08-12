@@ -18,10 +18,17 @@
 
 
             <li>
-                <a href="#" class="nav-link px-0 align-middle text-white">
-                    <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Appointments</span>
-                </a>
-            </li>
+  <%= link_to user_appointments_path(current_user), class: 'nav-link px-0 align-middle text-white' do %>
+    <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Appointments</span>
+  <% end %>
+</li>
+ <li>
+  <%= link_to user_medical_records_path(current_user), class: 'nav-link px-0 align-middle text-white' do %>
+    <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Medical Record</span>
+  <% end %>
+</li>
+
+ 
             <li class="d-none d-md-block"> 
                 <a href="#submenu3" data-bs-toggle="collapse" class="nav-link px-0 align-middle text-white">
                     <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">People</span>
@@ -37,16 +44,23 @@
                     <li>
                         <a href="#" class="nav-link px-4 text-white"> * <span class="d-none d-sm-inline">Staff</span> </a>
                     </li>
-                   <li>
+                     <% if current_user.role != 'doctor'  %>
+          <!-- Show only Patients link for Doctors -->
+          <li>
             <%= link_to doctors_path, class: "nav-link px-4 text-white" do %>
               <span class="d-none d-sm-inline">Doctors</span>
             <% end %>
           </li>
-                    <li>
- <%= link_to patients_path, class: "nav-link px-4 text-white" do %>
-              <span class="d-none d-sm-inline">Patients</span>
-            <% end %>                    </li>
-                </ul>
+          <%end%>
+        <% if current_user.role != 'patient' %>
+          <!-- Show only Doctors link for Patients -->
+          <li>
+            <%= link_to patients_path, class: "nav-link px-4 text-white" do %>
+              <span class="d-none d-sm-inline">Patient</span>
+            <% end %>
+          </li>
+        <% end %>    
+                    </ul>
             </li>
             <li class="d-block d-md-none">
                 <div class="dropdown pb-4">

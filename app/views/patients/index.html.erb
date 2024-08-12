@@ -46,6 +46,12 @@
                       <%= button_to patient_path(patient), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm' do %>
                         <i class="bi bi-trash"></i> 
                       <% end %>  
+                      <%if current_user.role=="doctor" || current_user.role == "patient"%>
+                      <!-- Medical Record of Patient-->
+                      <%= link_to user_medical_records_path(patient), class: 'btn btn-danger btn-sm' do %>
+                        <i class="bi bi-trash"></i> 
+                      <% end %> 
+                      <%end%>
                  </td>
                 </tr>
               <% end %>

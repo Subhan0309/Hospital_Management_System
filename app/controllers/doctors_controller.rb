@@ -3,9 +3,14 @@ class DoctorsController < ApplicationController
 
   # GET /doctors
   def index
-    # @doctors=Doctor.all
+    if current_user.role == 'patient'
+      @patient=Patient.find(current_user.id)
+      @doctors= @patient.doctors
+      
+ 
+    else
     @doctors=User.all.where(hospital_id:ActsAsTenant.current_tenant , role:"doctor")
-
+    end
   end
 
   # GET /doctors/1
@@ -20,7 +25,8 @@ class DoctorsController < ApplicationController
 
   def create
     @doctor = Doctor.new(doctor_params)
-
+    
+    @doctor.role = 'doctor' 
     if @doctor.save
       redirect_to doctors_path, notice: 'Doctor was successfully created.'
     else
@@ -45,11 +51,9 @@ class DoctorsController < ApplicationController
 
   # DELETE /doctors/1
   def destroy
-    @doctor.destroy
-    respond_to do |format|
-      format.html { redirect_to doctors_url, notice: 'Doctor was successfully deleted.' }
-      format.json { head :no_content }
-     end 
+    if  @doctor.destroy
+      redirect_to doctors_path, notice: 'Doctor was successfully deleted.' 
+      end
   end
 
   private
@@ -61,6 +65,6 @@ class DoctorsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def doctor_params
-    params.require(:doctor).permit(:name, :email, :hospital_id) # Add other permitted attributes here
+    params.require(:doctor).permit(:name, :email, :gender,:password, :password_confirmation, :hospital_id) # Add other permitted attributes here
   end
 end

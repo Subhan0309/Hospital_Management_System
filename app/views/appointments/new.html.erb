@@ -1,2 +1,45 @@
-<h1>Appointments#new</h1>
-<p>Find me in app/views/appointments/new.html.erb</p>
+<div class="container appointment-section text-center">
+  <h2>New Appointment</h2>
+  <p>Book an appointment with a doctor</p>
+
+  <% if @appointment.errors.any? %>
+    <div class="alert alert-danger">
+      <ul>
+        <% @appointment.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= form_with(model: [@user, @appointment], url: user_appointments_path(@user), local: true, class: "appointment-form") do |form| %>
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <%= form.text_field :patient_name, class: "form-control", placeholder: "Your Name", value: current_user.name, readonly: true %>
+      </div>
+      <div class="form-group col-md-4">
+        <%= form.email_field :patient_email, class: "form-control", placeholder: "Your Email", value: current_user.email, readonly: true %>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <%= form.datetime_local_field :start_time, class: "form-control", placeholder: "Start Time" %>
+      </div>
+      <div class="form-group col-md-4">
+        <%= form.datetime_local_field :end_time, class: "form-control", placeholder: "End Time" %>
+      </div>
+      <div class="form-group col-md-4">
+        <%= form.label :doctor_id, class: "form-label" %>
+        <%= form.select :doctor_id, options_from_collection_for_select(@doctors, 'id', 'name'), { prompt: "Select Doctor" }, class: "form-control" %>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= form.label :status, class: "form-label" %>
+      <%= form.select :status, options_for_select(Appointment.statuses.keys.map { |status| [status.humanize, status] }, 'scheduled'), { prompt: "Select Status" }, class: "form-control" %>
+    </div>
+    <div class="form-group">
+      <%= form.text_area :message, class: "form-control", rows: 4, placeholder: "Message (Optional)" %>
+    </div>
+    <%= form.submit 'Create Appointment', class: "btn btn-primary" %>
+  <% end %>
+</div>

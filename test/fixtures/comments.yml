@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  description: MyText
+  created_by: one
+  associated_with: one
+  associated_with_type: Associated with
+
+two:
+  description: MyText
+  created_by: two
+  associated_with: two
+  associated_with_type: Associated with

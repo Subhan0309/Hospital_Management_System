@@ -1,33 +1,48 @@
 class AppointmentsController < ApplicationController
+  before_action :set_user
+  before_action :set_doctors, only: [:new, :edit, :create, :update]
   before_action :set_appointment, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!
 
+  def self.send_daily_reminders
+    tomorrow = Date.tomorrow
+    appointments = Appointment.where(start_time: tomorrow.beginning_of_day..tomorrow.end_of_day)
+
+    appointments.each do |appointment|
+      AppointmentMailer.reminder_email(appointment).deliver_now
+    end
+  end
   def index
-    @appointments = current_user.role == 'doctor' ? current_user.doctor_appointments : current_user.patient_appointments
+
+    @appointments = @user.appointments
   end
 
   def show
+     @appointment 
   end
 
   def new
-    @appointment = Appointment.new
+    @appointment = @user.appointments.new
+
+ 
   end
 
   def create
-    @appointment = Appointment.new(appointment_params)
+    @appointment = @user.appointments.new(appointment_params)
+   
     if @appointment.save
-      redirect_to @appointment, notice: 'Appointment was successfully created.'
+      AppointmentMailer.with(appointment: @appointment).appointment_confirmation.deliver_now
+      redirect_to user_appointments_path(@user), notice: 'Appointment was successfully created.'
     else
-      render :new
+      flash.now[:alert] = 'Doctor is not available at this time'
+      render :new, status: :unprocessable_entity
     end
   end
 
-  def edit
-  end
-
+ 
   def update
     if @appointment.update(appointment_params)
-      redirect_to @appointment, notice: 'Appointment was successfully updated.'
+      redirect_to user_appointments_path(@user), notice: 'Appointment was successfully updated.'
     else
       render :edit
     end
@@ -35,16 +50,26 @@ class AppointmentsController < ApplicationController
 
   def destroy
     @appointment.destroy
-    redirect_to appointments_url, notice: 'Appointment was successfully destroyed.'
+    redirect_to user_appointments_path(@user), notice: 'Appointment was successfully destroyed.'
   end
 
   private
 
+  def set_user
+   @user = current_user.role == 'doctor' ? Doctor.find(params[:user_id]) : Patient.find(params[:user_id])
+  end
+
+  def set_doctors
+    @doctors = User.where(hospital_id: current_user.hospital_id, role:"doctor")
+  end
+  
+  
   def set_appointment
-    @appointment = Appointment.find(params[:id])
+    @appointment = @user.appointments.find(params[:id])
+
   end
 
   def appointment_params
-    params.require(:appointment).permit(:patient_id, :doctor_id, :date_time, :status)
+    params.require(:appointment).permit(:patient_id, :doctor_id, :start_time, :end_time, :status)
   end
 end

@@ -17,8 +17,10 @@ Rails.application.routes.draw do
     resources :doctors, only: [:index, :show, :edit, :update, :destroy ,:new , :create ]
     resources :patients, only: [:index, :show, :edit, :update, :destroy ,:new , :create ]
     resources :users, only: [:index, :show, :edit, :update, :destroy ,:new , :create ] do
-      resources :appointments, only: [:index, :create, :update, :destroy]
-      resources :medical_records, only: [:index, :show, :create, :update, :destroy]
+      resources :appointments, only: [:index, :show,:new, :create, :edit, :update, :destroy]
+      resources :medical_records, only: [:index, :show, :new, :create,:edit, :update, :destroy] do
+        resources :comments, only: [:index, :show, :new, :create,:edit, :update, :destroy]
+      end
     end
     
 

@@ -1,7 +1,9 @@
-<div class="container appointment-section text-center">
-  <h2>Edit Appointment</h2>
-  <p>Update your appointment details</p>
+<!-- app/views/appointments/_form.html.erb -->
 
+<div class="container appointment-section text-center">
+  <h2><%= @appointment.new_record? ? 'New Appointment' : 'Edit Appointment' %></h2>
+  <p><%= @appointment.new_record? ? 'Book an appointment with a doctor' : 'Update your appointment details' %></p>
+  
   <% if @appointment.errors.any? %>
     <div class="alert alert-danger">
       <ul>
@@ -12,7 +14,7 @@
     </div>
   <% end %>
 
-  <%= form_with(model: [@user, @appointment], url: user_appointment_path(@user, @appointment), local: true, method: :patch, class: "appointment-form") do |form| %>
+  <%= form_with(model: [@user, @appointment], url: user_appointments_path(@user), local: true, class: "appointment-form") do |form| %>
     <div class="form-row">
       <div class="form-group col-md-4">
         <%= form.text_field :patient_name, class: "form-control", placeholder: "Your Name", value: current_user.name, readonly: true %>
@@ -28,8 +30,9 @@
       <div class="form-group col-md-4">
         <%= form.datetime_local_field :end_time, class: "form-control", placeholder: "End Time" %>
       </div>
-      <div class="form-group col-md-4">
+     <div class="form-group col-md-4">
         <%= form.label :doctor_id, class: "form-label" %>
+       
         <%= form.select :doctor_id, options_from_collection_for_select(@doctors, 'id', 'name'), { prompt: "Select Doctor" }, class: "form-control" %>
       </div>
     </div>
@@ -40,6 +43,6 @@
     <div class="form-group">
       <%= form.text_area :message, class: "form-control", rows: 4, placeholder: "Message (Optional)" %>
     </div>
-    <%= form.submit 'Update Appointment', class: "btn btn-primary" %>
+    <%= form.submit @appointment.new_record? ? 'Make an Appointment' : 'Update Appointment', class: "btn btn-primary" %>
   <% end %>
 </div>

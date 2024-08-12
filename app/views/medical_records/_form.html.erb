@@ -1,0 +1,33 @@
+<div class="container">
+  <h1 class="text-center mb-4 text-primary">
+    <%= @medical_record.new_record? ? 'Create New Medical Record' : 'Edit Medical Record' %>
+  </h1>
+  <%= form_with(model: [@user, @medical_record], url: user_medical_records_path(@user), local: true) do |form| %>
+    <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title">Patient Information</h5>
+      <div class="row">
+        <div class="col-md-6">
+          <label>Patient Name</label>
+          <p class="form-control-plaintext"><%= @user.name %></p>
+        </div>
+        <div class="col-md-6">
+          <label>Patient Email</label>
+          <p class="form-control-plaintext"><%= @user.email %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-12">
+        <%= form.label :details, "Medical Record Details" %>
+        <%= form.text_area :details, class: "form-control", rows: 4 %>
+      </div>
+    </div>
+
+    <%= form.hidden_field :date, value: Time.now %>
+
+    <%= form.submit "Create Medical Record", class: "btn btn-primary" %>
+  <% end %>
+</div>

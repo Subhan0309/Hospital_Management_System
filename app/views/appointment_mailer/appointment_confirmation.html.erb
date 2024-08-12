@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h1>Appointment Confirmation</h1>
+    <p>Hello <%= @patient.name %>,</p>
+    <p>Your appointment with Dr. <%= @doctor.name %> has been successfully booked.</p>
+    <p><strong>Appointment Details:</strong></p>
+    <p><strong>Start Time:</strong> <%= @start_time.strftime('%A, %B %d, %Y at %I:%M %p') %></p>
+    <p><strong>End Time:</strong> <%= @end_time.strftime('%A, %B %d, %Y at %I:%M %p') %></p>
+    <p>Thank you for using our service!</p>
+  </body>
+</html>

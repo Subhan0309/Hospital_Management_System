@@ -15,20 +15,20 @@
   </head>
 
   <body>
-    <% if flash[:notice] %>
-  <script type="text/javascript">
-    window.addEventListener('DOMContentLoaded', (event) => {
-      alert("<%= j flash[:notice] %>");
-    });
-  </script>
+<!-- Flash notices -->
+<% if flash[:notice] %>
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <%= flash[:notice] %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
 <% end %>
 
+<!-- Flash alerts -->
 <% if flash[:alert] %>
-  <script type="text/javascript">
-    window.addEventListener('DOMContentLoaded', (event) => {
-      alert("<%= j flash[:alert] %>");
-    });
-  </script>
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <%= flash[:alert] %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
 <% end %>
 
     <%= yield %>

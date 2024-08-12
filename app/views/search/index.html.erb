@@ -2,33 +2,58 @@
    
 
 
-<!-- app/views/search/index.html.erb -->
-<div class="container mt-4">
-  <% if @user_results.present? %>
-    <div class="row">
-      <% @user_results.each do |user| %>
-        <div class="col-md-6 mb-3">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title"><%= user.name %></h5>
-              <h6 class="card-subtitle mb-2 text-muted"><%= user.role %></h6>
-              <p class="card-text"><%= user.email %></p>
-              <!-- Add any additional user info or actions here -->
-            </div>
-          </div>
-        </div>
-      <% end %>
-    </div>
+<h1>Search Results</h1>
 
-    <!-- Pagination links -->
-    <div class="d-flex justify-content-between align-items-center mt-4">
-      <%= will_paginate @user_results, params: { query: params[:query] }, class: 'pagination' %>
+<% if @query.present? %>
+  <% if @user_results.present? %>
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @user_results.with_highlights.each do |user, highlights| %>
+            <tr>
+              <td>
+                <% if highlights[:name].present? %>
+                  <%= raw(highlights[:name]) %>
+                <% else %>
+                  <%= user.name %>
+                <% end %>
+              </td>
+              <td>
+                <% if highlights[:email].present? %>
+                  <%= raw(highlights[:email]) %>
+                <% else %>
+                  <%= user.email %>
+                <% end %>
+              </td>
+              <td>
+                <% if highlights[:role].present? %>
+                  <%= raw(highlights[:role]) %>
+                <% else %>
+                  <%= user.role %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+       <!-- Pagination links -->
+     <!-- Pagination links -->
+    <div class="pagination">
+      <%= will_paginate @user_results, params: { query: params[:query] } %>
+    </div>
     </div>
   <% else %>
-    <div class="alert alert-info" role="alert">
-      No results found for "<%= @query %>". Please try a different search.
-    </div>
+    <p>No users found</p>
   <% end %>
-</div>
+
+
+<% end %>
 
 <% end %>

@@ -1,11 +1,7 @@
-<div class="container-fluid">
-  <div class="row flex-nowrap">
-    <!-- Render the sidebar partial -->
-    <%= render 'shared/sidebar' %>
-
+<%= render layout: "layouts/users" do %> 
     <div class="col py-3">
       <!-- Dashboard content goes here -->
       <h1>Dashboard</h1>
     </div>
-  </div>
-</div>
+  
+<%end%>

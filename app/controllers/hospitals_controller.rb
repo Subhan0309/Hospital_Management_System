@@ -10,7 +10,7 @@ class HospitalsController < ApplicationController
     user_ids = users_with_email.pluck(:id)
     
     # Find all hospitals associated with these user_ids
-    @hospitals = Hospital.where(user_id: user_ids)
+    @hospitals = Hospital.where(user_id: user_ids).paginate(page: params[:page],per_page:5)
 
     respond_to do |format|
       if @hospitals.empty?

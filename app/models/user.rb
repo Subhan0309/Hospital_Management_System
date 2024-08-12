@@ -63,9 +63,7 @@ class User < ApplicationRecord
                       uniqueness: { scope: :hospital_id, message: "should be unique within the same hospital" }
     validates :role, presence: { message: "Role can't be blank" }
     validates :hospital_id, presence: { message: "Hospital ID can't be blank" }
-  
-    # Optional: Validations for gender if applicable
-    validates :gender, inclusion: { in: %w[male female], message: "%{value} is not a valid gender" }, allow_nil: true
+    validates :gender, inclusion: { in: %w[male female], message: "%{value} is not a valid gender" }
 end
 
 

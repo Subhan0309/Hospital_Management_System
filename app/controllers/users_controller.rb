@@ -13,12 +13,12 @@ class UsersController < ApplicationController
       #     @users = User.all.where(role: ['admin', 'staff'])
       # end
 
-      @users = User.where(role: ['admin', 'staff']).paginate(page: params[:page],per_page:1)
+      @users = User.where(role: ['admin', 'staff']).paginate(page: params[:page],per_page:2)
    
   end
 
   def show
-    
+   
   end
   def new
     @user=User.new()

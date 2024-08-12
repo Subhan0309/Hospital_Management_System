@@ -21,8 +21,9 @@ Rails.application.routes.draw do
         resources :appointments, only: [:index, :create, :update, :destroy]
         resources :medical_records, only: [:index, :show, :create, :update, :destroy]
       end
-      get 'dashboard', to: 'hospitals#dashboard', as: 'hospital_dashboard'
+      
       # Search route
+      get 'dashboard', to: 'hospitals#dashboard', as: 'hospital_dashboard'
       get 'search', to: 'search#index'
     end
 

@@ -1,0 +1,68 @@
+<div class="container-fluid">
+  <div class="row flex-nowrap">
+    <!-- Render the sidebar partial -->
+    <%= render 'shared/sidebar' %>
+
+    <div class="col py-3">
+     
+
+      
+      <!-- Flex container for header and button -->
+      <div class="d-flex flex-row justify-content-between align-items-center mb-3">
+        <!-- Heading -->
+        <h1 class="text-primary mb-0">Patients</h1>
+        
+        <!-- Button to create a new Doctor -->
+        <%= link_to 'Add New Patient', new_patient_path, class: 'btn btn-primary' %>
+      </div>
+
+      <!-- Doctor table -->
+      <% if @patients.any? %>
+        <div class="table-responsive mt-5">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @patients.each_with_index do |patient, index| %>
+                <tr>
+                  <td><%= index + 1 %></td>
+                  <td><%= patient.name %></td>
+                  <td><%= patient.email %></td>
+                  <td><%= patient.role.capitalize %></td>
+                  <td>
+                  <!-- Edit Button with Icon -->
+                      <%= link_to edit_patient_path(patient), class: 'btn btn-success btn-sm' do %>
+                        <i class="bi bi-pencil-square"></i> 
+                      <% end %>
+
+                      <!-- Delete Button with Icon -->
+                      <%= button_to patient_path(patient), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm' do %>
+                        <i class="bi bi-trash"></i> 
+                      <% end %>  
+                      <%if current_user.role=="doctor" || current_user.role == "patient"%>
+                      <!-- Medical Record of Patient-->
+                      <%= link_to user_medical_records_path(patient), class: 'btn btn-danger btn-sm' do %>
+                        <i class="bi bi-trash"></i> 
+                      <% end %> 
+                      <%end%>
+                 </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <div class="alert alert-warning" role="alert">
+          No Patient found.
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

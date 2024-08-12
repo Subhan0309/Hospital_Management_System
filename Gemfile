@@ -19,6 +19,7 @@ gem 'turbolinks', '~> 5'
 gem 'jbuilder', '~> 2.7'
 gem 'pry'
 gem 'acts_as_tenant'
+gem "simple_calendar", "~> 3.0"
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 # Use Active Model has_secure_password
@@ -58,3 +59,10 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem "devise", "~> 4.9"
+
+group :development do
+  gem 'mailcatcher'
+end
+gem 'whenever', require: false
+
+

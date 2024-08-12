@@ -1,0 +1,13 @@
+<% if @comment.persisted? %>
+  // Append the new comment to the comments list (you can customize this part according to your actual HTML structure)
+  $('#comments').append('<p><strong>Commented by:</strong> <%= j @comment.created_by.name %> (<%= j @comment.description %>)</p>');
+
+  // Clear the form
+  $('#new_comment_form')[0].reset();
+
+  // Close the modal
+  $('#addCommentModal').modal('hide');
+<% else %>
+  // Handle validation errors if any
+  alert('Failed to add comment. Please try again.');
+<% end %>

@@ -27,6 +27,8 @@ gem 'elasticsearch-model'
 gem 'elasticsearch-rails'
 gem 'searchkick'
 
+gem "simple_calendar", "~> 3.0"
+# Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 # Use Active Model has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
@@ -65,3 +67,10 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem "devise", "~> 4.9"
+
+group :development do
+  gem 'mailcatcher'
+end
+gem 'whenever', require: false
+
+

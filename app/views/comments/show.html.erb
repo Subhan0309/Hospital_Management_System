@@ -1,0 +1,12 @@
+
+<!-- Start of the comments section -->
+<div id="comments">
+  <% @medical_record.comments.each do |comment| %>  
+    <p>
+      <strong>Commented by:</strong> 
+      <%= comment.created_by.name %> 
+      (<%= comment.description %>)
+    </p>
+  <% end %>
+</div>
+<!-- End of the comments section -->

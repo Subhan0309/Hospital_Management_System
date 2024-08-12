@@ -1,6 +1,9 @@
 class User < ApplicationRecord
   attr_accessor :hospital_name, :hospital_location, :hospital_email, :license_no
   acts_as_tenant :hospital
+  
+  scope :patients, -> { where(role: 'patient') }
+  scope :doctors, -> { where(role: 'doctor') }
   devise :database_authenticatable, :registerable,
   :recoverable, :rememberable , :validatable
   
@@ -64,6 +67,9 @@ class User < ApplicationRecord
     validates :role, presence: { message: "Role can't be blank" }
     validates :hospital_id, presence: { message: "Hospital ID can't be blank" }
     validates :gender, inclusion: { in: %w[male female], message: "%{value} is not a valid gender" }
+
+  enum role: { owner: 'owner', admin: 'admin',staff: 'staff' }
+  validates :email, uniqueness: { scope: :hospital_id, message: "should be unique within the same hospital" }
 end
 
 

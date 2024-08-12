@@ -1,0 +1,58 @@
+
+<div class="container">
+  <h1>Medical Record</h1>
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title">Record Details</h5>
+      <div class="row">
+        <div class="col-md-6">
+          <strong>Date:</strong>
+          <p><%= @medical_record.date.strftime('%B %d, %Y') %></p>
+        </div>
+        <div class="col-md-6">
+          <strong>Patient Name:</strong>
+          <p><%= @medical_record.patient.name %></p>
+        </div>
+        <div class="col-md-6">
+          <strong>Patient Email:</strong>
+          <p><%= @medical_record.patient.email %></p>
+        </div>
+        <div class="col-md-12">
+          <strong>Details:</strong>
+          <p><%= @medical_record.details %></p>
+        </div>
+      </div>
+      <div class="mt-4">
+        <%= link_to 'Add Attachment', class: 'btn btn-secondary' %>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCommentModal">
+          Add Comment
+          </button>
+ <%= link_to 'View Comments', user_medical_record_comments_path(current_user, @medical_record), class: 'btn btn-secondary' %>
+      
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="addCommentModal" tabindex="-1" aria-labelledby="addCommentModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addCommentModalLabel">Add Comment</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <%= form_with(model: [current_user, @medical_record, Comment.new], url: user_medical_record_comments_path(current_user, @medical_record), method: :post, local: true, html: { id: 'new_comment_form' }) do |f| %>
+          <div class="form-group">
+            <%= f.label :description %>
+            <%= f.text_area :description, class: 'form-control' %>
+          </div>
+          <div class="form-group mt-3">
+            <%= f.submit 'Add Comment', class: 'btn btn-primary' %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

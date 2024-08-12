@@ -1,5 +1,5 @@
 <div class="container d-flex flex-row align-items-center justify-content-between my-4 w-100">
-  <h1 class="text-center mb-4 text-primary">Dashboard of Owner</h1>
+  <h1 class="text-center mb-4 text-primary">Owner</h1>
   <div class="text-center mb-4">
     <%= link_to 'Create New Hospital', new_user_registration_path, class: 'btn btn-primary btn-lg' %>
   </div>
@@ -31,7 +31,7 @@
                 <td><%= hospital.email %></td>
                 <td><%= hospital.license_no %></td>
                 <td class="">
-                  <%= link_to "http://#{hospital.subdomain}.localhost:3000/users/sign_in", class: 'btn btn-primary btn-sm me-2', rel: 'noopener noreferrer' do %>
+                  <%= link_to "http://#{hospital.subdomain}.localhost:3000/users/sign_in", class: 'btn btn-primary btn-sm me-2 ', rel: 'noopener noreferrer' do %>
                     Go to hospital
                   <% end %>
 
@@ -47,7 +47,9 @@
               </tr>
             <% end %>
           </tbody>
+
         </table>
+ <%= will_paginate @collection, renderer: BootstrapPagination::Rails %>
       </div>
     </div>
   </div>

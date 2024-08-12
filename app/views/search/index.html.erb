@@ -1,0 +1,59 @@
+<%= render layout: "layouts/users" do %> 
+   
+
+
+<h1>Search Results</h1>
+
+<% if @query.present? %>
+  <% if @user_results.present? %>
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @user_results.with_highlights.each do |user, highlights| %>
+            <tr>
+              <td>
+                <% if highlights[:name].present? %>
+                  <%= raw(highlights[:name]) %>
+                <% else %>
+                  <%= user.name %>
+                <% end %>
+              </td>
+              <td>
+                <% if highlights[:email].present? %>
+                  <%= raw(highlights[:email]) %>
+                <% else %>
+                  <%= user.email %>
+                <% end %>
+              </td>
+              <td>
+                <% if highlights[:role].present? %>
+                  <%= raw(highlights[:role]) %>
+                <% else %>
+                  <%= user.role %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+       <!-- Pagination links -->
+     <!-- Pagination links -->
+    <div class="pagination">
+      <%= will_paginate @user_results, params: { query: params[:query] } %>
+    </div>
+    </div>
+  <% else %>
+    <p>No users found</p>
+  <% end %>
+
+
+<% end %>
+
+<% end %>

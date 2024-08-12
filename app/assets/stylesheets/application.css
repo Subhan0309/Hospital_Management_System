@@ -13,3 +13,40 @@
  *= require_tree .
  *= require_self
  */
+/* Pagination container */
+.pagination {
+  display: flex;
+  justify-content: center; /* Center the pagination */
+  margin: 20px 0; /* Margin for spacing */
+  padding: 0;
+  list-style: none;
+}
+
+/* Pagination items */
+.pagination li {
+  margin: 0; /* Space between items */
+  border: 1px solid black;
+  padding: 4px 10px;
+}
+
+
+/* Disabled Previous and Next buttons */
+.pagination .prev.disabled, .pagination .next.disabled {
+
+  color: #6c757d; /* Disabled text color */
+ 
+  cursor: not-allowed; /* Not-allowed cursor */
+}
+
+.pagination a{
+  text-decoration: none;
+  color: black;
+}
+
+
+/* Active page */
+.pagination .active {
+  background-color: #007bff; /* Active page background color */
+  color: white; /* Active page text color */
+  
+}

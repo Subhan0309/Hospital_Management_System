@@ -19,6 +19,14 @@ gem 'turbolinks', '~> 5'
 gem 'jbuilder', '~> 2.7'
 gem 'pry'
 gem 'acts_as_tenant'
+gem 'cancancan'
+gem 'mini_magick'
+
+gem 'will_paginate-bootstrap'
+gem 'elasticsearch-model'
+gem 'elasticsearch-rails'
+gem 'searchkick'
+
 gem "simple_calendar", "~> 3.0"
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'

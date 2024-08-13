@@ -38,9 +38,10 @@
                   
                   <% end %>
 
-                  <% if (!current_user.doctor? && (resource_class == Patient || resource_class == Doctor) ) %>
+                  <% if ( (resource_class == Patient || resource_class == Doctor) ) %>
                     
-                      <!-- Appointments -->
+                      <!-- Appointments --> 
+                      
                       <%= link_to show_appointments_path.call(item), class: 'btn btn-outline-success btn-sm' do %>
                         <span>Appointments</span>
                       <% end %>
@@ -110,7 +111,7 @@
       </tbody>
     </table>
     <div class="position-absolute bottom-0">
-      <%= will_paginate collection, renderer: BootstrapPagination::Rails %>
+      <%# <%= will_paginate collection, renderer: BootstrapPagination::Rails %>
     </div>
   </div>
 <% else %>

@@ -4,7 +4,8 @@ class Doctor < User
   has_many :patients, through: :appointments, source: :patient 
 
   has_many :medical_records, foreign_key: :doctor_id, dependent: :destroy
-  # has_many :details, dependent: :destroy
+  has_one :detail, as: :associated_with, dependent: :destroy
+  accepts_nested_attributes_for :detail
   
 
   def self.default_scope

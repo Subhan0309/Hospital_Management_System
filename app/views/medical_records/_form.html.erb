@@ -2,7 +2,17 @@
   <h1 class="text-center mb-4 text-primary">
     Create New Medical Record
   </h1>
-  <%= form_with(model: [@patient, @medical_record], url: user_medical_records_path(@patient), local: true, multipart: true) do |form| %>
+  <%= form_with(model: [@user, @medical_record], url: user_medical_records_path(@user), local: true) do |form| %>
+   <% if @medical_record.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@medical_record.errors.count, "error") %> prohibited this medical record from being saved:</h2>
+      <ul>
+        <% @medical_record.errors.full_messages.each do |message| %>
+          <li class="text-danger"><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
     <div class="card mb-4">
       <div class="card-body">
         <h5 class="card-title">Patient Information</h5>
@@ -23,6 +33,7 @@
       <div class="form-group col-md-12">
         <%= form.label :details, "Medical Record Details" %>
         <%= form.text_area :details, class: "form-control", rows: 4 %>
+       
       </div>
     </div>
 

@@ -1,7 +1,7 @@
 <div class="container">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h1>Medical Records</h1>
-    <%= link_to 'Create Medical Record', new_user_medical_record_path(@patient), class: 'btn btn-primary' %>
+    <%= link_to 'Create Medical Record', new_user_medical_record_path(@user), class: 'btn btn-primary' %>
   </div>
   <% if @medical_records.any? %>
     <table class="table">
@@ -19,7 +19,7 @@
             <td><%= Patient.find(record.patient_id).name %></td>
             <td><%= record.details %></td>
             <td>
-              <%= link_to 'Show', user_medical_record_path(record.patient, record), class: 'btn btn-info' %>
+              <%= link_to 'Show', user_medical_record_path(@user, record), class: 'btn btn-info' %>
             </td>
           </tr>
         <% end %>

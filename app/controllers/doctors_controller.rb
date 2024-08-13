@@ -5,7 +5,7 @@ class DoctorsController < ApplicationController
   def index
     if current_user.role == 'patient'
       @patient=Patient.find(current_user.id)
-      @doctors= @patient.doctors
+      @doctors= @patient.doctors.paginate(page: params[:page],per_page:2)
       
  
     else
@@ -21,6 +21,7 @@ class DoctorsController < ApplicationController
   # GET /doctors/new
   def new
     @doctor = Doctor.new
+    @doctor.build_detail
   end
 
   def create
@@ -65,6 +66,7 @@ class DoctorsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def doctor_params
-    params.require(:doctor).permit(:name, :email, :gender,:password, :password_confirmation, :hospital_id) # Add other permitted attributes here
+ 
+    params.require(:doctor).permit(:name, :email, :gender,:password, :password_confirmation, :hospital_id,  detail_attributes: [:id, :specialization, :qualification, :disease, :status, :_destroy])
   end
 end

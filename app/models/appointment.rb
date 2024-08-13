@@ -14,5 +14,15 @@ class Appointment < ApplicationRecord
     end  
   end
 
+  def self.send_daily_reminders
+    tomorrow = Date.tomorrow
+    appointments = Appointment.where(start_time: tomorrow.beginning_of_day..tomorrow.end_of_day)
+
+    appointments.each do |appointment|
+      AppointmentMailer.reminder_email(appointment).deliver_now
+    end
+  end
+
   enum status: { scheduled: 0, canceled: 1, completed: 2 }
+
 end

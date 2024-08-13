@@ -18,10 +18,12 @@
 # end
 
 # Learn more: http://github.com/javan/whenever
-# config/schedule.rb
-
 set :output, "log/cron.log"
 
-every 1.day, at: '4:05 pm' do
+every 1.day, at: '9:00 pm' do
   runner "Appointment.send_daily_reminders"
+end
+
+every 1.day do
+  rake "daily_summary:send_report"
 end

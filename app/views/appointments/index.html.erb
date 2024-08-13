@@ -10,24 +10,15 @@
       <%= date.day %>
     </div>
     <% appointments.each do |appointment| %>
-      <div class="card mt-2">
-        <div class="card-header">
-          
-        </div>
-        <div class="card-body">
-          <p class="card-text">
+      <div >
+     
+    
+          <p >
              <%= link_to appointment.status, user_appointment_path(@user, appointment) %>
      
           </p>
-        </div>
-        <div class="card-footer">
-          <p class="card-text">
-            From: <%= appointment.startTime.strftime('%A, %B %d, %Y at %I:%M %p') %>
-          </p>
-          <p class="card-text">
-            To: <%= appointment.endTime.strftime('%A, %B %d, %Y at %I:%M %p') %>
-          </p>
-        </div>
+ 
+        
       </div>
     <% end %>
   <% end %>

@@ -9,7 +9,9 @@
 # migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
-ActiveRecord::Schema.define(version: 2024_08_09_192747) do
+
+ActiveRecord::Schema.define(version: 2024_08_13_055104) do
+
   create_table "Hospitals", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "location"
@@ -46,6 +48,7 @@ ActiveRecord::Schema.define(version: 2024_08_09_192747) do
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
+
   create_table "appointments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "patient_id", null: false
     t.bigint "doctor_id", null: false
@@ -68,14 +71,15 @@ ActiveRecord::Schema.define(version: 2024_08_09_192747) do
     t.index ["created_by_id"], name: "index_comments_on_created_by_id"
   end
   create_table "details", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "user_id", null: false
+    t.string "associated_with_type", null: false
+    t.bigint "associated_with_id", null: false
     t.string "specialization"
     t.string "qualification"
     t.string "disease"
     t.string "status"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["user_id"], name: "index_details_on_user_id"
+    t.index ["associated_with_type", "associated_with_id"], name: "index_details_on_associated_with"
   end
   create_table "medical_records", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.datetime "date", null: false
@@ -108,7 +112,6 @@ ActiveRecord::Schema.define(version: 2024_08_09_192747) do
   add_foreign_key "appointments", "users", column: "doctor_id"
   add_foreign_key "appointments", "users", column: "patient_id"
   add_foreign_key "comments", "users", column: "created_by_id"
-  add_foreign_key "details", "users"
   add_foreign_key "medical_records", "users", column: "doctor_id"
   add_foreign_key "medical_records", "users", column: "patient_id"
   add_foreign_key "users", "hospitals"

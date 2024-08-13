@@ -117,7 +117,10 @@
         <%= form_with(model: [current_user, @medical_record, Comment.new], url: user_medical_record_comments_path(current_user, @medical_record), method: :post, local: true, html: { id: 'new_comment_form' }) do |f| %>
           <div class="form-group">
             <%= f.label :description %>
-            <%= f.text_area :description, class: 'form-control' %>
+            <%= f.text_area :description, class: 'form-control', required: true %>
+            <div class="invalid-feedback">
+              Description can't be empty.
+            </div>
           </div>
           <div class="form-group mt-3">
             <%= f.submit 'Add Comment', class: 'btn btn-primary' %>

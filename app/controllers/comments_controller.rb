@@ -34,7 +34,7 @@ class CommentsController < ApplicationController
         end
         format.js   # Handles JS requests
       else
-        format.html { render :new }
+      
         format.js   # Handles JS requests
       end
     end
@@ -46,10 +46,14 @@ class CommentsController < ApplicationController
 
   # PATCH/PUT /medical_records/:medical_record_id/comments/:id
   def update
-    if @comment.update(comment_params)
-      redirect_to user_medical_record_comments_url(@user,@medical_record), notice: 'Comment was successfully updated.'
-    else
-      render :edit
+    respond_to do |format|
+      if @comment.update(comment_params)
+        format.html { redirect_to user_medical_record_comments_url(@user, @medical_record), notice: 'Comment was successfully updated.' }
+        format.js   # This will render edit.js.erb
+      else
+        format.html { render :edit }
+        format.js   # This will render edit.js.erb to handle errors
+      end
     end
   end
 

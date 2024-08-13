@@ -4,7 +4,11 @@ class MedicalRecordsController < ApplicationController
   before_action :authenticate_user!
   
   def index
-    @medical_records = @patient.medical_records
+    if current_user.doctor?
+       @medical_records = @user.medical_records.where(doctor_id: current_user.id)
+    else
+      @medical_records = @user.medical_records
+    end
   end
 
   def show
@@ -24,7 +28,7 @@ class MedicalRecordsController < ApplicationController
      
       redirect_to user_medical_records_path(@patient), notice: 'Medical record was successfully created.'
     else
-      render :new
+      render :new, alert: @medical_record.errors.full_messages.to_sentence
     end
   end
 
@@ -85,7 +89,7 @@ class MedicalRecordsController < ApplicationController
 
   private
   def set_user
-    @patient = Patient.find(params[:user_id])
+    @user = Patient.find(params[:user_id])
    end
   def set_medical_record
     @medical_record = @patient.medical_records.find(params[:id])

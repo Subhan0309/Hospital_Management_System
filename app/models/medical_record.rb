@@ -4,4 +4,6 @@ class MedicalRecord < ApplicationRecord
    has_many :comments, as: :associated_with, dependent: :destroy
    validates :date, :details, :patient_id, :doctor_id, presence: true
 
+    # Active Storage association for attachments
+  has_many_attached :attachments
 end

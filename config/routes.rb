@@ -1,18 +1,11 @@
 Rails.application.routes.draw do
-
-
- 
   devise_for :users, controllers: {
       sessions: 'users/sessions'
     },only: [:sessions]
-
   constraints subdomain: '' do
-   
-  
     devise_for :users, controllers: {
       registrations: 'users/registrations'
     }, only: [:registrations]
-  
     resources :hospitals
   end
   constraints subdomain: /.*/ do
@@ -22,20 +15,25 @@ Rails.application.routes.draw do
       resources :appointments, only: [:index, :show,:new, :create, :edit, :update, :destroy]
       resources :medical_records, only: [:index, :show, :new, :create,:edit, :update, :destroy] do
         resources :comments, only: [:index, :show, :new, :create,:edit, :update, :destroy]
+        delete 'delete_attachment/:attachment_id', to: 'medical_records#delete_attachment', as: 'delete_attachment'
+
       end
-      
-      # Search route
-      get 'dashboard', to: 'hospitals#dashboard', as: 'hospital_dashboard'
-      get 'search', to: 'search#index'
-   
     end
+    # Search route
+    get 'dashboard', to: 'hospitals#dashboard', as: 'hospital_dashboard'
+    get 'search', to: 'search#index'
+
+   
+
+   
+        
     
 
-  
- root to: 'landing_pages#index'
+  end
+
+  root to: 'landing_pages#index'
+   # Catch-all route for routing errors
+  #  match '*unmatched', to: 'application#routing_error', via: :all
+
+
 end
-
-
-
-
-

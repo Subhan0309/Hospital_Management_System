@@ -1,23 +1,23 @@
 <div class="container">
   <h1 class="text-center mb-4 text-primary">
-    <%= @medical_record.new_record? ? 'Create New Medical Record' : 'Edit Medical Record' %>
+    Create New Medical Record
   </h1>
-  <%= form_with(model: [@user, @medical_record], url: user_medical_records_path(@user), local: true) do |form| %>
+  <%= form_with(model: [@patient, @medical_record], url: user_medical_records_path(@patient), local: true, multipart: true) do |form| %>
     <div class="card mb-4">
-    <div class="card-body">
-      <h5 class="card-title">Patient Information</h5>
-      <div class="row">
-        <div class="col-md-6">
-          <label>Patient Name</label>
-          <p class="form-control-plaintext"><%= @user.name %></p>
-        </div>
-        <div class="col-md-6">
-          <label>Patient Email</label>
-          <p class="form-control-plaintext"><%= @user.email %></p>
+      <div class="card-body">
+        <h5 class="card-title">Patient Information</h5>
+        <div class="row">
+          <div class="col-md-6">
+            <label>Patient Name</label>
+            <p class="form-control-plaintext"><%= @patient.name %></p>
+          </div>
+          <div class="col-md-6">
+            <label>Patient Email</label>
+            <p class="form-control-plaintext"><%= @patient.email %></p>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
     <div class="form-row">
       <div class="form-group col-md-12">
@@ -26,8 +26,14 @@
       </div>
     </div>
 
+    <!-- Attachment Field -->
+    <div class="form-group mt-5">
+      <%= form.label :attachments, "Attachments" %>
+      <%= form.file_field :attachments, multiple: true, class: "form-control" %>
+    </div>
+
     <%= form.hidden_field :date, value: Time.now %>
 
-    <%= form.submit "Create Medical Record", class: "btn btn-primary" %>
+    <%= form.submit "Create Medical Record", class: "btn btn-primary mt-4" %>
   <% end %>
 </div>

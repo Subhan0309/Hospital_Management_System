@@ -1,0 +1,120 @@
+<div class="d-flex flex-row justify-content-between align-items-center mb-3 mt-5 border p-3">
+  <h3 class="text-primary mb-0 fs-4 fs-md-6"><%= title %></h3>
+
+  <% if can?(:create, resource_class.new(role: 'admin')) || can?(:create, resource_class.new(role: 'staff')) || can?(:create, resource_class.new(role: 'doctor'))|| can?(:create, resource_class.new(role: 'patient')) %>
+    <%= link_to 'Add New ' + title.singularize, new_path, class: 'btn btn-outline-primary fs-6 fs-md-6' %>
+  <% end %>
+</div>
+
+<% if collection.any? %>
+  <div class="table-responsive mt-5">
+    <table class="table table-striped table-responsive overflow-auto">
+      <thead>
+        <tr>
+          <th>#</th>
+          <% headers.each do |header| %>
+            <th><%= header %></th>
+          <% end %>
+          <th class="text-center">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% collection.each_with_index do |item, index| %>
+          <tr>
+            <td><%= index + 1 %></td>
+            <% fields.each do |field| %>
+              <td><%= item.send(field) %></td>
+            <% end %>
+
+
+          <% if resource_class != User %>
+                <td class="">
+                  <% if !current_user.patient? && resource_class == Patient %>
+                    
+                      <!-- Medical Record of Patient -->
+                      <%= link_to show_medical_record_path.call(item), class: 'btn btn-outline-danger btn-sm' do %>
+                        <span>Medical Record</span>
+                      <% end %>
+                  
+                  <% end %>
+
+                  <% if (!current_user.doctor? && (resource_class == Patient || resource_class == Doctor) ) %>
+                    
+                      <!-- Appointments -->
+                      <%= link_to show_appointments_path.call(item), class: 'btn btn-outline-success btn-sm' do %>
+                        <span>Appointments</span>
+                      <% end %>
+                  
+                  <% end %>
+                </td>
+          <% end %>
+
+
+
+            <td class="d-flex flex-row justify-content-evenly">
+              <% if can?(:update, item) %>
+                <%= link_to edit_path.call(item), class: 'btn btn-outline-success btn-sm' do %>
+                  <i class="bi bi-pencil-square"></i>
+                <% end %>
+              <% end %>
+
+              <% if can?(:destroy, item) %>
+                <%= button_to destroy_path.call(item), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-outline-danger btn-sm ml-3' do %>
+                  <i class="bi bi-trash"></i>
+                <% end %>
+              <% end %>
+
+              <% if can?(:read, item) %>
+                <button class="btn btn-outline-info btn-sm ml-3" data-bs-toggle="modal" data-bs-target="#showItemModal">
+                  <i class="bi bi-eye"></i>
+                </button>
+              <% end %>
+
+              <!-- Modal for viewing item details -->
+              <div class="modal fade" id="showItemModal" tabindex="-1" aria-labelledby="showItemModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                  <div class="modal-content">
+                    <div class="modal-header bg-secondary text-light">
+                      <h5 class="modal-title" id="showItemModalLabel"><%= title.singularize %> Profile</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="card shadow-lg">
+                        <div class="card-body">
+                          <div class="text-center mb-3">
+                            <% if item.respond_to?(:profile_picture) && item.profile_picture.attached? %>
+                              <%= image_tag item.profile_picture, id: 'profile-picture-preview', class: 'rounded-circle shadow', size: '150x150' %>
+                            <% else %>
+                              <%= image_tag 'default-profile.jpeg', id: 'profile-picture-preview', class: 'rounded-circle shadow', size: '150x150' %>
+                            <% end %>
+                          </div>
+
+                          <% fields.each do |field| %>
+                            <div class="mb-3">
+                              <h6 class="text-primary"><%= field.capitalize %>:</h6>
+                              <p><%= item.send(field) %></p>
+                            </div>
+                          <% end %>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <div class="position-absolute bottom-0">
+      <%= will_paginate collection, renderer: BootstrapPagination::Rails %>
+    </div>
+  </div>
+<% else %>
+  <div class="alert alert-warning" role="alert">
+    No <%= title.pluralize %> found.
+  </div>
+<% end %>

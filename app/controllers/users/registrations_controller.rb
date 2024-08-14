@@ -17,7 +17,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def create
     binding.pry
-    # if user_params[:role] == "owner"
+  
     @hospital = Hospital.new(hospital_params)
     
     respond_to do |format|

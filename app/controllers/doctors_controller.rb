@@ -9,7 +9,7 @@ class DoctorsController < ApplicationController
       
  
     else
-    @doctors=User.all.where(hospital_id:ActsAsTenant.current_tenant , role:"doctor")
+    @doctors=User.all.where(hospital_id:ActsAsTenant.current_tenant , role:"doctor").paginate(page: params[:page],per_page:2)
     end
   end
 

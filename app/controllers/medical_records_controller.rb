@@ -16,17 +16,17 @@ class MedicalRecordsController < ApplicationController
   end
 
   def new
-    @medical_record = @patient.medical_records.new
+    @medical_record = @user.medical_records.new
   end
 
   def create
   
-    @medical_record = @patient.medical_records.new(medical_record_params)
+    @medical_record = @user.medical_records.new(medical_record_params)
     @medical_record.doctor_id=current_user.id
   
     if @medical_record.save
      
-      redirect_to user_medical_records_path(@patient), notice: 'Medical record was successfully created.'
+      redirect_to user_medical_records_path(@user), notice: 'Medical record was successfully created.'
     else
       render :new, alert: @medical_record.errors.full_messages.to_sentence
     end
@@ -35,16 +35,6 @@ class MedicalRecordsController < ApplicationController
   def edit
   end
 
-  # def update
-  #   @medical_record = MedicalRecord.find(params[:id])
-    
-  #   if @medical_record.update(medical_record_params)
-  #     redirect_to user_medical_record_path(@medical_record.patient, @medical_record), notice: 'Medical record was successfully updated.'
-  #   else
-  #     render :edit
-  #   end
-  # end
-  # 
   def update
     @medical_record = MedicalRecord.find(params[:id])
     
@@ -54,9 +44,9 @@ class MedicalRecordsController < ApplicationController
     end
 
     if @medical_record.update(medical_record_params.except(:attachments))
-      redirect_to [@medical_record.patient, @medical_record], notice: 'Attachment added successfully'
+      redirect_to [@medical_record.user, @medical_record], notice: 'Attachment added successfully'
     else
-      redirect_to [@medical_record.patient, @medical_record], alert: 'Attachment not added'
+      redirect_to [@medical_record.user, @medical_record], alert: 'Attachment not added'
     end
   end
 
@@ -92,7 +82,7 @@ class MedicalRecordsController < ApplicationController
     @user = Patient.find(params[:user_id])
    end
   def set_medical_record
-    @medical_record = @patient.medical_records.find(params[:id])
+    @medical_record = @user.medical_records.find(params[:id])
   end
   def medical_record_params
     params.require(:medical_record).permit(:date, :details, :patient_id, :doctor_id, attachments: [])

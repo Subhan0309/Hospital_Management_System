@@ -38,16 +38,14 @@
         
         <%= f.fields_for :detail do |detail_form| %>
           <div class="form-group">
-            <%= detail_form.label :specialization %>
-            <%= detail_form.text_field :specialization, class: 'form-control' %>
+            <%= detail_form.label :specialization, class: "form-label" %>
+            <%= detail_form.text_field :specialization, class: 'form-control', required: true %>
           </div>
 
           <div class="form-group">
-            <%= detail_form.label :qualification %>
-            <%= detail_form.text_field :qualification, class: 'form-control' %>
+            <%= detail_form.label :qualification, class: "form-label" %>
+            <%= detail_form.text_field :qualification, class: 'form-control', required: true %>
           </div>
-
-          
         <% end %>
 
         <div class="form-group text-center">

@@ -7,7 +7,6 @@ class AppointmentsController < ApplicationController
 
   
   def index
-    
     if current_user.patient?
 
       if current_user.id == params[:user_id].to_i
@@ -16,17 +15,22 @@ class AppointmentsController < ApplicationController
      else
       @appointments = @specific_doctor.appointments.where(patient_id: current_user.id)
      end
-     elsif current_user.doctor?
-      if current_user.id == params[:user_id].to_i
-        @appointments = @user.appointments
-     
-     else
-      @appointments = @specific_patient.appointments.where(doctor_id: current_user.id)
-     end
+    elsif current_user.doctor?
+        if current_user.id == params[:user_id].to_i
+          @appointments = @user.appointments
+      
+      else
+        @appointments = @specific_patient.appointments.where(doctor_id: current_user.id)
+      end
+    else
+    
+     @appointments=@user.appointments
+
     end
-
-
   end
+
+
+ 
 
   def show
      @appointment 
@@ -65,12 +69,24 @@ class AppointmentsController < ApplicationController
     redirect_to user_appointments_path(@user), notice: 'Appointment was successfully destroyed.'
   end
 
+  def available_doctors
+    start_time = params[:start_time]
+    end_time = params[:end_time]
+    available_doctors = Doctor.where(role: 'doctor').select do |doctor|
+      !doctor.appointments.where("startTime < ? AND endTime > ?", end_time, start_time).exists?
+    end
+    render json: available_doctors.map { |doctor| { id: doctor.id, name: doctor.name } }
+  end
   private
 
   def set_user
-   @user = current_user.role == 'doctor' ? Doctor.find(params[:user_id]) : Patient.find(params[:user_id])
+   @user = User.find(params[:user_id])
+   if @user.role == "doctor"
+    @user=Doctor.find(params[:user_id])
+   else
+    @user=Patient.find(params[:user_id])
   end
-
+end
   def set_doctors
     @doctors = User.where(hospital_id: current_user.hospital_id, role:"doctor")
   end

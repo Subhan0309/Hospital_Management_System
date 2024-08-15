@@ -28,9 +28,9 @@ class CommentsController < ApplicationController
         if current_user.role == 'patient'
           format.html { redirect_to user_medical_records_path(current_user), notice: 'Comment was successfully created.' }
         elsif current_user.role == 'doctor'
-          format.html { redirect_to patients_path, notice: 'Comment was successfully created.' }
+          format.html { redirect_to user_medical_records_path(current_user), notice: 'Comment was successfully created.' }
         else
-          format.html { redirect_to root_path, notice: 'Comment was successfully created.' }
+          format.html { redirect_to user_medical_records_path(current_user), notice: 'Comment was successfully created.' }
         end
         format.js   # Handles JS requests
       else

@@ -31,6 +31,7 @@ class PatientsController < ApplicationController
     @patient = Patient.new(patient_params)
     @patient.role= 'patient'
     if @patient.save
+      UserMailer.welcome_email(@patient).deliver_now 
       redirect_to patients_path, notice: 'Patient was successfully created.'
     else
       render :new

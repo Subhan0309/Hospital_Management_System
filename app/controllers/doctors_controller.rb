@@ -6,7 +6,6 @@ class DoctorsController < ApplicationController
     if current_user.role == 'patient'
       @patient=Patient.find(current_user.id)
       @doctors= @patient.doctors.paginate(page: params[:page],per_page:2)
-      
  
     else
     @doctors=User.all.where(hospital_id:ActsAsTenant.current_tenant , role:"doctor").paginate(page: params[:page],per_page:2)
@@ -29,6 +28,7 @@ class DoctorsController < ApplicationController
     
     @doctor.role = 'doctor' 
     if @doctor.save
+      UserMailer.welcome_email(@doctor).deliver_now 
       redirect_to doctors_path, notice: 'Doctor was successfully created.'
     else
       render :new

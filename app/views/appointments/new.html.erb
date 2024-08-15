@@ -23,14 +23,14 @@
     </div>
     <div class="form-row">
       <div class="form-group col-md-4">
-        <%= form.datetime_local_field :start_time, class: "form-control", placeholder: "Start Time" %>
+        <%= form.datetime_local_field :start_time, class: "form-control", placeholder: "Start Time", id: "start_time" %>
       </div>
       <div class="form-group col-md-4">
-        <%= form.datetime_local_field :end_time, class: "form-control", placeholder: "End Time" %>
+        <%= form.datetime_local_field :end_time, class: "form-control", placeholder: "End Time", id: "end_time" %>
       </div>
       <div class="form-group col-md-4">
         <%= form.label :doctor_id, class: "form-label" %>
-        <%= form.select :doctor_id, options_from_collection_for_select(@doctors, 'id', 'name'), { prompt: "Select Doctor" }, class: "form-control" %>
+        <%= form.select :doctor_id, options_from_collection_for_select(@doctors, 'id', 'name'), { prompt: "Select Doctor" }, class: "form-control", id: "doctor_select" %>
       </div>
     </div>
     <div class="form-group">
@@ -43,3 +43,38 @@
     <%= form.submit 'Create Appointment', class: "btn btn-primary" %>
   <% end %>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    var startTimeField = document.getElementById('start_time');
+    var endTimeField = document.getElementById('end_time');
+    var doctorSelect = document.getElementById('doctor_select');
+
+    function fetchAvailableDoctors() {
+      var startTime = startTimeField.value;
+      var endTime = endTimeField.value;
+
+      if (startTime && endTime) {
+        var userId = <%= current_user.id %> // Ensure this Ruby code outputs the current user's ID
+        fetch(`/users/${userId}/appointments/available_doctors?start_time=${encodeURIComponent(startTime)}&end_time=${encodeURIComponent(endTime)}`)
+          .then(response => response.json())
+          .then(data => {
+            doctorSelect.innerHTML = '<option>Select Doctor</option>';
+            data.forEach(function(doctor) {
+              var option = document.createElement('option');
+              option.value = doctor.id;
+              option.text = doctor.name;
+              doctorSelect.appendChild(option);
+            });
+          })
+          .catch(error => {
+            console.error('Error fetching available doctors:', error);
+            alert('Failed to fetch available doctors');
+          });
+      }
+    }
+
+    startTimeField.addEventListener('change', fetchAvailableDoctors);
+    endTimeField.addEventListener('change', fetchAvailableDoctors);
+  });
+</script>

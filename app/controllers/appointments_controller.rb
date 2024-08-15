@@ -8,29 +8,21 @@ class AppointmentsController < ApplicationController
   
   def index
     if current_user.patient?
-
-      if current_user.id == params[:user_id].to_i
-        @appointments = @user.appointments
-     
-     else
-      @appointments = @specific_doctor.appointments.where(patient_id: current_user.id)
-     end
+      @appointments = if current_user.id == params[:user_id].to_i
+                        @user.appointments
+                      else
+                        @specific_doctor.appointments.where(patient_id: current_user.id)
+                      end
     elsif current_user.doctor?
-        if current_user.id == params[:user_id].to_i
-          @appointments = @user.appointments
-      
-      else
-        @appointments = @specific_patient.appointments.where(doctor_id: current_user.id)
-      end
+      @appointments = if current_user.id == params[:user_id].to_i
+                        @user.appointments
+                      else
+                        @specific_patient.appointments.where(doctor_id: current_user.id)
+                      end
     else
-    
-     @appointments=@user.appointments
-
+      @appointments = @user.appointments
     end
   end
-
-
- 
 
   def show
      @appointment 
@@ -69,14 +61,29 @@ class AppointmentsController < ApplicationController
     redirect_to user_appointments_path(@user), notice: 'Appointment was successfully destroyed.'
   end
 
+  def delete_all
+
+    Appointment.where(doctor_id: current_user.id).destroy_all
+    
+    redirect_to user_appointments_path(@user), notice: 'All appointments were successfully deleted.'
+  end
+
   def available_doctors
     start_time = params[:start_time]
     end_time = params[:end_time]
-    available_doctors = Doctor.where(role: 'doctor').select do |doctor|
-      !doctor.appointments.where("startTime < ? AND endTime > ?", end_time, start_time).exists?
+  
+    doctors = Doctor.where(availability_status: 'available',role: 'doctor').map do |doctor|
+      appointments_conflict = doctor.appointments.where("startTime < ? AND endTime > ?", end_time, start_time).exists?
+      {
+        id: doctor.id,
+        name: doctor.name,
+        availability: appointments_conflict ? 'Not Available' : 'Available'
+      }
     end
-    render json: available_doctors.map { |doctor| { id: doctor.id, name: doctor.name } }
+
+    render json: doctors
   end
+  
   private
 
   def set_user

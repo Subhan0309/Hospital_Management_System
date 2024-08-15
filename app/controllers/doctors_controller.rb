@@ -1,5 +1,5 @@
 class DoctorsController < ApplicationController
-  before_action :set_doctor, only: [:show, :edit, :update, :destroy]
+  before_action :set_doctor, only: [:show, :edit, :update, :destroy, :update_availability_status]
 
   # GET /doctors
   def index
@@ -56,7 +56,15 @@ class DoctorsController < ApplicationController
       redirect_to doctors_path, notice: 'Doctor was successfully deleted.' 
       end
   end
-
+  
+  def update_availability_status
+     Rails.logger.debug "Incoming parameters: #{params.inspect}"
+    if @doctor.update(availability_status_params)
+      redirect_to user_appointments_path(@doctor), notice: 'Availability status was successfully updated.'
+    else
+      render :edit
+    end
+  end
   private
 
   # Use callbacks to share common setup or constraints between actions.
@@ -64,7 +72,10 @@ class DoctorsController < ApplicationController
     @doctor = Doctor.find(params[:id])
   end
 
-  # Only allow a list of trusted parameters through.
+  def availability_status_params
+    params.require(:user).permit(:availability_status)
+  end
+
   def doctor_params
  
     params.require(:doctor).permit(:name, :email, :gender,:password, :password_confirmation, :hospital_id,  detail_attributes: [:id, :specialization, :qualification, :disease, :status, :_destroy])

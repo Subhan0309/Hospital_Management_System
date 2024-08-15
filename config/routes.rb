@@ -9,12 +9,18 @@ Rails.application.routes.draw do
     resources :hospitals
   end
   constraints subdomain: /.*/ do
-    resources :doctors, only: [:index, :show, :edit, :update, :destroy ,:new , :create ]
+    resources :doctors, only: [:index, :show, :edit, :update, :destroy ,:new , :create ] do
+      member do
+        patch :update_availability_status
+      end
+    end
     resources :patients, only: [:index, :show, :edit, :update, :destroy ,:new , :create ]
     resources :users, only: [:index, :show, :edit, :update, :destroy ,:new , :create ] do
+    
       resources :appointments, only: [:index, :show,:new, :create, :edit, :update, :destroy] do
         collection do
           get :available_doctors
+          delete :delete_all
         end
       end
       resources :medical_records, only: [:index, :show, :new, :create,:edit, :update, :destroy] do

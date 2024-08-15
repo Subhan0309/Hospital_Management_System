@@ -58,6 +58,13 @@ class UsersController < ApplicationController
       redirect_to users_path,notice: 'There is an error in deleting a user'
     end
   end
+  def update_availability_status
+    if @user.update(user_params)
+      redirect_to user_appointments_path(@user), notice: 'Availability status was successfully updated.'
+    else
+      render :edit
+    end
+  end
   # def destroy
   #   # binding.pry
   #   @user = User.find(params[:id])
@@ -73,7 +80,7 @@ class UsersController < ApplicationController
 
 
   def user_params
-    params.require(:user).permit(:name, :email, :gender,:role,:password,:password_confirmation,:profile_picture)
+    params.require(:user).permit(:availability_status,:name, :email, :gender,:role,:password,:password_confirmation,:profile_picture)
   end
   def find_user
     @user = User.find(params[:id])

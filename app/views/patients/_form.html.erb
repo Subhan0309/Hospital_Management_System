@@ -41,6 +41,10 @@
             <%= detail_form.label :disease %>
             <%= detail_form.text_field :disease, class: 'form-control' %>
           </div>
+         <div class="form-group">
+          <%= detail_form.label :status %>
+          <%= detail_form.select :status, options_for_select([['Alive', 'alive'], ['Disease', 'disease'], ['Dead', 'dead']]), {}, class: 'form-control' %>
+        </div>
 
           
         <% end %>

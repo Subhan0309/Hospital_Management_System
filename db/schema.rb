@@ -3,14 +3,14 @@
 # incrementally modify your database, and then regenerate this schema definition.
 #
 # This file is the source Rails uses to define your schema when running `bin/rails
-# db:schema:load`. When creating a new database, bin/rails db:schema:load tends to
+# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
 # be faster and is potentially less error prone than running all of your
 # migrations from scratch. Old migrations may fail to apply correctly if those
 # migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_08_13_055104) do
+ActiveRecord::Schema.define(version: 2024_08_15_112038) do
 
   create_table "Hospitals", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
@@ -23,6 +23,7 @@ ActiveRecord::Schema.define(version: 2024_08_13_055104) do
     t.string "subdomain"
     t.index ["user_id"], name: "index_hospitals_on_user_id"
   end
+
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -32,6 +33,7 @@ ActiveRecord::Schema.define(version: 2024_08_13_055104) do
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
+
   create_table "active_storage_blobs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "key", null: false
     t.string "filename", null: false
@@ -43,6 +45,7 @@ ActiveRecord::Schema.define(version: 2024_08_13_055104) do
     t.datetime "created_at", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
+
   create_table "active_storage_variant_records", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
@@ -60,6 +63,7 @@ ActiveRecord::Schema.define(version: 2024_08_13_055104) do
     t.index ["doctor_id"], name: "index_appointments_on_doctor_id"
     t.index ["patient_id"], name: "index_appointments_on_patient_id"
   end
+
   create_table "comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.text "description"
     t.bigint "created_by_id", null: false
@@ -70,6 +74,7 @@ ActiveRecord::Schema.define(version: 2024_08_13_055104) do
     t.index ["associated_with_type", "associated_with_id"], name: "index_comments_on_associated_with"
     t.index ["created_by_id"], name: "index_comments_on_created_by_id"
   end
+
   create_table "details", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "associated_with_type", null: false
     t.bigint "associated_with_id", null: false
@@ -81,6 +86,7 @@ ActiveRecord::Schema.define(version: 2024_08_13_055104) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["associated_with_type", "associated_with_id"], name: "index_details_on_associated_with"
   end
+
   create_table "medical_records", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.datetime "date", null: false
     t.bigint "patient_id", null: false
@@ -91,6 +97,7 @@ ActiveRecord::Schema.define(version: 2024_08_13_055104) do
     t.index ["doctor_id"], name: "index_medical_records_on_doctor_id"
     t.index ["patient_id"], name: "index_medical_records_on_patient_id"
   end
+
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -103,9 +110,11 @@ ActiveRecord::Schema.define(version: 2024_08_13_055104) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "hospital_id", null: false
+    t.string "availability_status", default: "Available"
     t.index ["hospital_id"], name: "index_users_on_hospital_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
+
   add_foreign_key "Hospitals", "users"
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
@@ -114,5 +123,4 @@ ActiveRecord::Schema.define(version: 2024_08_13_055104) do
   add_foreign_key "comments", "users", column: "created_by_id"
   add_foreign_key "medical_records", "users", column: "doctor_id"
   add_foreign_key "medical_records", "users", column: "patient_id"
-  add_foreign_key "users", "hospitals"
 end

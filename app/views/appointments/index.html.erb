@@ -1,10 +1,26 @@
 <div class="container mt-5 text-center">
   <h1>Appointments Calendar</h1>
-  <% if current_user.role == 'patient' %>
-    <div class="mb-3">
-      <%= link_to 'New Appointment', new_user_appointment_path(@user), class: 'btn btn-primary' %>
-    </div>
-  <% end %>
+
+  <div class="row justify-content-center">
+    <% if current_user.role == 'patient' %>
+      <div class="col-md-6 mb-3">
+        <%= link_to 'New Appointment', new_user_appointment_path(@user), class: 'btn btn-primary' %>
+      </div>
+    <% elsif current_user.role == 'doctor' %>
+      <div class="col-md-6 mb-3 d-flex justify-content-between">
+        <%= button_to 'Delete All Appointments', delete_all_user_appointments_path, method: :delete, class: 'btn btn-danger', data: { confirm: 'Are you sure you want to delete all appointments?' } %>
+        
+        <!-- Form to update availability status -->
+        <%= form_with(model: current_user, url: update_availability_status_doctor_path(current_user), method: :patch, local: true, class: 'd-flex align-items-center') do |form| %>
+          <div class="form-group mb-0 mr-2">
+            <%= form.select :availability_status, [['Available', 'available'], ['Not Available', 'not_available']], {}, class: 'form-control' %>
+          </div>
+          <%= form.submit 'Update Status', class: 'btn btn-primary' %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+  
   <%= month_calendar(events: @appointments) do |date, appointments| %>
     <div class="day">
       <%= date.day %>

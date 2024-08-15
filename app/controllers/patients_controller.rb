@@ -1,6 +1,6 @@
 class PatientsController < ApplicationController
   before_action :set_patient, only: [:show, :edit, :update, :destroy]
-
+  before_action :set_details, only: [:edit, :update, :show]
   # GET /patients
   def index
     
@@ -32,7 +32,12 @@ class PatientsController < ApplicationController
     @patient.role= 'patient'
     if @patient.save
       UserMailer.welcome_email(@patient).deliver_now 
-      redirect_to patients_path, notice: 'Patient was successfully created.'
+      
+      if current_user.nil?
+        redirect_to new_user_session_path, notice: 'Please log in to continue.'
+      else
+        redirect_to patients_path, notice: 'Patient was successfully created.'
+      end
     else
       render :new
     end
@@ -66,6 +71,10 @@ class PatientsController < ApplicationController
     @patient = Patient.find(params[:id])
   end
 
+  def set_details
+    @details = Detail.where(associated_with_id: @patient.id)
+ 
+  end
   # Only allow a list of trusted parameters through.
   def patient_params
     params.require(:patient).permit(:name, :email,:password, :password_confirmation, :gender, :hospital_id,detail_attributes: [:id, :specialization, :qualification, :disease, :status, :_destroy]) # Add other permitted attributes here

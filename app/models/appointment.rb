@@ -6,6 +6,7 @@ class Appointment < ApplicationRecord
   validates :startTime, :endTime, :doctor_id, :patient_id, presence: true
   validate :no_conflicting_appointments
 
+  
   def no_conflicting_appointments
      conflicts = Appointment.where(doctor_id: doctor_id).where.not(id: id)
                             .where("startTime < ? AND endTime > ?", endTime, startTime)

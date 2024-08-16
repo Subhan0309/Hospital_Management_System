@@ -26,7 +26,8 @@ gem 'will_paginate-bootstrap'
 gem 'elasticsearch-model'
 gem 'elasticsearch-rails'
 gem 'searchkick'
-
+gem 'chartkick'
+gem 'groupdate'
 gem "simple_calendar", "~> 3.0"
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'

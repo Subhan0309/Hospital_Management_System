@@ -1,64 +1,58 @@
 <div class="container d-flex justify-content-center mt-5 mb-5">
   <div class="col-md-8 col-lg-6">
     <div class="bg-white p-4 rounded shadow-sm">
-     <h1 class="text-center mb-4 text-primary">
-          <%= @user.new_record? ? 'Create New User' : 'Edit User' %>
-        </h1>
+      <h1 class="text-center mb-4 text-primary">
+        <%= @user.new_record? ? 'Create New User' : 'Edit User' %>
+      </h1>
 
-     <%= form_with(model: @user, local: true) do |f| %>
+      <%= form_with(model: @user, local: true) do |f| %>
         <%= render "devise/shared/error_messages", resource: @user %>
 
         <div class="form-group">
           <%= f.label :name, class: "form-label" %>
-          <%= f.text_field :name, class: "form-control", autofocus: true,required: true %>
+          <%= f.text_field :name, class: "form-control", autofocus: true, required: true, minlength: 3, maxlength: 10 %>
         </div>
 
         <div class="form-group">
           <%= f.label :email, class: "form-label" %>
-          <%= f.email_field :email, class: "form-control", autocomplete: "email" ,required: true%>
+          <%= f.email_field :email, class: "form-control", autocomplete: "email", required: true %>
         </div>
 
-        <div class="form-group">
-          <%= f.label :password, class: "form-label" %>
-          <%= f.password_field :password, class: "form-control", autocomplete: "new-password" ,required: true%>
-          <% if @minimum_password_length %>
-            <br />
-            <em><%= @minimum_password_length %> characters minimum</em>
-          <% end %>
-        </div>
+        <% if @user.new_record? %>
+          <div class="form-group">
+            <%= f.label :password, class: "form-label" %>
+            <%= f.password_field :password, class: "form-control", autocomplete: "new-password", required: true, minlength: 6 %>
+            <% if @minimum_password_length %>
+              <br />
+              <em><%= @minimum_password_length %> characters minimum</em>
+            <% end %>
+          </div>
 
-        <div class="form-group">
-          <%= f.label :password_confirmation, class: "form-label" %><br />
-          <%= f.password_field :password_confirmation, class: "form-control", autocomplete: "new-password",required: true %>
-        </div>
+          <div class="form-group">
+            <%= f.label :password_confirmation, class: "form-label" %><br />
+            <%= f.password_field :password_confirmation, class: "form-control", autocomplete: "new-password", required: true %>
+          </div>
+        <% end %>
 
         <div class="form-group">
           <%= f.label :gender, class: "form-label" %>
-          <%= f.select :gender, options_for_select([['Male', 'male'], ['Female', 'female'], ['Other', 'other']]), {}, class: "form-control ",required: true%>
+          <%= f.select :gender, options_for_select([['Male', 'male'], ['Female', 'female'], ['Other', 'other']]), {}, class: "form-control", required: true %>
         </div>
 
-        <!-- Role selection for admin and staff -->
-      <div class="form-group">
-        <%= f.label :role, class: "form-label" %>
-        
-       
-        
-        <% if can?(:create,User.new(role:'admin')) %>
-            <% role_options = [['Admin', 'admin'],['Staff', 'staff']] %>
-          <%else%>
+        <div class="form-group">
+          <%= f.label :role, class: "form-label" %>
+          <% if can?(:create, User.new(role: 'admin')) %>
+            <% role_options = [['Admin', 'admin'], ['Staff', 'staff']] %>
+          <% else %>
             <% role_options = [['Staff', 'staff']] %>
-          <%end%>
-
-        <%= f.select :role, options_for_select(role_options, f.object.role), { prompt: 'Select a role' }, class: "form-control",required: true %>
-      </div>
-
+          <% end %>
+          <%= f.select :role, options_for_select(role_options, f.object.role), { prompt: 'Select a role' }, class: "form-control", required: true %>
+        </div>
 
         <div class="form-group text-center mt-4">
-         <%= f.submit @user.new_record? ? 'Create User' : 'Update User', class: 'btn btn-primary btn-block' %>
+          <%= f.submit @user.new_record? ? 'Create User' : 'Update User', class: 'btn btn-primary btn-block' %>
         </div>
       <% end %>
-
-     
     </div>
   </div>
 </div>

@@ -1,4 +1,5 @@
 class PatientsController < ApplicationController
+  
   before_action :set_patient, only: [:show, :edit, :update, :destroy]
   before_action :set_details, only: [:edit, :update, :show]
   # GET /patients
@@ -6,7 +7,7 @@ class PatientsController < ApplicationController
     
     if current_user.role == 'doctor'
       @doctor=Doctor.find(current_user.id)
-      @patients= @doctor.patients.paginate(page: params[:page],per_page:2)
+      @patients= @doctor.patients.paginate(page: params[:page],per_page:2).distinct
       
  
     else

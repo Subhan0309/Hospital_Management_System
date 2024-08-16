@@ -123,4 +123,5 @@ ActiveRecord::Schema.define(version: 2024_08_15_112038) do
   add_foreign_key "comments", "users", column: "created_by_id"
   add_foreign_key "medical_records", "users", column: "doctor_id"
   add_foreign_key "medical_records", "users", column: "patient_id"
+  add_foreign_key "users", "hospitals"
 end

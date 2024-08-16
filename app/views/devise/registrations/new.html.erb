@@ -5,9 +5,14 @@
   <div class="col-md-8 col-lg-6">
     <div class="bg-white p-4 rounded shadow-sm">
       <h2 class="text-center mb-4 text-success display-4">Sign up</h2>
+       
+       
 
       <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "form-horizontal" }) do |f| %>
         <%= render "devise/shared/error_messages", resource: resource %>
+
+
+       
 
         <div class="form-group">
           <%= f.label :name, class: "form-label" %>

@@ -65,30 +65,6 @@ class Ability
     end
 
 
-    # if user.doctor?
-    #    puts "Hi i am a doctor"
-    #   cannot :manage, User, role: 'owner'
-    #   cannot [:create,:delete,:update] , User , role: 'admin'
-    #   cannot [:create,:delete,:update] , User , role: 'staff'
-    #   cannot [:create,:delete,:update] , User ,role: 'patient'
-    #   cannot [:create,:delete,:update] , Users ,role: 'doctor'
-
-
-    #   can :read , User, role: 'admin'
-    #   can :read , User, role: 'staff'
-    #   can :read,  User, role: 'patient'
-    #   can :read, User, role: 'doctor'
-    #  can :update,User,role:'doctor'
-      
-     
-      
-
-    #   can :manage, Appointment
-    #   can :manage , Comment
-    #   # can :manage, Attachment
-    #   can :manage, MedicalRecord
-    # end
-
     if user.doctor?
       puts "Hi I am a doctor"
       
@@ -104,10 +80,10 @@ class Ability
       can :read, User, role: 'staff'
       can :read, User, role: 'patient'
       can :read, User, role: 'doctor'
-    
-      # Can update only their own profile
-      can :update, User, id: user.id
       
+      # Can update only their own profile
+      can [:update,:read], User, id: user.id
+     
       # Can manage appointments, comments, and medical records
       can :manage, Appointment
       can :manage, Comment

@@ -1,11 +1,12 @@
 class User < ApplicationRecord
+  
   attr_accessor :hospital_name, :hospital_location, :hospital_email, :license_no
   acts_as_tenant :hospital
   scope :patients, -> { where(role: 'patient') }
   scope :doctors, -> { where(role: 'doctor') }
   devise :database_authenticatable, :registerable,
   :recoverable, :rememberable , :validatable
-  # searchkick word_middle: [:name, :email, :role], highlight: [:name, :email, :role]
+  searchkick word_middle: [:name, :email, :role], highlight: [:name, :email, :role]
   has_many :hospitals, dependent: :destroy
   has_one_attached :profile_picture
   enum role:
@@ -25,7 +26,10 @@ class User < ApplicationRecord
     }
   end
     # Validations
-    validates :name, presence: { message: "Name can't be blank" }
+    validates :name, presence: { message: "Name can't be blank" }, length: { 
+      minimum: 3, too_short: "must have at least %{count} characters",
+      maximum: 10, too_long: "must have at most %{count} characters"
+    }
     validates :email, presence: { message: "Email can't be blank" },
                       format: { with: URI::MailTo::EMAIL_REGEXP, message: "Email is not a valid format" },
                       uniqueness: { scope: :hospital_id, message: "should be unique within the same hospital" }

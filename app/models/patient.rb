@@ -7,8 +7,8 @@ class Patient < User
   accepts_nested_attributes_for :detail
   
 
- def self.default_scope
-  where(role: "patient")
-end
+    def self.default_scope
+      where(role: "patient")
+    end
 
 end

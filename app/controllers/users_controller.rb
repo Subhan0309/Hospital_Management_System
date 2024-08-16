@@ -1,18 +1,10 @@
 class UsersController < ApplicationController
-  load_and_authorize_resource
+  load_and_authorize_resource except: :profile
+
   before_action :authenticate_user!
   before_action :find_user, only: [:update, :edit, :show, :destroy]
   
   def index
-        # Fetch users with roles 'admin' and 'staff' belonging to the current tenant
-      # if current_user.role == 'owner'
-      #    @users = User.all.where(role: ['admin', 'staff'])
-      # elsif current_user.role == 'admin'
-      #     @users = User.all.where(role:'staff')
-      # elsif current_user.role == 'staff'
-      #     @users = User.all.where(role: ['admin', 'staff'])
-      # end
-
       @users = User.where(role: ['admin', 'staff']).paginate(page: params[:page],per_page:2)
    
   end
@@ -43,6 +35,14 @@ class UsersController < ApplicationController
 
 
   def update
+    if current_user.doctor?
+      # Redirect to the doctor's profile action in the DoctorsController
+      redirect_to edit_doctor_path(current_user.id) and return
+    elsif current_user.patient?
+      # Redirect to the patient's profile action in the PatientsController
+      redirect_to edit_patient_path(current_user.id) and return
+    end
+
     if @user.update(user_params)
       redirect_to users_path,notice: "User (#{user_params[:role]}) was Successfully Updated "
     else
@@ -58,6 +58,19 @@ class UsersController < ApplicationController
       redirect_to users_path,notice: 'There is an error in deleting a user'
     end
   end
+
+  def profile
+    if current_user.doctor? || current_user.patient? 
+      
+      @user=current_user
+      @details=Detail.where(associated_with_id: current_user.id)
+    else
+      @user = current_user      
+    end
+
+  end
+  
+ 
   def update_availability_status
     if @user.update(user_params)
       redirect_to user_appointments_path(@user), notice: 'Availability status was successfully updated.'
@@ -84,7 +97,6 @@ class UsersController < ApplicationController
   end
   def find_user
     @user = User.find(params[:id])
-    
   end
 
 end

@@ -2,7 +2,8 @@
   <h1 class="text-center mb-4 text-primary">
     Create New Medical Record
   </h1>
-  <%= form_with(model: [@user, @medical_record], url: user_medical_records_path(@user), local: true) do |form| %>
+  <%binding.pry%>
+  <%= form_with(model: [@patient, @medical_record], url: user_medical_records_path(@patient), local: true) do |form| %>
    <% if @medical_record.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@medical_record.errors.count, "error") %> prohibited this medical record from being saved:</h2>

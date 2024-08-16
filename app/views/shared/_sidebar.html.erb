@@ -14,86 +14,113 @@
                     </span>
                 </h3>
             </a>
-            <ul class="nav nav-pills flex-column mb-md-auto mb-0 align-items-center align-items-md-start" id="menu">
-                <li class="nav-item">
-                    <%= link_to user_path(current_user), class: 'nav-link px-0 align-middle text-white' do %>
+         <ul class="nav nav-pills flex-column mb-md-auto mb-0 align-items-center align-items-md-start" id="menu">
+            <li class="nav-item">
+                <%= link_to profile_path, class: 'nav-link px-0 align-middle text-white' do %>
                 <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-md-inline">Profile</span>
+                <% end %>
+            </li>
+            <li class="nav-item">
+                <%= link_to hospital_dashboard_path, class: 'nav-link px-0 align-middle text-white' do %>
+                <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-md-inline">Dashboard</span>
+                <% end %>
+            </li>
+           
+             <% if current_user.owner?  %>
+                <li class="nav-item">
+                    <%= link_to edit_hospital_path(ActsAsTenant.current_tenant.id), class: 'nav-link px-0 align-middle text-white' do %>
+                    <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-md-inline">Update Hospital Profile</span>
                     <% end %>
                 </li>
-                <li>
-                    <%= link_to hospital_dashboard_path, class: 'nav-link px-0 align-middle text-white' do %>
-                    <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-md-inline">Dashboard</span>
-                    <% end %>
-                </li>
-                <li>
-                   
+             <% end %>
+
+
+            <% if current_user.doctor? || current_user.patient?  %>
+                <li class="nav-item">
                     <%= link_to user_appointments_path(current_user), class: 'nav-link px-0 align-middle text-white' do %>
-                        <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-md-inline">Appointments</span>
+                    <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-md-inline">Appointments</span>
                     <% end %>
                 </li>
-                <% if current_user.patient?%>
-                 <li>
-                    <%= link_to user_medical_records_path(current_user), class: 'nav-link px-0 align-middle text-white' do %>
-                        <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-md-inline">Medical Record</span>
-                    <% end %>
+             <% end %>
+            
+            <% if current_user.patient? %>
+                <li class="nav-item">
+                <%= link_to user_medical_records_path(current_user), class: 'nav-link px-0 align-middle text-white' do %>
+                    <i class="fs-4 bi-file-medical"></i> <span class="ms-1 d-none d-md-inline">Medical Record</span>
+                <% end %>
                 </li>
-                <%end%>
-                <li class="d-none d-md-block">
-                    <a href="#submenu3" data-bs-toggle="collapse" class="nav-link px-0 align-middle text-white">
-                        <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-md-inline">People</span>
-                    </a>
-                    <ul class="collapse nav flex-column" id="submenu3" data-bs-parent="#menu">
-                        <% if can?(:read, User.new(role: 'admin')) || can?(:read, User.new(role: 'staff')) %>
-                            <li class="w-100">
-                                <%= link_to users_path, class: "nav-link px-2 text-white" do %>
-                                <span class="d-none d-md-inline">Staff</span>
-                                <% end %>
-                            </li>
+            <% end %>
+            
+
+            <li class="d-none d-md-block mt-2">
+  <a href="#submenu3" data-bs-toggle="collapse" class="nav-link px-0 align-middle text-white">
+    <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-md-inline">People</span>
+  </a>
+  <div class="collapse" id="submenu3" data-bs-parent="#menu">
+    <ul class="nav flex-column">
+      <% if can?(:read, User.new(role: 'admin')) || can?(:read, User.new(role: 'staff')) %>
+        <li class="nav-item">
+          <%= link_to users_path, class: "nav-link text-white" do %>
+            Staff
+          <% end %>
+        </li>
+      <% end %>
+
+      <% unless current_user.doctor? %>
+        <li class="nav-item">
+          <%= link_to doctors_path, class: "nav-link text-white" do %>
+            Doctors
+          <% end %>
+        </li>
+      <% end %>
+
+      <% unless current_user.patient? %>
+        <li class="nav-item">
+          <%= link_to patients_path, class: "nav-link text-white" do %>
+            Patients
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</li>
+
+            
+            
+            <!-- Dropdown for mobile view -->
+            <li class="d-block d-md-none mt-2">
+                <div class="dropdown pb-4">
+                <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-md-block">People</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+                    <% if can?(:read, User.new(role: 'admin')) || can?(:read, User.new(role: 'staff')) %>
+                    <li>
+                        <%= link_to users_path, class: "dropdown-item text-white" do %>
+                        Staff
                         <% end %>
-                        <% if can?(:read, User.new(role: 'doctor')) %>
-                            <!-- Show only Patients link for Doctors -->
-                            <li>
-                                <%= link_to doctors_path, class: "nav-link px-2 text-white" do %>
-                                <span class="d-none d-sm-inline">Doctors</span>
-                                <% end %>
-                            </li>
-                            <%end%>
-                       <% if can?(:read, User.new(role: 'patient')) %>
-                            <!-- Show only Doctors link for Patients -->
-                            <li>
-                                <%= link_to patients_path, class: "nav-link px-2 text-white" do %>
-                                <span class="d-none d-sm-inline">Patient</span>
-                                <% end %>
-                            </li>
-                         <% end %>
-                        <li class="d-block d-md-none">
-                            <div class="dropdown pb-4">
-                                <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fs-4 bi-people"></i>
-                                    <span class="d-none d-md-inline mx-1">People</span>
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-                                        <% if can?(:read, User.new(role: 'admin')) || can?(:read, User.new(role: 'staff')) %>
-                                            <li class="w-100">
-                                                <%= link_to users_path, class: "nav-link px-4 text-white" do %>
-                                                <span class="d-none d-sm-inline">Staff</span>
-                                                <% end %>
-                                            </li>
-                                        <% end %>
-                                        <li>
-                                            <%= link_to doctors_path, class: "nav-link dropdown-item  text-white" do %>
-                                            <span class="d-none d-sm-inline">Doctors</span>
-                                            <% end %>
-                                        </li>
-                                        <li>
-                                            <%= link_to patients_path, class: "nav-link dropdown-item  text-white" do %>
-                                            <span class="d-none d-sm-inline">Patient</span>
-                                            <% end %>
-                                        </li>
-                                </ul>
-                            </div>
-                        </li>
-            </ul>
+                    </li>
+                    <% end %>
+                    <% unless current_user.doctor? %>
+                    <li>
+                        <%= link_to doctors_path, class: "dropdown-item text-white" do %>
+                        Doctors
+                        <% end %>
+                    </li>
+                    <% end %>
+                    <% unless current_user.patient? %>
+                    <li>
+                        <%= link_to patients_path, class: "dropdown-item text-white" do %>
+                        Patients
+                        <% end %>
+                    </li>
+                    <% end %>
+                </ul>
+                </div>
+            </li>
+        </ul>
+
+
         </div>
         <div class="position-absolute bottom-0">
             <hr class="text-white">

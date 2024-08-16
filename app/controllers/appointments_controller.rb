@@ -1,6 +1,6 @@
 class AppointmentsController < ApplicationController
   before_action :set_user
-  before_action :set_specific_doctor_appointment, :set_specific_patient_appointment, only: [:index]
+ before_action :set_specific_doctor_appointment, :set_specific_patient_appointment, only: [:index]
   before_action :set_doctors, only: [:new, :edit, :create, :update]
   before_action :set_appointment, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!
@@ -8,11 +8,14 @@ class AppointmentsController < ApplicationController
   
   def index
     if current_user.patient?
-      @appointments = if current_user.id == params[:user_id].to_i
-                        @user.appointments
-                      else
-                        @specific_doctor.appointments.where(patient_id: current_user.id)
-                      end
+      set_specific_doctor_appointment
+
+      if current_user.id == params[:user_id].to_i
+        @appointments = @user.appointments
+     
+     else
+      @appointments = @specific_doctor.appointments.where(patient_id: current_user.id)
+     end
     elsif current_user.doctor?
       @appointments = if current_user.id == params[:user_id].to_i
                         @user.appointments

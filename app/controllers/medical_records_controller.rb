@@ -5,10 +5,11 @@ class MedicalRecordsController < ApplicationController
   
   def index
     if current_user.doctor?
-       @medical_records = @user.medical_records.where(doctor_id: current_user.id)
+      @medical_records = @patient.medical_records.where(doctor_id: current_user.id)
     else
-      @medical_records = @user.medical_records
+      @medical_records = @patient.medical_records
     end
+   
   end
 
   def show
@@ -44,9 +45,9 @@ class MedicalRecordsController < ApplicationController
     end
 
     if @medical_record.update(medical_record_params.except(:attachments))
-      redirect_to [@medical_record.user, @medical_record], notice: 'Attachment added successfully'
+      redirect_to [@medical_record.patient, @medical_record], notice: 'Attachment added successfully'
     else
-      redirect_to [@medical_record.user, @medical_record], alert: 'Attachment not added'
+      redirect_to [@medical_record.patient, @medical_record], alert: 'Attachment not added'
     end
   end
 
@@ -79,10 +80,10 @@ class MedicalRecordsController < ApplicationController
 
   private
   def set_user
-    @user = Patient.find(params[:user_id])
+    @patient = Patient.find(params[:user_id])
    end
   def set_medical_record
-    @medical_record = @user.medical_records.find(params[:id])
+    @medical_record = @patient.medical_records.find(params[:id])
   end
   def medical_record_params
     params.require(:medical_record).permit(:date, :details, :patient_id, :doctor_id, attachments: [])

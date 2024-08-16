@@ -1,0 +1,104 @@
+<div class="container my-5">
+  <div class="card shadow-lg">
+    <div class="card-header bg-secondary d-flex justify-content-between align-items-center">
+      <h5 class="text-light">My Profile</h5>
+      <div>
+        <button id="edit-button" class="btn btn-outline-light">Update</button>
+      </div>
+    </div>
+    
+    <div class="card-body">
+      <%= form_for @user, url: user_path(@user), html: { method: :patch, id: 'profile-form' }, multipart: true do |f| %>
+
+        <!-- Profile Picture Upload and Preview -->
+        <div class="form-group mb-3 text-center">
+          <% if @user.profile_picture.attached? %>
+            <%= image_tag @user.profile_picture, id: 'profile-picture-preview', class: 'rounded-circle shadow', size: '150x150' %>
+          <% else %>
+            <%= image_tag 'default-profile.jpeg', id: 'profile-picture-preview', class: 'rounded-circle shadow', size: '150x150' %>
+          <% end %>
+          <br>
+          <%= f.file_field :profile_picture, accept: 'image/*', class: 'form-control mt-3', style: 'display: none;' %>
+        </div>
+
+        <div class="form-group mb-3">
+          <%= f.label :name, class: "form-label text-primary" %>
+          <%= f.text_field :name, class: 'form-control', readonly: true %>
+        </div>
+        
+        <div class="form-group mb-3">
+          <%= f.label :email, class: "form-label text-primary" %>
+          <%= f.email_field :email, class: 'form-control', readonly: true %>
+        </div>
+
+        <div class="form-group mb-3">
+          <%= f.label :role, class: "form-label text-primary" %>
+          <%= f.text_field :role, class: 'form-control', readonly: true %>
+        </div>
+
+        <div class="form-group mb-3">
+          <%= f.label :gender, class: "form-label text-primary" %>
+          <%= f.select :gender, [['Male', 'male'], ['Female', 'female']], { include_blank: 'Select Gender' }, class: 'form-control', readonly: true %>
+        </div>
+
+        <!-- Display additional details if present -->
+        <% if @details.present? %>
+          <% @details.each do |detail| %>
+            <div class="form-group mb-3">
+              <%= f.label :qualification, class: "form-label text-primary" %>
+              <%= f.text_field :qualification, value: detail.qualification, class: 'form-control', readonly: true %>
+            </div>
+
+            <div class="form-group mb-3">
+              <%= f.label :specialization, class: "form-label text-primary" %>
+              <%= f.text_field :specialization, value: detail.specialization, class: 'form-control', readonly: true %>
+            </div>
+
+            <div class="form-group mb-3">
+              <%= f.label :status, class: "form-label text-primary" %>
+              <%= f.text_field :status, value: detail.status, class: 'form-control', readonly: true %>
+            </div>
+          <% end %>
+        <% end %>
+
+        <div class="text-center">
+          <%= f.submit "Save", class: "btn btn-outline-success", id: "save-button", style: "display: none;" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const editButton = document.getElementById('edit-button');
+    const saveButton = document.getElementById('save-button');
+    const formFields = document.querySelectorAll('#profile-form input[readonly], #profile-form select[readonly]');
+    const profilePictureInput = document.querySelector('input[name="user[profile_picture]"]');
+    const profilePicturePreview = document.getElementById('profile-picture-preview');
+
+    editButton.addEventListener('click', function() {
+      formFields.forEach(field => {
+        if (field.name !== "user[email]" && field.name !== "user[role]") {
+          field.removeAttribute('readonly');
+        }
+      });
+
+      profilePictureInput.style.display = 'block';
+      saveButton.style.display = 'block';
+      editButton.style.display = 'none';
+    });
+
+    // Preview the uploaded profile picture
+    profilePictureInput.addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          profilePicturePreview.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  });
+</script>

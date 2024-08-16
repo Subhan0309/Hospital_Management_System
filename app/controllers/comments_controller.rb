@@ -1,4 +1,5 @@
 class CommentsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_user
   before_action :set_medical_record
   before_action :set_comment, only: [:show, :edit, :update, :destroy]
@@ -9,22 +10,23 @@ class CommentsController < ApplicationController
 
   end
 
-  # GET /medical_records/:medical_record_id/comments/:id
   def show
+
   end
 
-  # GET /medical_records/:medical_record_id/comments/new
+
   def new
     @comment = @medical_record.comments.build
   end
 
-  # POST /medical_records/:medical_record_id/comments
+
   def create
     @comment = @medical_record.comments.build(comment_params)
     @comment.created_by = current_user
   
     respond_to do |format|
       if @comment.save
+        CommentMailer.comment_notification(@medical_record, @comment).deliver_now
         if current_user.role == 'patient'
           format.html { redirect_to user_medical_records_path(current_user), notice: 'Comment was successfully created.' }
         elsif current_user.role == 'doctor'

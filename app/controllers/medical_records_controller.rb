@@ -1,7 +1,8 @@
 class MedicalRecordsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_user
   before_action :set_medical_record, only: [:show, :edit, :update, :destroy]
-  before_action :authenticate_user!
+  
   
   def index
     if current_user.doctor?

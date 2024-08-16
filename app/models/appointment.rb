@@ -4,15 +4,40 @@ class Appointment < ApplicationRecord
   belongs_to :patient, class_name: 'User', foreign_key: 'patient_id'
   belongs_to :doctor, class_name: 'User', foreign_key: 'doctor_id'
   validates :startTime, :endTime, :doctor_id, :patient_id, presence: true
-  validate :no_conflicting_appointments
+  validate :start_time_in_future
+  validate :end_time_after_start_time
 
+  enum status: { scheduled: 'scheduled', canceled: 'canceled', completed: 'completed' }
   
-  def no_conflicting_appointments
-     conflicts = Appointment.where(doctor_id: doctor_id).where.not(id: id)
-                            .where("startTime < ? AND endTime > ?", endTime, startTime)
-    if conflicts.exists?
-        errors.add(:base, 'Doctor is not available at this time')
-    end  
+  include AASM
+
+  aasm column: 'status' do
+    state :scheduled, initial: true
+    state :completed
+    state :canceled
+
+    event :complete do
+      transitions from: :scheduled, to: :completed
+    end
+
+    event :cancel do
+      transitions from: :scheduled, to: :canceled
+    end
+    event :reschedule do
+      transitions from: :canceled, to: :scheduled
+    end
+  end
+
+  def start_time_in_future
+    if startTime.present? && startTime < Date.today
+      errors.add(:startTime, "must be on or after today")
+    end
+  end
+
+  def end_time_after_start_time
+    if startTime.present? && endTime.present? && endTime <= startTime
+      errors.add(:endTime, "must be after the start time")
+    end
   end
 
   def self.send_daily_reminders
@@ -24,6 +49,6 @@ class Appointment < ApplicationRecord
     end
   end
 
-  enum status: { scheduled: 0, canceled: 1, completed: 2 }
+ 
 
 end

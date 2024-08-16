@@ -1,9 +1,10 @@
 class AppointmentsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_user
   before_action :set_specific_doctor_appointment, :set_specific_patient_appointment, only: [:index]
   before_action :set_doctors, only: [:new, :edit, :create, :update]
   before_action :set_appointment, only: [:show, :edit, :update, :destroy]
-  before_action :authenticate_user!
+
 
   
   def index
@@ -49,7 +50,19 @@ class AppointmentsController < ApplicationController
 
  
   def update
+    case params[:appointment][:status]
+    when 'completed'
+      @appointment.complete! 
+    when 'canceled'
+      @appointment.cancel! 
+    when 'scheduled'
+      @appointment.reschedule! if @appointment.may_reschedule?
+    
+    end
+
     if @appointment.update(appointment_params)
+   
+      
       redirect_to user_appointments_path(@user), notice: 'Appointment was successfully updated.'
     else
       render :edit

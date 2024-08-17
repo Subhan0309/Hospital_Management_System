@@ -1,7 +1,6 @@
 class UsersController < ApplicationController
-  load_and_authorize_resource except: :profile
-
   before_action :authenticate_user!
+  load_and_authorize_resource except: :profile
   before_action :find_user, only: [:update, :edit, :show, :destroy]
   
   def index
@@ -36,20 +35,37 @@ class UsersController < ApplicationController
 
   def update
     if current_user.doctor?
-      # Redirect to the doctor's profile action in the DoctorsController
-      redirect_to edit_doctor_path(current_user.id) and return
+      doctor = Doctor.find(current_user.id)
+      
+      if doctor.update(user_params)
+        flash[:notice] = "Doctor profile updated successfully."
+        redirect_to users_path, notice: "Doctor was successfully updated."
+      else
+        flash.now[:alert] = "There was an error updating the doctor profile."
+        render :profile
+      end
+      
     elsif current_user.patient?
-      # Redirect to the patient's profile action in the PatientsController
-      redirect_to edit_patient_path(current_user.id) and return
-    end
-
-    if @user.update(user_params)
-      redirect_to users_path,notice: "User (#{user_params[:role]}) was Successfully Updated "
+      patient = Patient.find(current_user.id)
+      
+      if patient.update(user_params)
+        flash[:notice] = "Patient profile updated successfully."
+        redirect_to users_path, notice: "Patient was successfully updated."
+      else
+        flash.now[:alert] = "There was an error updating the patient profile."
+        render :profile
+      end
+      
     else
-      # If the update fails (e.g., due to validation errors), render the edit form again
-      render :edit
+      # Handle other user roles if necessary
+      if @user.update(user_params)
+        redirect_to users_path, notice: "User (#{user_params[:role]}) was successfully updated."
+      else
+        render :profile
+      end
     end
   end
+  
 
   def destroy
     if @user.destroy
@@ -78,14 +94,7 @@ class UsersController < ApplicationController
       render :edit
     end
   end
-  # def destroy
-  #   # binding.pry
-  #   @user = User.find(params[:id])
-  #   @user.destroy
-  #   redirect_to users_path, notice: 'User was successfully deleted.'
-  # rescue CanCan::AccessDenied
-  #   redirect_to users_path, alert: 'Access denied. You are not authorized to delete this user.'
-  # end
+
 
 
 
@@ -93,7 +102,12 @@ class UsersController < ApplicationController
 
 
   def user_params
-    params.require(:user).permit(:availability_status,:name, :email, :gender,:role,:password,:password_confirmation,:profile_picture)
+    if current_user.doctor? || current_user.patient?
+      params.require(:user).permit(:name, :email,:password, :password_confirmation, :gender, :hospital_id,:profile_picture,detail_attributes: [:id, :specialization, :qualification, :disease, :status, :_destroy])
+    else
+      params.require(:user).permit(:availability_status,:name, :email, :gender,:role,:password,:password_confirmation,:profile_picture)
+    end
+   
   end
   def find_user
     @user = User.find(params[:id])

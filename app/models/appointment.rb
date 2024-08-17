@@ -1,6 +1,7 @@
 class Appointment < ApplicationRecord
   alias_attribute :start_time, :startTime
   alias_attribute :end_time, :endTime
+  
   belongs_to :patient, class_name: 'User', foreign_key: 'patient_id'
   belongs_to :doctor, class_name: 'User', foreign_key: 'doctor_id'
   validates :startTime, :endTime, :doctor_id, :patient_id, presence: true

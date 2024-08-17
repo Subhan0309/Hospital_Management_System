@@ -51,6 +51,7 @@ class PatientsController < ApplicationController
 
   # PATCH/PUT /patients/1
   def update
+    binding.pry
     if @patient.update(patient_params)
       redirect_to patients_path, notice: 'Patient was successfully updated.'
     else
@@ -65,6 +66,7 @@ class PatientsController < ApplicationController
     end
   end
 
+ 
   private
 
   # Use callbacks to share common setup or constraints between actions.

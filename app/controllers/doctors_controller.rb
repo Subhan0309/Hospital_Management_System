@@ -113,7 +113,7 @@ end
   def update_availability_status
      Rails.logger.debug "Incoming parameters: #{params.inspect}"
     if @doctor.update(availability_status_params)
-      redirect_to user_appointments_path(@doctor), notice: 'Availability status was successfully updated.'
+      
     else
       render :edit
     end
@@ -126,9 +126,8 @@ end
   end
 
   def availability_status_params
-    params.require(:user).permit(:availability_status)
+    params.permit(:availability_status) # Directly permit availability_status since it's not nested
   end
-
   def doctor_params
  
     params.require(:doctor).permit(:name, :email, :gender,:password, :password_confirmation, :hospital_id,  detail_attributes: [:id, :specialization, :qualification, :disease, :status, :_destroy])

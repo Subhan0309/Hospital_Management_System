@@ -1,4 +1,5 @@
 class Doctor < User
+  has_one_attached :profile_picture
   acts_as_tenant :hospital
   has_many :appointments, foreign_key: :doctor_id, dependent: :destroy
   has_many :patients, through: :appointments, source: :patient 

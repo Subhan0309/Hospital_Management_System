@@ -1,9 +1,10 @@
 class AppointmentsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_user
- before_action :set_specific_doctor_appointment, :set_specific_patient_appointment, only: [:index]
+  before_action :set_specific_doctor_appointment, :set_specific_patient_appointment, only: [:index]
   before_action :set_doctors, only: [:new, :edit, :create, :update]
   before_action :set_appointment, only: [:show, :edit, :update, :destroy]
-  before_action :authenticate_user!
+
 
   
   def index

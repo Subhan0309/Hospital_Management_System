@@ -39,13 +39,6 @@ root to: 'landing_pages#index'
     get 'dashboard', to: 'hospitals#dashboard', as: 'hospital_dashboard'
     get 'search', to: 'search#index'
     get 'profile', to: 'users#profile', as: 'profile'
-
-   
-
-   
-        
-    
-
   end
 
   

@@ -8,8 +8,27 @@
     </div>
     
     <div class="card-body">
-      <%= form_for @user, url: user_path(@user), html: { method: :patch, id: 'profile-form' }, multipart: true do |f| %>
 
+
+      <% if current_user.doctor? %>
+      <%= form_with(url: update_availability_status_doctor_path(@user), method: :patch, remote: true, id: 'availability-status-form') do |form| %>
+        <%= form.hidden_field :availability_status, id: 'availability_status_field', value: @user.availability_status %>
+        <div class="w-25 d-flex align-items-center justify-content-between">
+          <small class="text-muted">Unavailable</small>
+          <label class="switch">
+            <input type="checkbox" id="availability-switch" <%= 'checked' if @user.availability_status == 'available' %>>
+            <span class="slider round"></span>
+          </label>
+          <small class="text-muted">Available</small>
+        </div>
+        <%= form.submit 'Update Status', style: 'display: none;' %>
+      <% end %>
+    <% end %>
+
+
+
+      <%= form_for @user, url: user_path(@user), html: { method: :patch, id: 'profile-form' }, multipart: true do |f| %>
+        <%= render "devise/shared/error_messages", resource: @user %>
         <!-- Profile Picture Upload and Preview -->
         <div class="form-group mb-3 text-center">
           <% if @user.profile_picture.attached? %>
@@ -41,24 +60,31 @@
           <%= f.select :gender, [['Male', 'male'], ['Female', 'female']], { include_blank: 'Select Gender' }, class: 'form-control', readonly: true %>
         </div>
 
-        <!-- Display additional details if present -->
-        <% if @details.present? %>
-          <% @details.each do |detail| %>
-            <div class="form-group mb-3">
-              <%= f.label :qualification, class: "form-label text-primary" %>
-              <%= f.text_field :qualification, value: detail.qualification, class: 'form-control', readonly: true %>
-            </div>
+        <!-- Display additional details if present or allow new details to be added -->
+        <% if current_user.doctor? || current_user.patient? %>
+          <div class="form-group mb-3">
+            <%= f.fields_for :detail_attributes, @details.first_or_initialize do |detail_fields| %>
+              <% if current_user.doctor? %>
+                <div class="form-group mb-3">
+                  <%= detail_fields.label :qualification, class: "form-label text-primary" %>
+                  <%= detail_fields.text_field :qualification, class: 'form-control', readonly: true %>
+                </div>
 
-            <div class="form-group mb-3">
-              <%= f.label :specialization, class: "form-label text-primary" %>
-              <%= f.text_field :specialization, value: detail.specialization, class: 'form-control', readonly: true %>
-            </div>
+                <div class="form-group mb-3">
+                  <%= detail_fields.label :specialization, class: "form-label text-primary" %>
+                  <%= detail_fields.text_field :specialization, class: 'form-control', readonly: true %>
+                </div>
+              <% elsif current_user.patient? %>
+                <div class="form-group mb-3">
+                  <%= detail_fields.label :disease, class: "form-label text-primary" %>
+                  <%= detail_fields.text_field :disease, class: 'form-control', readonly: true %>
+                </div>
+              <% end %>
+              
 
-            <div class="form-group mb-3">
-              <%= f.label :status, class: "form-label text-primary" %>
-              <%= f.text_field :status, value: detail.status, class: 'form-control', readonly: true %>
-            </div>
-          <% end %>
+              
+            <% end %>
+          </div>
         <% end %>
 
         <div class="text-center">
@@ -79,7 +105,7 @@
 
     editButton.addEventListener('click', function() {
       formFields.forEach(field => {
-        if (field.name !== "user[email]" && field.name !== "user[role]") {
+        if (field.name !== "user[email]" && field.name !== "user[role]" && field.name !== "details[status]") {
           field.removeAttribute('readonly');
         }
       });
@@ -100,5 +126,18 @@
         reader.readAsDataURL(file);
       }
     });
+    const availabilityStatusField = document.getElementById('availability_status_field');
+  const availabilitySwitch = document.getElementById('availability-switch');
+
+  if (availabilitySwitch && availabilityStatusField) {
+    availabilitySwitch.addEventListener('change', function() {
+      availabilityStatusField.value = this.checked ? 'available' : 'unavailable';
+      document.getElementById('availability-status-form').requestSubmit(); // Trigger form submission
+    });
+  } else {
+    console.error('Required elements not found.');
+  }
+
+   
   });
 </script>

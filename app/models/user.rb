@@ -28,7 +28,7 @@ class User < ApplicationRecord
     # Validations
     validates :name, presence: { message: "Name can't be blank" }, length: { 
       minimum: 3, too_short: "must have at least %{count} characters",
-      maximum: 10, too_long: "must have at most %{count} characters"
+      maximum: 20, too_long: "must have at most %{count} characters"
     }
     validates :email, presence: { message: "Email can't be blank" },
                       format: { with: URI::MailTo::EMAIL_REGEXP, message: "Email is not a valid format" },

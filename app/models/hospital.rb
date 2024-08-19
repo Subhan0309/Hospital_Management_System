@@ -3,8 +3,8 @@ class Hospital < ApplicationRecord
   
    # Validations
    validates :name, presence: { message: "Hospital name can't be blank" }, length: { 
-      minimum: 4, too_short: "must have at least %{count} characters",
-      maximum: 15, too_long: "must have at most %{count} characters"
+      minimum: 3, too_short: "must have at least %{count} characters",
+      maximum: 20, too_long: "must have at most %{count} characters"
     }
    validates :location, presence: { message: "Location can't be blank" }
    validates :email, presence: { message: "Email can't be blank" },

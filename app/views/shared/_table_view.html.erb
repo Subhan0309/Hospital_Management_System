@@ -107,9 +107,13 @@
             <% if details.present? %>
               <div class="mb-3">
                 <h6 class="text-primary">Details:</h6>
+                <% if resource_class == Doctor %>
                 <p><strong>Specialization:</strong> <%= details.specialization %></p>
                 <p><strong>Qualification:</strong> <%= details.qualification %></p>
-                <!-- Add other detail fields as needed -->
+                <%elsif resource_class == Patient %>
+                <p><strong>Disease:</strong> <%= details.disease %></p>
+                <%end%>
+               
               </div>
             <% end %>
           </div>

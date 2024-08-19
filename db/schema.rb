@@ -10,9 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_08_15_112038) do
+ActiveRecord::Schema.define(version: 2024_08_19_173854) do
 
-  create_table "Hospitals", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "Hospitals", charset: "utf8mb3", force: :cascade do |t|
     t.string "name"
     t.string "location"
     t.bigint "user_id"
@@ -24,7 +24,7 @@ ActiveRecord::Schema.define(version: 2024_08_15_112038) do
     t.index ["user_id"], name: "index_hospitals_on_user_id"
   end
 
-  create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "active_storage_attachments", charset: "utf8mb3", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
     t.bigint "record_id", null: false
@@ -34,7 +34,7 @@ ActiveRecord::Schema.define(version: 2024_08_15_112038) do
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
 
-  create_table "active_storage_blobs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "active_storage_blobs", charset: "utf8mb3", force: :cascade do |t|
     t.string "key", null: false
     t.string "filename", null: false
     t.string "content_type"
@@ -46,16 +46,16 @@ ActiveRecord::Schema.define(version: 2024_08_15_112038) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
-  create_table "active_storage_variant_records", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "active_storage_variant_records", charset: "utf8mb3", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
-  create_table "appointments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "appointments", charset: "utf8mb3", force: :cascade do |t|
     t.bigint "patient_id", null: false
     t.bigint "doctor_id", null: false
-    t.integer "status", default: 0, null: false
+    t.string "status", default: "scheduled", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.datetime "startTime", null: false
@@ -64,7 +64,7 @@ ActiveRecord::Schema.define(version: 2024_08_15_112038) do
     t.index ["patient_id"], name: "index_appointments_on_patient_id"
   end
 
-  create_table "comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "comments", charset: "utf8mb3", force: :cascade do |t|
     t.text "description"
     t.bigint "created_by_id", null: false
     t.string "associated_with_type"
@@ -75,7 +75,7 @@ ActiveRecord::Schema.define(version: 2024_08_15_112038) do
     t.index ["created_by_id"], name: "index_comments_on_created_by_id"
   end
 
-  create_table "details", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "details", charset: "utf8mb3", force: :cascade do |t|
     t.string "associated_with_type", null: false
     t.bigint "associated_with_id", null: false
     t.string "specialization"
@@ -87,7 +87,7 @@ ActiveRecord::Schema.define(version: 2024_08_15_112038) do
     t.index ["associated_with_type", "associated_with_id"], name: "index_details_on_associated_with"
   end
 
-  create_table "medical_records", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "medical_records", charset: "utf8mb3", force: :cascade do |t|
     t.datetime "date", null: false
     t.bigint "patient_id", null: false
     t.text "details", null: false
@@ -98,7 +98,7 @@ ActiveRecord::Schema.define(version: 2024_08_15_112038) do
     t.index ["patient_id"], name: "index_medical_records_on_patient_id"
   end
 
-  create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "users", charset: "utf8mb3", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "name", null: false
@@ -109,9 +109,8 @@ ActiveRecord::Schema.define(version: 2024_08_15_112038) do
     t.datetime "remember_created_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.bigint "hospital_id", null: false
+    t.integer "hospital_id"
     t.string "availability_status", default: "Available"
-    t.index ["hospital_id"], name: "index_users_on_hospital_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
@@ -123,5 +122,4 @@ ActiveRecord::Schema.define(version: 2024_08_15_112038) do
   add_foreign_key "comments", "users", column: "created_by_id"
   add_foreign_key "medical_records", "users", column: "doctor_id"
   add_foreign_key "medical_records", "users", column: "patient_id"
-  add_foreign_key "users", "hospitals"
 end

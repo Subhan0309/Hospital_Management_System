@@ -38,12 +38,75 @@ class AppointmentsController < ApplicationController
  
   end
 
+  # def create
+  #   @appointment = @user.appointments.new(appointment_params)
+   
+  #   if @appointment.save
+  #     #email - notifications
+  #     AppointmentMailer.with(appointment: @appointment).appointment_confirmation_patient.deliver_now
+  #     AppointmentMailer.with(appointment: @appointment).appointment_confirmation_doctor.deliver_now
+
+
+   
+  #   ActionCable.server.broadcast("appointment_channel_#{@appointment.doctor_id}", {
+  #     action: 'create',
+  #     appointment: {
+  #       id: @appointment.id,
+  #       date: @appointment.start_time.to_s(:db),
+  #       html: render_to_string( partial: 'appointments/appointment', locals: { appointment: @appointment, user: @user})
+  #     }
+  #   })
+
+  #     redirect_to user_appointments_path(@user), notice: 'Appointment was successfully created.'
+  #   else
+  #     flash.now[:alert] = 'Doctor is not available at this time'
+  #     render :new, status: :unprocessable_entity
+  #   end
+  # end
+
+ 
+
+  # def update
+  #   if @appointment.update(appointment_params)
+  #     ActionCable.server.broadcast('appointment_channel', {
+  #       action: 'update',
+  #       appointment: {
+  #         id: @appointment.id,
+  #         date: @appointment.start_time.to_s(:db),
+  #         html: render_to_string(partial: 'appointments/appointment', locals: { appointment: @appointment, user: @user })
+  #       }
+  #     })
+  #     redirect_to user_appointments_path(@user), notice: 'Appointment was successfully updated.'
+  #   else
+  #     render :edit
+  #   end
+  # end
+
+  # def destroy
+  #   @appointment.destroy
+  #   # Broadcast destroy
+   
+  #       ActionCable.server.broadcast('appointment_channel', { 
+  #         action: 'destroy', 
+  #         appointment: {
+  #         id: @appointment.id,
+  #         date: @appointment.start_time.to_s(:db)
+  #         }
+  #       })
+  #   redirect_to user_appointments_path(@user), notice: 'Appointment was successfully destroyed.'
+  # end
+
+
+
+
+
   def create
     @appointment = @user.appointments.new(appointment_params)
    
     if @appointment.save
-      AppointmentMailer.with(appointment: @appointment).appointment_confirmation_patient.deliver_now
-      AppointmentMailer.with(appointment: @appointment).appointment_confirmation_doctor.deliver_now
+      # Notify both doctor and patient
+      notify_users('create', @appointment)
+      
       redirect_to user_appointments_path(@user), notice: 'Appointment was successfully created.'
     else
       flash.now[:alert] = 'Doctor is not available at this time'
@@ -51,9 +114,19 @@ class AppointmentsController < ApplicationController
     end
   end
 
- 
+
   def update
+    case params[:appointment][:status]
+    when 'completed'
+      @appointment.complete!
+    when 'canceled'
+    
+      @appointment.cancel!
+    when 'scheduled'
+      @appointment.reschedule! if @appointment.may_reschedule?
+    end
     if @appointment.update(appointment_params)
+      notify_users('update', @appointment)
       redirect_to user_appointments_path(@user), notice: 'Appointment was successfully updated.'
     else
       render :edit
@@ -61,9 +134,17 @@ class AppointmentsController < ApplicationController
   end
 
   def destroy
-    @appointment.destroy
-    redirect_to user_appointments_path(@user), notice: 'Appointment was successfully destroyed.'
+    if @appointment.destroy
+    # Notify both doctor and patient
+      notify_users('destroy', @appointment)
+    
+      redirect_to user_appointments_path(@user), notice: 'Appointment was successfully destroyed.'
+    else
+       redirect_to user_appointments_path(@user), notice: 'Appointment is not destroyedπ.'
+    end
   end
+
+
 
   def delete_all
 
@@ -75,7 +156,6 @@ class AppointmentsController < ApplicationController
   def available_doctors
     start_time = params[:start_time]
     end_time = params[:end_time]
-  
     doctors = Doctor.where(availability_status: 'available',role: 'doctor').map do |doctor|
       appointments_conflict = doctor.appointments.where("startTime < ? AND endTime > ?", end_time, start_time).exists?
       {
@@ -97,7 +177,7 @@ class AppointmentsController < ApplicationController
    else
     @user=Patient.find(params[:user_id])
   end
-end
+  end
   def set_doctors
     @doctors = User.where(hospital_id: current_user.hospital_id, role:"doctor")
   end
@@ -122,4 +202,48 @@ end
   def appointment_params
     params.require(:appointment).permit(:patient_id, :doctor_id, :start_time, :end_time, :status)
   end
+  
+
+  def notify_users(action, appointment)
+    # Broadcast to the doctor's channel
+    ActionCable.server.broadcast("appointment_channel_#{appointment.doctor_id}", {
+      action: action,
+      appointment: {
+        id: appointment.id,
+        date: appointment.start_time.to_s(:db),
+        doctor_id: appointment.doctor_id,
+        patient_id: appointment.patient_id,
+        html: render_to_string(partial: 'appointments/appointment', locals: { appointment: appointment, user: @user })
+      }
+    })
+
+    # Broadcast to the patient's channel
+    ActionCable.server.broadcast("appointment_channel_#{appointment.patient_id}", {
+      action: action,
+      appointment: {
+        id: appointment.id,
+        date: appointment.start_time.to_s(:db),
+        doctor_id: appointment.doctor_id,
+        patient_id: appointment.patient_id,
+        html: render_to_string(partial: 'appointments/appointment', locals: { appointment: appointment, user: @user })
+      }
+    })
+
+    # Broadcast to specific role-based channels
+    ['owner', 'admin', 'staff'].each do |role|
+
+      ActionCable.server.broadcast("appointment_channel_#{role}", {
+        action: action,
+        appointment: {
+          id: appointment.id,
+          date: appointment.start_time.to_s(:db),
+          doctor_id: appointment.doctor_id,
+          patient_id: appointment.patient_id,
+          html: render_to_string(partial: 'appointments/appointment', locals: { appointment: appointment, user: @user })
+        }
+      })
+    end
+
+  end
+
 end

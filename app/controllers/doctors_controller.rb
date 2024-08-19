@@ -1,4 +1,5 @@
 class DoctorsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_doctor, only: [:show, :edit, :update, :destroy, :update_availability_status]
 
  # GET /doctors

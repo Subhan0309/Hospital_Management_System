@@ -25,6 +25,7 @@ class CommentsController < ApplicationController
   
     respond_to do |format|
       if @comment.save
+        CommentMailer.comment_notification(@medical_record, @comment).deliver_now
         if current_user.role == 'patient'
           format.html { redirect_to user_medical_records_path(current_user), notice: 'Comment was successfully created.' }
         elsif current_user.role == 'doctor'

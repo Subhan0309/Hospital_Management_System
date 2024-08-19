@@ -7,3 +7,13 @@ development:
   pool: 5
   variables:
     sql_mode: TRADITIONAL
+
+test:
+  adapter: mysql2
+  encoding: utf8
+  database: tenant_db_test
+  username: root
+  password: 7vals
+  pool: 5
+  variables:
+    sql_mode: TRADITIONAL

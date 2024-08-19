@@ -21,9 +21,11 @@
         <td>
           <div class="row">
             <div class="col-md-2">
+          <%if @appointment.status != 'completed'%>
           <%= link_to edit_user_appointment_path(current_user, @appointment), class: 'btn btn-sm btn-warning', title: 'Edit' do %>
             <i class="bi bi-pencil"></i>
           <% end %>
+          <%end%>
           </div>
           <div class="col-md-2">
           <%= button_to user_appointment_path(current_user, @appointment), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger', title: 'Delete' do %>

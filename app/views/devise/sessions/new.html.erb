@@ -24,7 +24,10 @@
         <div class="form-group text-center">
           <%= f.submit "Log in", class: "btn btn-primary btn-block mt-4" %>
         </div>
+         <%= render "devise/shared/links" %>
       <% end %>
+      
+    
 
      
     <% else %>
@@ -38,7 +41,7 @@
         <%= f.submit "Continue", class: "btn btn-primary btn-block mt-4" %>
       </div>
     <% end %>
-<%= render "devise/shared/links" %>
+    <%= render "devise/shared/links" %>
     <% end %>
   </div>
 </div>

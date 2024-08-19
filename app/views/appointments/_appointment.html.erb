@@ -1,0 +1,6 @@
+<!-- app/views/appointments/_appointment.html.erb -->
+<div class="appointment" id="appointment_<%= appointment.id %>">
+  <p>
+    <%= link_to appointment.status, user_appointment_path(user, appointment) %>
+  </p>
+</div>

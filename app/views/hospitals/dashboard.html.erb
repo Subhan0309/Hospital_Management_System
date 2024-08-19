@@ -1,7 +1,125 @@
-<%= render layout: "layouts/users" do %> 
-    <div class="col py-3">
-      <!-- Dashboard content goes here -->
-      <h1>Dashboard</h1>
+<div class="container">
+  <h1 class="text-center my-4 text-primary">Dashboard</h1>
+
+  <% if @user.owner? || @user.admin? || @user.staff?  %>
+
+  <div class="container mt-5">
+  <!-- Users Summary Card -->
+      <div class="card mb-4">
+         <div class="card-header d-flex bg-secondary flex-row justify-content-center align-items-center">
+            <h3 class="mb-0 fs-4 fs-md-6 text-center text-white">Users Summary</h3>
+         </div>
+         <div class="card-body">
+            <div class="row">
+            <div class="col-md-6">
+               <%= pie_chart User.group(:role).count, height: "400px" %>
+            </div>
+            <div class="col-md-6 d-flex flex-row align-items-center">
+               <ul class="list-group w-100">
+                  <li class="list-group-item"><strong>Doctors:</strong> <%= @doctor_count %></li>
+                  <li class="list-group-item"><strong>Patients:</strong> <%= @patient_count %></li>
+                  <li class="list-group-item"><strong>Admins:</strong> <%= @admin_count %></li>
+                  <li class="list-group-item"><strong>Staff:</strong> <%= @staff_count %></li>
+               </ul>
+            </div>
+            </div>
+         </div>
+      </div>
+
+      <!-- Appointments by Day Card -->
+      <div class="card mb-4">
+         <div class="card-header d-flex bg-secondary flex-row justify-content-center align-items-center">
+            <h3 class="mb-0 fs-4 fs-md-6 text-white text-center">Appointments Scheduled by Day</h3>
+         </div>
+         <div class="card-body">
+            <%= line_chart @appointments_by_day, height: "400px", library: { title: { text: "Appointments Scheduled by Day" } } %>
+         </div>
+      </div>
+
+      <div class="card mb-4">
+         <div class="card-header d-flex bg-secondary flex-row justify-content-center align-items-center">
+            <h3 class="mb-0 fs-4 fs-md-6 text-white text-center">Today's Registrations</h3>
+         </div>
+         <div class="card-body">
+            <%= column_chart @today_registrations, height: "400px", library: { title: { text: "Registrations by Role for Today" } } %>
+         </div>
+   </div>
+
+</div>
+
+
+  <% elsif @user.doctor? %>
+   <div class="container mt-5">
+    <div class="card mb-4">
+      <div class="card-header d-flex bg-secondary flex-row justify-content-center align-items-center">
+        <h3 class="mb-0 fs-4 fs-md-6 text-white text-center">Appointments Scheduled by Day</h3>
+      </div>
+      <div class="card-body">
+        <!-- Appointments Scheduled by Day -->
+         <%= area_chart @appointments_by_day, height: "400px", library: { title: { text: "Appointments Scheduled by Day" } } %>
+
+               <!-- Patient Status -->
+           
+      </div>
     </div>
+   <div class="card mb-4">
+      <div class="card-header d-flex bg-secondary flex-row justify-content-center align-items-center">
+        <h3 class="mb-0 fs-4 fs-md-6 text-white text-center">Patient Status</h3>
+      </div>
+      <div class="card-body">
+        <!-- Appointments Scheduled by Day -->
+        <%= pie_chart @patient_status, height: "400px", library: { title: { text: "Patient Status Distribution" } } %>
+      </div>
+    </div>
+    <div class="card mb-4">
+      <div class="card-header d-flex bg-secondary flex-row justify-content-center align-items-center">
+        <h3 class="mb-0 fs-4 fs-md-6 text-white text-center">Medical Records Created by Day</h3>
+      </div>
+      <div class="card-body">
+        <!-- Appointments Scheduled by Day -->
+          <%= bar_chart @medical_records_by_day, height: "400px", library: { title: { text: "Medical Records Created by Day" } } %>
+      </div>
+    </div>
+
+
+
+
+ 
+   </div>
+
+
+  <% elsif @user.patient? %>
+   
   
-<%end%>
+     <div class="container mt-5">
+    <div class="card mb-4">
+      <div class="card-header d-flex bg-secondary flex-row justify-content-center align-items-center">
+        <h3 class="mb-0 fs-4 fs-md-6 text-white text-center">Appointments Scheduled by Day</h3>
+      </div>
+      <div class="card-body">
+        <!-- Appointments Scheduled by Day -->
+         <%= area_chart @appointments_by_day, height: "400px", library: { title: { text: "Appointments Scheduled by Day" } } %>
+
+               <!-- Patient Status -->
+           
+      </div>
+    </div>
+ 
+    <div class="card mb-4">
+      <div class="card-header d-flex bg-secondary flex-row justify-content-center align-items-center">
+        <h3 class="mb-0 fs-4 fs-md-6 text-white text-center">Medical Records Created by Day</h3>
+      </div>
+      <div class="card-body">
+        <!-- Appointments Scheduled by Day -->
+          <%= bar_chart @medical_records_by_day, height: "400px", library: { title: { text: "Medical Records Created by Day" } } %>
+      </div>
+    </div>
+
+
+
+
+ 
+   </div>
+
+  <% end %>
+</div>

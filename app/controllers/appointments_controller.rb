@@ -1,20 +1,31 @@
 class AppointmentsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_user
+  before_action :set_specific_doctor_appointment, :set_specific_patient_appointment, only: [:index]
   before_action :set_doctors, only: [:new, :edit, :create, :update]
   before_action :set_appointment, only: [:show, :edit, :update, :destroy]
-  before_action :authenticate_user!
 
-  def self.send_daily_reminders
-    tomorrow = Date.tomorrow
-    appointments = Appointment.where(start_time: tomorrow.beginning_of_day..tomorrow.end_of_day)
 
-    appointments.each do |appointment|
-      AppointmentMailer.reminder_email(appointment).deliver_now
-    end
-  end
+  
   def index
+    if current_user.patient?
+      set_specific_doctor_appointment
 
-    @appointments = @user.appointments
+      if current_user.id == params[:user_id].to_i
+        @appointments = @user.appointments
+     
+     else
+      @appointments = @specific_doctor.appointments.where(patient_id: current_user.id)
+     end
+    elsif current_user.doctor?
+      @appointments = if current_user.id == params[:user_id].to_i
+                        @user.appointments
+                      else
+                        @specific_patient.appointments.where(doctor_id: current_user.id)
+                      end
+    else
+      @appointments = @user.appointments
+    end
   end
 
   def show
@@ -27,11 +38,75 @@ class AppointmentsController < ApplicationController
  
   end
 
+  # def create
+  #   @appointment = @user.appointments.new(appointment_params)
+   
+  #   if @appointment.save
+  #     #email - notifications
+  #     AppointmentMailer.with(appointment: @appointment).appointment_confirmation_patient.deliver_now
+  #     AppointmentMailer.with(appointment: @appointment).appointment_confirmation_doctor.deliver_now
+
+
+   
+  #   ActionCable.server.broadcast("appointment_channel_#{@appointment.doctor_id}", {
+  #     action: 'create',
+  #     appointment: {
+  #       id: @appointment.id,
+  #       date: @appointment.start_time.to_s(:db),
+  #       html: render_to_string( partial: 'appointments/appointment', locals: { appointment: @appointment, user: @user})
+  #     }
+  #   })
+
+  #     redirect_to user_appointments_path(@user), notice: 'Appointment was successfully created.'
+  #   else
+  #     flash.now[:alert] = 'Doctor is not available at this time'
+  #     render :new, status: :unprocessable_entity
+  #   end
+  # end
+
+ 
+
+  # def update
+  #   if @appointment.update(appointment_params)
+  #     ActionCable.server.broadcast('appointment_channel', {
+  #       action: 'update',
+  #       appointment: {
+  #         id: @appointment.id,
+  #         date: @appointment.start_time.to_s(:db),
+  #         html: render_to_string(partial: 'appointments/appointment', locals: { appointment: @appointment, user: @user })
+  #       }
+  #     })
+  #     redirect_to user_appointments_path(@user), notice: 'Appointment was successfully updated.'
+  #   else
+  #     render :edit
+  #   end
+  # end
+
+  # def destroy
+  #   @appointment.destroy
+  #   # Broadcast destroy
+   
+  #       ActionCable.server.broadcast('appointment_channel', { 
+  #         action: 'destroy', 
+  #         appointment: {
+  #         id: @appointment.id,
+  #         date: @appointment.start_time.to_s(:db)
+  #         }
+  #       })
+  #   redirect_to user_appointments_path(@user), notice: 'Appointment was successfully destroyed.'
+  # end
+
+
+
+
+
   def create
     @appointment = @user.appointments.new(appointment_params)
    
     if @appointment.save
-      AppointmentMailer.with(appointment: @appointment).appointment_confirmation.deliver_now
+      # Notify both doctor and patient
+      notify_users('create', @appointment)
+      
       redirect_to user_appointments_path(@user), notice: 'Appointment was successfully created.'
     else
       flash.now[:alert] = 'Doctor is not available at this time'
@@ -39,9 +114,19 @@ class AppointmentsController < ApplicationController
     end
   end
 
- 
+
   def update
+    case params[:appointment][:status]
+    when 'completed'
+      @appointment.complete!
+    when 'canceled'
+    
+      @appointment.cancel!
+    when 'scheduled'
+      @appointment.reschedule! if @appointment.may_reschedule?
+    end
     if @appointment.update(appointment_params)
+      notify_users('update', @appointment)
       redirect_to user_appointments_path(@user), notice: 'Appointment was successfully updated.'
     else
       render :edit
@@ -49,20 +134,65 @@ class AppointmentsController < ApplicationController
   end
 
   def destroy
-    @appointment.destroy
-    redirect_to user_appointments_path(@user), notice: 'Appointment was successfully destroyed.'
+    if @appointment.destroy
+    # Notify both doctor and patient
+      notify_users('destroy', @appointment)
+    
+      redirect_to user_appointments_path(@user), notice: 'Appointment was successfully destroyed.'
+    else
+       redirect_to user_appointments_path(@user), notice: 'Appointment is not destroyedπ.'
+    end
   end
 
+
+
+  def delete_all
+
+    Appointment.where(doctor_id: current_user.id).destroy_all
+    
+    redirect_to user_appointments_path(@user), notice: 'All appointments were successfully deleted.'
+  end
+
+  def available_doctors
+    start_time = params[:start_time]
+    end_time = params[:end_time]
+    doctors = Doctor.where(availability_status: 'available',role: 'doctor').map do |doctor|
+      appointments_conflict = doctor.appointments.where("startTime < ? AND endTime > ?", end_time, start_time).exists?
+      {
+        id: doctor.id,
+        name: doctor.name,
+        availability: appointments_conflict ? 'Not Available' : 'Available'
+      }
+    end
+
+    render json: doctors
+  end
+  
   private
 
   def set_user
-   @user = current_user.role == 'doctor' ? Doctor.find(params[:user_id]) : Patient.find(params[:user_id])
+   @user = User.find(params[:user_id])
+   if @user.role == "doctor"
+    @user=Doctor.find(params[:user_id])
+   else
+    @user=Patient.find(params[:user_id])
   end
-
+  end
   def set_doctors
     @doctors = User.where(hospital_id: current_user.hospital_id, role:"doctor")
   end
   
+  def set_specific_doctor_appointment
+
+    @specific_doctor = Doctor.find(params[:user_id])
+
+  end
+  def set_specific_patient_appointment
+
+    @specific_patient = Patient.find(params[:user_id])
+
+  end
+
   
   def set_appointment
     @appointment = @user.appointments.find(params[:id])
@@ -72,4 +202,48 @@ class AppointmentsController < ApplicationController
   def appointment_params
     params.require(:appointment).permit(:patient_id, :doctor_id, :start_time, :end_time, :status)
   end
+  
+
+  def notify_users(action, appointment)
+    # Broadcast to the doctor's channel
+    ActionCable.server.broadcast("appointment_channel_#{appointment.doctor_id}", {
+      action: action,
+      appointment: {
+        id: appointment.id,
+        date: appointment.start_time.to_s(:db),
+        doctor_id: appointment.doctor_id,
+        patient_id: appointment.patient_id,
+        html: render_to_string(partial: 'appointments/appointment', locals: { appointment: appointment, user: @user })
+      }
+    })
+
+    # Broadcast to the patient's channel
+    ActionCable.server.broadcast("appointment_channel_#{appointment.patient_id}", {
+      action: action,
+      appointment: {
+        id: appointment.id,
+        date: appointment.start_time.to_s(:db),
+        doctor_id: appointment.doctor_id,
+        patient_id: appointment.patient_id,
+        html: render_to_string(partial: 'appointments/appointment', locals: { appointment: appointment, user: @user })
+      }
+    })
+
+    # Broadcast to specific role-based channels
+    ['owner', 'admin', 'staff'].each do |role|
+
+      ActionCable.server.broadcast("appointment_channel_#{role}", {
+        action: action,
+        appointment: {
+          id: appointment.id,
+          date: appointment.start_time.to_s(:db),
+          doctor_id: appointment.doctor_id,
+          patient_id: appointment.patient_id,
+          html: render_to_string(partial: 'appointments/appointment', locals: { appointment: appointment, user: @user })
+        }
+      })
+    end
+
+  end
+
 end

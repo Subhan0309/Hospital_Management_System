@@ -12,18 +12,27 @@
       </tr>
     </thead>
     <tbody>
+
       <tr>
         <td><%= @appointment.startTime.strftime('%Y-%m-%d %H:%M') %></td>
         <td><%= @appointment.endTime.strftime('%Y-%m-%d %H:%M') %></td>
         <td><%= @appointment.status %></td>
         <td><%= current_user.role == 'patient' ? @appointment.doctor.name : @appointment.patient.name %></td>
         <td>
+          <div class="row">
+            <div class="col-md-2">
+          <%if @appointment.status != 'completed'%>
           <%= link_to edit_user_appointment_path(current_user, @appointment), class: 'btn btn-sm btn-warning', title: 'Edit' do %>
             <i class="bi bi-pencil"></i>
           <% end %>
+          <%end%>
+          </div>
+          <div class="col-md-2">
           <%= button_to user_appointment_path(current_user, @appointment), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger', title: 'Delete' do %>
             <i class="bi bi-trash"></i>
           <% end %>
+          </div>
+          </div>
         </td>
       </tr>
     </tbody>

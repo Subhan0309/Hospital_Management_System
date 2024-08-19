@@ -13,6 +13,9 @@
  *= require_tree .
  *= require_self
  */
+ @import "chartkick";
+@import "chart.js";
+
 /* Pagination container */
 .pagination {
   display: flex;
@@ -42,11 +45,116 @@
   text-decoration: none;
   color: black;
 }
-
-
 /* Active page */
 .pagination .active {
   background-color: #007bff; /* Active page background color */
   color: white; /* Active page text color */
-  
+}
+
+.calendar-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #f8f9fa; /* Light background similar to Bootstrap's bg-light */
+  border: 1px solid #dee2e6; /* Border similar to Bootstrap's border class */
+  border-radius: 0.25rem; /* Rounded corners */
+  margin-bottom: 1rem; /* Space below the heading */
+}
+
+.calendar-title {
+  color: #0d6efd; /* Primary color similar to Bootstrap's text-primary */
+  font-size: 1.5rem; /* Adjust font size */
+  margin: 0; /* Remove default margin */
+}
+
+.calendar-heading nav a {
+  color: #0d6efd; /* Primary color similar to Bootstrap's text-primary */
+  border: 1px solid #0d6efd; /* Border in primary color */
+  border-radius: 0.25rem; /* Rounded corners */
+  padding: 0.25rem 0.75rem; /* Padding around the links */
+  margin: 0 0.25rem; /* Space between the links */
+  font-size: 0.875rem; /* Adjust font size */
+  text-decoration: none; /* Remove underline */
+}
+
+.calendar-heading nav a:hover {
+  background-color: #0d6efd; /* Primary color background on hover */
+  color: #fff; /* White text on hover */
+}
+
+.calendar-heading nav a.btn-outline-secondary {
+  border-color: #6c757d; /* Border in secondary color */
+  color: #6c757d; /* Secondary color similar to Bootstrap's text-secondary */
+}
+
+.calendar-heading nav a.btn-outline-secondary:hover {
+  background-color: #6c757d; /* Secondary color background on hover */
+  color: #fff; /* White text on hover */
+}
+.logInIndex
+{
+  z-index: 10000;
+}
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
 }

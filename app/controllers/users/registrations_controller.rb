@@ -12,12 +12,13 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # GET /resource/sign_up
   def new
+    @hospital = Hospital.new
     @user = User.new
   end
 
   def create
-    binding.pry
-    # if user_params[:role] == "owner"
+    
+  binding.pry
     @hospital = Hospital.new(hospital_params)
     
     respond_to do |format|
@@ -25,22 +26,20 @@ class Users::RegistrationsController < Devise::RegistrationsController
         # After creating the hospital, create the user
         @user = User.new(user_params)
         @user.hospital_id = @hospital.id
-       
-       
-
+        # binding.pry
         if @user.save
           # Construct the subdomain
           @hospital.update(user_id:@user.id)
           host_with_subdomain = "#{@hospital.subdomain}.localhost"
           port = 3000
-  
+          # binding.pry
           # Construct the URL with the subdomain using URI module
           url_with_subdomain = URI::HTTP.build(
             host: host_with_subdomain,
             port: port,
             # path: new_user_session_path,  ADD THE ROUTE TO HOSPITAL DASHBOARD HERE
           ).to_s
-          sign_in(@user)
+          # binding.pry
           # Redirect to the sign-in page with the subdomain
           format.html { redirect_to url_with_subdomain, notice: 'User and hospital were successfully created.' }
           format.json { render :show, status: :created, location: @user }
@@ -51,7 +50,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
           format.json { render json: @user.errors, status: :unprocessable_entity }
         end
       else
-        format.html { render :new }
+        format.html { render :new , alert: 'Failed to create Hospital and user ' }
         format.json { render json: @hospital.errors, status: :unprocessable_entity }
       end
     end

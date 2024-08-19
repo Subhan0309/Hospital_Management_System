@@ -6,46 +6,53 @@
       </h1>
       <%= form_with(model: @doctor, local: true) do |f| %>
         <%= render "devise/shared/error_messages", resource: @doctor %>
+        
         <div class="form-group">
           <%= f.label :name, class: "form-label" %>
-          <%= f.text_field :name, class: "form-control", autofocus: true %>
+          <%= f.text_field :name, class: "form-control", autofocus: true ,required: true,minlength: 3, maxlength: 20 %>
         </div>
+        
+        <% if @doctor.new_record? %>
         <div class="form-group">
           <%= f.label :email, class: "form-label" %>
-          <%= f.email_field :email, class: "form-control", autocomplete: "email" %>
+          <%= f.email_field :email, class: "form-control", autocomplete: "email" ,required: true %>
         </div>
-        <div class="form-group">
-          <%= f.label :password, class: "form-label" %>
-          <%= f.password_field :password, class: "form-control", autocomplete: "new-password" %>
-          <% if @minimum_password_length %>
-            <br />
-            <em><%= @minimum_password_length %> characters minimum</em>
-          <% end %>
-        </div>
-        <div class="form-group">
-          <%= f.label :password_confirmation, class: "form-label" %><br />
-          <%= f.password_field :password_confirmation, class: "form-control", autocomplete: "new-password" %>
-        </div>
+        
+        
+
+          <div class="form-group">
+            <%= f.label :password, class: "form-label" %>
+            <%= f.password_field :password, class: "form-control", autocomplete: "new-password" ,required: true %>
+            <% if @minimum_password_length %>
+              <br />
+              <em><%= @minimum_password_length %> characters minimum</em>
+            <% end %>
+          </div>
+          
+          <div class="form-group">
+            <%= f.label :password_confirmation, class: "form-label" %><br />
+            <%= f.password_field :password_confirmation, class: "form-control", autocomplete: "new-password" ,required: true  %>
+          </div>
+        <%end%>
+
         <div class="form-group">
           <%= f.label :gender, class: "form-label" %>
-          <%= f.select :gender, options_for_select([['Male', 'male'], ['Female', 'female'], ['Other', 'other']]), {}, class: "form-control" %>
+          <%= f.select :gender, options_for_select([['Male', 'male'], ['Female', 'female'], ['Other', 'other']]), {}, class: "form-control" ,required: true %>
         </div>
-        <!-- Specialization field -->
-        <div class="form-group">
-          <%= f.fields_for :detail do |detail_fields| %>
-            <%= detail_fields.label :specialization, class: "form-label" %>
-            <%= detail_fields.text_field :specialization, class: "form-control" %>
-          <% end %>
-        </div>
-        <!-- Qualification field -->
-        <div class="form-group">
-          <%= f.fields_for :detail do |detail_fields| %>
-            <%= detail_fields.label :qualification, class: "form-label" %>
-            <%= detail_fields.text_field :qualification, class: "form-control" %>
-          <% end %>
-        </div>
-        <!-- Role selection for admin and staff -->
-        <div class="form-group text-center">
+        
+        <%= f.fields_for :detail do |detail_form| %>
+          <div class="form-group">
+            <%= detail_form.label :specialization, class: "form-label" %>
+            <%= detail_form.text_field :specialization, class: 'form-control', required: true %>
+          </div>
+
+          <div class="form-group">
+            <%= detail_form.label :qualification, class: "form-label" %>
+            <%= detail_form.text_field :qualification, class: 'form-control', required: true %>
+          </div>
+        <% end %>
+
+        <div class="form-group text-center mt-5">
           <%= f.submit @doctor.new_record? ? 'Create Doctor' : 'Update Doctor', class: 'btn btn-primary btn-block' %>
         </div>
       <% end %>

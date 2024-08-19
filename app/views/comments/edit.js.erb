@@ -1,0 +1,14 @@
+<% if @comment.errors.any? %>
+  // Display validation errors if any
+  alert('Failed to update comment. Please try again.');
+<% else %>
+  // Assuming you have a container to hold the comment with an ID like 'comment-<%= @comment.id %>'
+  var commentContainer = $('#comment-<%= @comment.id %>');
+
+  // Update the comment content
+  commentContainer.find('.comment-description').text('<%= j @comment.description %>');
+  commentContainer.find('.comment-author').text('Commented by: <%= j @comment.created_by.name %>');
+
+  // Close the modal (if any)
+  $('#editCommentModal').modal('hide');
+<% end %>

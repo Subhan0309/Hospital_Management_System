@@ -8,15 +8,14 @@
 </head>
 <body>
   <!-- Navbar -->
-  <div class="navbar navbar-expand-lg navbar-dark">
+  <div class="navbar navbar-expand-lg navbar-dark ">
     <div class="container">
-      <a class="navbar-brand" href="#">Medilab</a>
+      <a class="navbar-brand" href="#">HMS</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ml-auto">
-         
          <% if user_signed_in? %>
   <li class="nav-item">
     <%= button_to 'Sign Out', destroy_user_session_path, method: :delete, class: 'btn btn-dark', data: { confirm: 'Are you sure you want to sign out?' } %>
@@ -25,14 +24,14 @@
   <li class="nav-item">
     <%= link_to 'Sign In', new_user_session_path, class: 'nav-link' %>
   </li>
+  <li class="nav-item">
+        <%= link_to "Register as a Patient", new_patient_path, class: "nav-link" %>
+  </li>
 <% end %>
-
-
           <li class="nav-item">
             <a class="nav-link" href="#">Contact</a>
           </li>
         </ul>
-        <%# <a href="#" class="btn btn-primary ml-3">Make an Appointment</a> %>
       </div>
     </div>
   </div>
@@ -47,63 +46,70 @@
     <div class="row">
       <div class="col-md-4">
         <div class="card p-4 bg-primary text-white">
-          <h5>Why Choose Medilab?</h5>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          <h5>Why Choose HMS?</h5>
+          <p>HMS is a platform where you can manage and mantain your hospital.</p>
           <a href="#" class="btn btn-outline-light">Learn More</a>
         </div>
       </div>
-      <div class="col-md-4">
-        <div class="card p-4 text-center">
-          <img src="path_to_icon" alt="Icon" class="mb-3">
-          <h5>Corporis voluptates officia eiusmod</h5>
-          <p>Consequuntur sunt aut quasi enim aliquam quae harum pariatur laboris nisi ut aliquip.</p>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card p-4 text-center">
-          <img src="path_to_icon" alt="Icon" class="mb-3">
-          <h5>Ullamco laboris ladore pan</h5>
-          <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt.</p>
-        </div>
-      </div>
-      <div class="col-md-4 mt-4">
-        <div class="card p-4 text-center">
-          <img src="path_to_icon" alt="Icon" class="mb-3">
-          <h5>Labore consequatur incidid dolore</h5>
-          <p>Aut suscipit aut cum nemo deleniti aut omnis. Doloribus ut maiores omnis facere.</p>
-        </div>
-      </div>
-    </div>
+     <div class="col-lg-8 d-flex align-items-stretch">
+            <div class="d-flex flex-column justify-content-center">
+              <div class="row gy-4">
+                <div class="col-xl-4 d-flex align-items-stretch">
+  <div class="icon-box" data-aos="zoom-out" data-aos-delay="300">
+    <i class="bi bi-calendar-check"></i>
+    <h4>Book Appointments</h4>
+    <p>Schedule your appointments with ease using our intuitive and user-friendly booking system.</p>
   </div>
-    </div>
+</div><!-- End Icon Box -->
+<div class="col-xl-4 d-flex align-items-stretch">
+  <div class="icon-box" data-aos="zoom-out" data-aos-delay="400">
+    <i class="bi bi-file-medical"></i>
+    <h4>Create Medical Records</h4>
+    <p>Effortlessly create and manage comprehensive medical records for better patient care.</p>
+  </div>
+</div><!-- End Icon Box -->
+<div class="col-xl-4 d-flex align-items-stretch">
+  <div class="icon-box" data-aos="zoom-out" data-aos-delay="500">
+    <i class="bi bi-hospital"></i>
+    <h4>Register Your Hospital</h4>
+    <p>Join our network and benefit from our integrated hospital management solutions.</p>
+  </div>
+</div><!-- End Icon Box -->
+              </div>
+            </div>
+          </div>
+        </div><!-- End  Content-->
+        </div>
+        </div>
   <%# ABOUT US SECTION %>
-  <div class="container  py-5">
+  <div class="container py-5">
   <div class="row">
-    <div class="col-md-6 about-us">
+    <div class="col-md-6 about-us mb-4 mb-md-0 pr-5">
     </div>
     <div class="col-md-6">
       <h2>About Us</h2>
-      <p>Dolor iure expedita id fuga asperiores qui sunt consequatur minima. Quidem voluptas deleniti. Sit quia molestiae quia quas qui magnam itaque veritatis dolores. Corrupti totam ut eius incidunt reiciendis veritatis asperiores placeat.</p>
-      <div class="media mb-3">
-        <i class="fas fa-vials media-icon"></i>
-        <div class="media-body">
-          <h5>Ullamco laboris nisi ut aliquip consequat</h5>
-          <p>Magni facilis facilis repellendus cum excepturi quaerat praesentium libre trade</p>
-        </div>
-      </div>
-      <div class="media mb-3">
-        <i class="fas fa-hand-holding-medical media-icon"></i>
-        <div class="media-body">
-          <h5>Magnam soluta odio exercitationem reprehenderi</h5>
-          <p>Quo totam dolorum at pariatur aut distinctio dolorem laudantium illo direna pasata redi</p>
-        </div>
-      </div>
-      <div class="media">
-        <i class="fas fa-heartbeat media-icon"></i>
-        <div class="media-body">
-          <h5>Voluptatem et qui exercitationem</h5>
-          <p>Et velit et eos maiores est tempora et quos dolorem autem tempora incidunt maxime veniam</p>
-        </div>
+<p>Welcome to our Hospital Management System, where we prioritize patient care, efficiency, and cutting-edge technology to ensure the best healthcare experience. Our platform is designed to seamlessly connect patients with healthcare providers, manage appointments, and streamline hospital operations.</p>
+<div class="media mb-3">
+  <i class="fas fa-vials media-icon"></i>
+  <div class="media-body">
+    <h5>Innovative Solutions for Better Care</h5>
+    <p>Our system leverages advanced technology to provide innovative solutions that enhance patient care and improve operational efficiency.</p>
+  </div>
+</div>
+<div class="media mb-3">
+  <i class="fas fa-hand-holding-medical media-icon"></i>
+  <div class="media-body">
+    <h5>Comprehensive Patient Management</h5>
+    <p>From appointment scheduling to medical records management, our system offers comprehensive tools to manage every aspect of patient care.</p>
+  </div>
+</div>
+<div class="media">
+  <i class="fas fa-heartbeat media-icon"></i>
+  <div class="media-body">
+    <h5>Commitment to Excellence</h5>
+    <p>We are committed to providing the highest quality of healthcare services, ensuring that every patient receives personalized and compassionate care.</p>
+  </div>
+</div>
       </div>
     </div>
   </div>
@@ -147,21 +153,12 @@
           <li><a href="#">Graphic Design</a></li>
         </ul>
       </div>
-      <div class="col-md-3">
-        <h4>Hic solutasetp</h4>
-        <ul class="list-unstyled">
-          <li><a href="#">Molestiae accusamus iure</a></li>
-          <li><a href="#">Excepturi dignissimos</a></li>
-          <li><a href="#">Suscipit distinctio</a></li>
-          <li><a href="#">Dilecta</a></li>
-          <li><a href="#">Sit quas consectetur</a></li>
-        </ul>
-      </div>
+    
     </div>
   </div>
   <div class="text-center py-4">
-    &copy; Copyright <strong>Medilab</strong>. All Rights Reserved<br>
-    Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+    &copy; Copyright <strong>HMS</strong>. All Rights Reserved<br>
+    Designed by <a href="https://bootstrapmade.com/">Awais & Subhan</a>
   </div>
 </div>
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

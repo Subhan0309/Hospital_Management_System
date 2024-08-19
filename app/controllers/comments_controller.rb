@@ -25,16 +25,17 @@ class CommentsController < ApplicationController
   
     respond_to do |format|
       if @comment.save
+        CommentMailer.comment_notification(@medical_record, @comment).deliver_now
         if current_user.role == 'patient'
           format.html { redirect_to user_medical_records_path(current_user), notice: 'Comment was successfully created.' }
         elsif current_user.role == 'doctor'
-          format.html { redirect_to patients_path, notice: 'Comment was successfully created.' }
+          format.html { redirect_to user_medical_records_path(current_user), notice: 'Comment was successfully created.' }
         else
-          format.html { redirect_to root_path, notice: 'Comment was successfully created.' }
+          format.html { redirect_to user_medical_records_path(current_user), notice: 'Comment was successfully created.' }
         end
         format.js   # Handles JS requests
       else
-        format.html { render :new }
+      
         format.js   # Handles JS requests
       end
     end
@@ -46,10 +47,14 @@ class CommentsController < ApplicationController
 
   # PATCH/PUT /medical_records/:medical_record_id/comments/:id
   def update
-    if @comment.update(comment_params)
-      redirect_to user_medical_record_comments_url(@user,@medical_record), notice: 'Comment was successfully updated.'
-    else
-      render :edit
+    respond_to do |format|
+      if @comment.update(comment_params)
+        format.html { redirect_to user_medical_record_comments_url(@user, @medical_record), notice: 'Comment was successfully updated.' }
+        format.js   # This will render edit.js.erb
+      else
+        format.html { render :edit }
+        format.js   # This will render edit.js.erb to handle errors
+      end
     end
   end
 

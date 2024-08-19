@@ -1,10 +1,10 @@
-<div class="container appointment-section text-center">
-  <h2>New Appointment</h2>
-  <p>Book an appointment with a doctor</p>
+<div class="container appointment-section mt-5 mb-4">
+  <h2 class="text-center mb-4">New Appointment</h2>
+  <p class="text-center mb-4 lead">Book an appointment with a doctor</p>
 
   <% if @appointment.errors.any? %>
-    <div class="alert alert-danger">
-      <ul>
+    <div class="alert alert-danger mb-4">
+      <ul class="mb-0">
         <% @appointment.errors.full_messages.each do |message| %>
           <li><%= message %></li>
         <% end %>
@@ -13,33 +13,74 @@
   <% end %>
 
   <%= form_with(model: [@user, @appointment], url: user_appointments_path(@user), local: true, class: "appointment-form") do |form| %>
-    <div class="form-row">
-      <div class="form-group col-md-4">
-        <%= form.text_field :patient_name, class: "form-control", placeholder: "Your Name", value: current_user.name, readonly: true %>
+    <div class="card p-4 shadow-sm">
+      <div class="form-row mb-3">
+        <div class="form-group mb-3  col-md-6">
+          <%= form.text_field :patient_name, class: "form-control", placeholder: "Your Name", value: current_user.name, readonly: true %>
+        </div>
+        <div class="form-group mb-3 col-md-6">
+          <%= form.email_field :patient_email, class: "form-control", placeholder: "Your Email", value: current_user.email, readonly: true %>
+        </div>
       </div>
-      <div class="form-group col-md-4">
-        <%= form.email_field :patient_email, class: "form-control", placeholder: "Your Email", value: current_user.email, readonly: true %>
+
+      <div class="form-row mb-3">
+        <div class="form-group mb-3  col-md-6">
+          <%= form.datetime_local_field :start_time, class: "form-control", placeholder: "Start Time", id: "start_time" %>
+        </div>
+        <div class="form-group mb-3 col-md-6">
+          <%= form.datetime_local_field :end_time, class: "form-control", placeholder: "End Time", id: "end_time" %>
+        </div>
       </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group col-md-4">
-        <%= form.datetime_local_field :start_time, class: "form-control", placeholder: "Start Time" %>
-      </div>
-      <div class="form-group col-md-4">
-        <%= form.datetime_local_field :end_time, class: "form-control", placeholder: "End Time" %>
-      </div>
-      <div class="form-group col-md-4">
+
+      <div class="form-group mb-3">
         <%= form.label :doctor_id, class: "form-label" %>
-        <%= form.select :doctor_id, options_from_collection_for_select(@doctors, 'id', 'name'), { prompt: "Select Doctor" }, class: "form-control" %>
+        <%= form.select :doctor_id, [], { prompt: "Select Doctor" }, class: "form-control", id: "doctor_select" %>
+      </div>
+
+      <div class="form-group mb-3">
+        <%= form.text_area :message, class: "form-control", rows: 4, placeholder: "Message (Optional)" %>
+      </div>
+      <div class="form-group d-flex flex-row justify-content-center mb-3">
+      <%= form.submit 'Create Appointment', class: "btn btn-primary w-25 text-center" %>
       </div>
     </div>
-    <div class="form-group">
-      <%= form.label :status, class: "form-label" %>
-      <%= form.select :status, options_for_select(Appointment.statuses.keys.map { |status| [status.humanize, status] }, 'scheduled'), { prompt: "Select Status" }, class: "form-control" %>
-    </div>
-    <div class="form-group">
-      <%= form.text_area :message, class: "form-control", rows: 4, placeholder: "Message (Optional)" %>
-    </div>
-    <%= form.submit 'Create Appointment', class: "btn btn-primary" %>
   <% end %>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    var startTimeField = document.getElementById('start_time');
+    var endTimeField = document.getElementById('end_time');
+    var doctorSelect = document.getElementById('doctor_select');
+
+    function fetchAvailableDoctors() {
+      var startTime = startTimeField.value;
+      var endTime = endTimeField.value;
+
+      if (startTime && endTime) {
+        var userId = <%= current_user.id %>; // Ensure this Ruby code outputs the current user's ID
+        fetch(`/users/${userId}/appointments/available_doctors?start_time=${encodeURIComponent(startTime)}&end_time=${encodeURIComponent(endTime)}`)
+          .then(response => response.json())
+          .then(data => {
+            doctorSelect.innerHTML = '<option>Select Doctor</option>';
+            data.forEach(function(doctor) {
+              var option = document.createElement('option');
+              option.value = doctor.id;
+              option.text = `${doctor.name} (${doctor.availability})`;
+              if (doctor.availability === 'Not Available') {
+                option.disabled = true;
+              }
+              doctorSelect.appendChild(option);
+            });
+          })
+          .catch(error => {
+            console.error('Error fetching available doctors:', error);
+            alert('Failed to fetch available doctors');
+          });
+      }
+    }
+
+    startTimeField.addEventListener('change', fetchAvailableDoctors);
+    endTimeField.addEventListener('change', fetchAvailableDoctors);
+  });
+</script>

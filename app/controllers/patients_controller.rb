@@ -1,16 +1,17 @@
 class PatientsController < ApplicationController
+  before_action :authenticate_user!,  only: [:show, :edit, :update, :destroy]
   before_action :set_patient, only: [:show, :edit, :update, :destroy]
-
+  before_action :set_details, only: [:edit, :update, :show]
   # GET /patients
   def index
     
     if current_user.role == 'doctor'
       @doctor=Doctor.find(current_user.id)
-      @patients= @doctor.patients
+      @patients= @doctor.patients.paginate(page: params[:page],per_page:2).distinct
       
  
     else
-      @patients = User.where(hospital_id: ActsAsTenant.current_tenant.id, role: 'patient')
+      @patients = User.where(hospital_id: ActsAsTenant.current_tenant.id, role: 'patient').paginate(page: params[:page],per_page:2)
     end
 
   end
@@ -23,6 +24,7 @@ class PatientsController < ApplicationController
   # GET /patients/new
   def new
     @patient = Patient.new
+    @patient.build_detail
   end
 
   # POST /patients
@@ -30,7 +32,13 @@ class PatientsController < ApplicationController
     @patient = Patient.new(patient_params)
     @patient.role= 'patient'
     if @patient.save
-      redirect_to patients_path, notice: 'Patient was successfully created.'
+      UserMailer.welcome_email(@patient).deliver_now 
+      
+      if current_user.nil?
+        redirect_to new_user_session_path, notice: 'Please log in to continue.'
+      else
+        redirect_to patients_path, notice: 'Patient was successfully created.'
+      end
     else
       render :new
     end
@@ -43,6 +51,7 @@ class PatientsController < ApplicationController
 
   # PATCH/PUT /patients/1
   def update
+    binding.pry
     if @patient.update(patient_params)
       redirect_to patients_path, notice: 'Patient was successfully updated.'
     else
@@ -57,6 +66,7 @@ class PatientsController < ApplicationController
     end
   end
 
+ 
   private
 
   # Use callbacks to share common setup or constraints between actions.
@@ -64,8 +74,12 @@ class PatientsController < ApplicationController
     @patient = Patient.find(params[:id])
   end
 
+  def set_details
+    @details = Detail.where(associated_with_id: @patient.id)
+ 
+  end
   # Only allow a list of trusted parameters through.
   def patient_params
-    params.require(:patient).permit(:name, :email,:password, :password_confirmation, :gender, :hospital_id) # Add other permitted attributes here
+    params.require(:patient).permit(:name, :email,:password, :password_confirmation, :gender, :hospital_id,detail_attributes: [:id, :specialization, :qualification, :disease, :status, :_destroy]) # Add other permitted attributes here
   end
 end

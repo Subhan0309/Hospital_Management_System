@@ -1,9 +1,12 @@
-<%= render layout: "layouts/users" do %> 
-   
-
-
-<h1>Search Results</h1>
-
+<!-- Flex container for header and button -->
+<div class="d-flex flex-row justify-content-between align-items-center mb-3 mt-5 border p-3">
+  <!-- Heading -->
+  <h3 class="text-primary mb-0 fs-4 fs-md-6">Search Results</h3>
+</div>
+<div class="d-flex flex-row justify-content-between align-items-center mb-3 mt-5 p-3">
+  <!-- Heading -->
+  <h3 class="text-primary mb-0 fs-4 fs-md-6">Users Results</h3>
+</div>
 <% if @query.present? %>
   <% if @user_results.present? %>
     <div class="table-responsive">
@@ -17,7 +20,7 @@
         </thead>
         <tbody>
           <% @user_results.with_highlights.each do |user, highlights| %>
-            <tr>
+            <tr class="clickable-row" data-href="<%= user_path(user) %>">
               <td>
                 <% if highlights[:name].present? %>
                   <%= raw(highlights[:name]) %>
@@ -43,17 +46,40 @@
           <% end %>
         </tbody>
       </table>
-       <!-- Pagination links -->
-     <!-- Pagination links -->
-    <div class="pagination">
-      <%= will_paginate @user_results, params: { query: params[:query] } %>
-    </div>
+      <!-- Pagination links -->
+      <div class="pagination">
+        <%= will_paginate @user_results, params: { query: params[:query] } %>
+      </div>
     </div>
   <% else %>
-    <p>No users found</p>
+    <div class="alert alert-danger" role="alert">
+      No Users found.
+    </div>
   <% end %>
-
-
 <% end %>
 
-<% end %>
+<style>
+  /* Add hover effect and pointer cursor */
+  .clickable-row {
+    cursor: pointer;
+  }
+
+  .clickable-row:hover {
+    background-color: #f1f1f1; /* Light grey background on hover */
+  }
+</style>
+
+<script>
+  // Add a click event listener to each row with the class 'clickable-row'
+  document.addEventListener('DOMContentLoaded', function() {
+    const rows = document.querySelectorAll('.clickable-row');
+    rows.forEach(row => {
+      row.addEventListener('click', function() {
+        const href = this.getAttribute('data-href');
+        if (href) {
+          window.location.href = href;
+        }
+      });
+    });
+  });
+</script>

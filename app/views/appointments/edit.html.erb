@@ -1,6 +1,6 @@
 <div class="container appointment-section text-center">
-  <h2>Edit Appointment</h2>
-  <p>Update your appointment details</p>
+ <h2><%= t('appointments.edit') %></h2>
+  <p><%= t('appointments.update_details') %></p>
 
   <% if @appointment.errors.any? %>
     <div class="alert alert-danger">
@@ -35,11 +35,11 @@
     </div>
     <div class="form-group">
         <%= form.label :status, class: "form-label" %>
-        <%= form.select :status, options_for_select( @appointment.aasm.states(permitted: true).map { |status| [status, status] }, @appointment.status), { prompt: "Select Status" }, class: "form-control" %>
+        <%= form.select :status, options_for_select( @appointment.aasm.states(permitted: true).map { |status| [t("appointments.statuses.#{status}"), status] }, @appointment.status), { prompt: "Select Status" }, class: "form-control" %>
       </div>
     <div class="form-group">
-      <%= form.text_area :message, class: "form-control", rows: 4, placeholder: "Message (Optional)" %>
+      <%= form.text_area :message, class: "form-control", rows: 4, placeholder: t('message') %>
     </div>
-    <%= form.submit 'Update Appointment', class: "btn btn-primary" %>
+    <%= form.submit t('appointments.update'), class: "btn btn-primary" %>
   <% end %>
 </div>

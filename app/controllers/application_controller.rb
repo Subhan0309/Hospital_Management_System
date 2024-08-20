@@ -3,9 +3,10 @@ class ApplicationController < ActionController::Base
   set_current_tenant_by_subdomain(:hospital, :subdomain)
 
   before_action :log_current_tenant
+  before_action :set_locale
 
-
-
+  
+  
   def routing_error
     raise ActionController::RoutingError, 'Page not found'
   end
@@ -40,6 +41,22 @@ class ApplicationController < ActionController::Base
   def log_current_tenant
     Rails.logger.info "Current tenant is: #{current_tenant.inspect}" if current_tenant
     Rails.logger.info "Current user is: #{current_user.inspect}" if current_user
+  end
+
+
+  def default_url_options
+    {locale: I18n.locale}
+  end
+
+  def set_locale
+    I18n.locale = extract_locale || I18n.default_locale
+  end
+
+  def extract_locale
+    parsed_locale = params[:locale]
+    I18n.available_locales.map(&:to_s).include?(parsed_locale) ?
+      parsed_locale.to_sym :
+      nil
   end
 end
 

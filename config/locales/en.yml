@@ -1,33 +1,111 @@
-# Files in the config/locales directory are used for internationalization
-# and are automatically loaded by Rails. If you want to use locales other
-# than English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t 'hello'
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t('hello') %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# The following keys must be escaped otherwise they will not be retrieved by
-# the default I18n backend:
-#
-# true, false, on, off, yes, no
-#
-# Instead, surround them with single quotes.
-#
-# en:
-#   'true': 'foo'
-#
-# To learn more, please read the Rails Internationalization guide
-# available at https://guides.rubyonrails.org/i18n.html.
-
 en:
-  hello: "Hello world"
+  hello: "Hello"
+  message: "Message (Optional)"
+  appointments:
+    title: "Appointments"
+    delete_all_confirm: "Are you sure you want to delete all appointments?"
+    delete_all: "Delete All Appointments"
+    calendar: "Appointments Calendar"
+    start_time: "Start Time"
+    end_time: "End Time"
+    status: "Status"
+    doctor: "Doctor"
+    patient: "Patient"
+    actions: "Actions"
+    edit: "Edit"
+    delete: "Delete"
+    confirm_delete: "Are you sure?"
+    no_appointments: "No appointments found."
+
+    update_details: "Update your appointment details"
+    new: "New Appointment"
+    edit: "Edit Appointment"
+    show: "Show Appointment"
+    update: "Update Appointment"
+    create: "Create Appointment"
+    book: "Book an appointment with a doctor"
+    statuses:
+      scheduled: "Scheduled"
+      canceled: "Canceled"
+      completed: "Completed"
+  doctors:
+    index: "Doctors"
+    show: "Doctor Details"
+    new: "New Doctor"
+    edit: "Edit Doctor"
+    name: "Name"
+    specialty: "Specialty"
+    select: "Select Doctor"
+  patients:
+    index: "Patients"
+    show: "Patient Details"
+    new: "New Patient"
+    edit: "Edit Patient"
+    name: "Name"
+    age: "Age"
+  medical_records:
+    title: "Medical Records"
+    create: "Create Medical Record"
+    date: "Date"
+    doctor: "Doctor"
+    patient: "Patient"
+    details: "Details"
+    actions: "Actions"
+    show: "Show"
+    no_records: "No medical records found for this Patient."
+    create_title: "Create New Medical Record"
+    patient_info: "Patient Information"
+    patient_name: "Patient Name"
+    patient_email: "Patient Email"
+    details: "Medical Record Details"
+    attachments: "Attachments"
+    create_button: "Create Medical Record"
+    errors:
+      error: "error"
+      prohibited: "prohibited this medical record from being saved"
+    record_details: "Record Details"
+    date: "Date"
+    doctor_name: "Doctor Name"
+    patient_name: "Patient Name"
+    doctor_email: "Doctor Email"
+    patient_email: "Patient Email"
+    details: "Details"
+    add_comment: "Add Comment"
+    view_comments: "View Comments"
+    attachments_title: "Attachments"
+    file_name: "File Name"
+    actions: "Actions"
+    preview: "Preview"
+    download: "Download"
+    delete: "Delete"
+    delete_confirm: "Are you sure?"
+    no_attachments: "No attachments available."
+    add_attachment: "Add Attachment"
+    upload_files: "Upload Files"
+    upload_files_button: "Upload Files"
+  comments:
+    index: "Comments"
+    new: "New Comment"
+    edit: "Edit Comment"
+    description_error: "Description can't be empty."
+    add_button: "Add Comment"
+    content: "Content"
+  users:
+    index: "Users"
+    show: "User Details"
+    new: "New User"
+    edit: "Edit User"
+    email: "Email"
+    password: "Password"
+  sidebar:
+    profile: "Profile"
+    dashboard: "Dashboard"
+    update_hospital_profile: "Update Hospital Profile"
+    appointments: "Appointments"
+    medical_records: "Medical Records"
+    people: "People"
+    staff: "Staff"
+    doctors: "Doctors"
+    patients: "Patients"
+    sign_out: "Sign out"
+

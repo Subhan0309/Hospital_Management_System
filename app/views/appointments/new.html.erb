@@ -1,6 +1,6 @@
 <div class="container appointment-section text-center">
-  <h2>New Appointment</h2>
-  <p>Book an appointment with a doctor</p>
+  <h2><%=t 'appointments.new' %></h2>
+  <p><%=t 'appointments.book'%></p>
 
   <% if @appointment.errors.any? %>
     <div class="alert alert-danger">
@@ -30,13 +30,13 @@
       </div>
       <div class="form-group col-md-4">
         <%= form.label :doctor_id, class: "form-label" %>
-        <%= form.select :doctor_id, [], { prompt: "Select Doctor" }, class: "form-control", id: "doctor_select" %>
+        <%= form.select :doctor_id, [], { prompt: t('doctors.select') }, class: "form-control", id: "doctor_select" %>
       </div>
     </div>
     <div class="form-group">
-      <%= form.text_area :message, class: "form-control", rows: 4, placeholder: "Message (Optional)" %>
+      <%= form.text_area :message, class: "form-control", rows: 4, placeholder: t('message') %>
     </div>
-    <%= form.submit 'Create Appointment', class: "btn btn-primary" %>
+    <%= form.submit t('appointments.create'), class: "btn btn-primary" %>
   <% end %>
 </div>
 

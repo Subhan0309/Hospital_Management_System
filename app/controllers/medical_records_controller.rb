@@ -2,6 +2,7 @@ class MedicalRecordsController < ApplicationController
   before_action :set_user
   before_action :set_medical_record, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!
+  before_action :set_medical_record_doctor, only: [:show]
   
   def index
     if current_user.doctor?
@@ -56,7 +57,6 @@ class MedicalRecordsController < ApplicationController
     redirect_to medical_records_url, notice: 'Medical record was successfully destroyed.'
   end
   def attach_files
-    binding.pry
     @medical_record = MedicalRecord.find(params[:id])
     if params[:attachments]
       params[:attachments].each do |attachment|
@@ -85,6 +85,10 @@ class MedicalRecordsController < ApplicationController
   def set_medical_record
     @medical_record = @patient.medical_records.find(params[:id])
   end
+  def set_medical_record_doctor
+   @doctor = Doctor.find(@medical_record.doctor_id)
+  end
+  
   def medical_record_params
     params.require(:medical_record).permit(:date, :details, :patient_id, :doctor_id, attachments: [])
   end

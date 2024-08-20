@@ -120,8 +120,7 @@ class AppointmentsController < ApplicationController
     when 'completed'
       @appointment.complete!
     when 'canceled'
-    
-      @appointment.cancel!
+     @appointment.canceled!
     when 'scheduled'
       @appointment.reschedule! if @appointment.may_reschedule?
     end

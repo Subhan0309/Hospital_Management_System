@@ -1,33 +1,43 @@
 <div class="container">
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>Medical Records</h1>
-<%if current_user.role == 'doctor'%>
-    <%= link_to 'Create Medical Record', new_user_medical_record_path(@patient), class: 'btn btn-primary' %>
- <%end%>
-      </div>
+    <h1><%= t('medical_records.title') %></h1>
+    <% if current_user.role == 'doctor' %>
+      <%= link_to t('medical_records.create'), new_user_medical_record_path(@patient), class: 'btn btn-primary' %>
+    <% end %>
+  </div>
+  
   <% if @medical_records.any? %>
     <table class="table">
       <thead>
         <tr>
-          <th>Date</th>
-          <th>Patient</th>
-          <th>Details</th>
+          <th><%= t('medical_records.date') %></th>
+          <% if current_user.role == 'patient' %>
+            <th><%= t('medical_records.doctor') %></th>
+          <% else %>
+            <th><%= t('medical_records.patient') %></th>
+          <% end %>
+          <th><%= t('medical_records.details') %></th>
+          <th><%= t('medical_records.actions') %></th>
         </tr>
       </thead>
       <tbody>
         <% @medical_records.each do |record| %>
           <tr>
             <td><%= record.date.strftime('%B %d, %Y') %></td>
-            <td><%= Patient.find(record.patient_id).name %></td>
+            <% if current_user.role == 'patient' %>
+              <td><%= Doctor.find(record.doctor_id).name %></td>
+            <% else %>
+              <td><%= Patient.find(record.patient_id).name %></td>
+            <% end %>
             <td><%= record.details %></td>
             <td>
-              <%= link_to 'Show', user_medical_record_path(@patient, record), class: 'btn btn-info' %>
+              <%= link_to t('medical_records.show'), user_medical_record_path(@patient, record), class: 'btn btn-info' %>
             </td>
           </tr>
         <% end %>
       </tbody>
     </table>
   <% else %>
-    <p>No medical records found for this Patient.</p>
+    <p><%= t('medical_records.no_records') %></p>
   <% end %>
 </div>

@@ -1,80 +1,81 @@
 <div class="container">
-  <h1 class="text-center my-4 text-primary">Medical Record</h1>
+  <h1 class="text-center my-4 text-primary">
+    <%= t('medical_records.title') %>
+  </h1>
 
   <div class="card mb-4">
     <div class="card-body">
-      <h5 class="card-title">Record Details</h5>
+      <h5 class="card-title"><%= t('medical_records.record_details') %></h5>
       <div class="row">
         <div class="col-md-6 mb-3">
-          <strong>Date:</strong>
+          <strong><%= t('medical_records.date') %>:</strong>
           <p><%= @medical_record.date.strftime('%B %d, %Y') %></p>
         </div>
         <div class="col-md-6 mb-3">
-          <strong>Patient Name:</strong>
+          <strong><%= t('medical_records.doctor_name') %>:</strong>
+          <p><%= @doctor.name %></p>
+          <strong><%= t('medical_records.patient_name') %>:</strong>
           <p><%= @medical_record.patient.name %></p>
         </div>
         <div class="col-md-6 mb-3">
-          <strong>Patient Email:</strong>
+          <strong><%= t('medical_records.doctor_email') %>:</strong>
+          <p><%= @doctor.email %></p>
+          <strong><%= t('medical_records.patient_email') %>:</strong>
           <p><%= @medical_record.patient.email %></p>
         </div>
         <div class="col-md-12">
-          <strong>Details:</strong>
+          <strong><%= t('medical_records.details') %>:</strong>
           <p><%= @medical_record.details %></p>
         </div>
       </div>
-      <hr >
+      <hr>
       <div>
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCommentModal">
-          Add Comment
+          <%= t('medical_records.add_comment') %>
         </button>
-        <%= link_to 'View Comments', user_medical_record_comments_path(current_user, @medical_record), class: 'btn btn-secondary ms-2' %>
-        </div>
+        <%= link_to t('medical_records.view_comments'), user_medical_record_comments_path(current_user, @medical_record), class: 'btn btn-secondary ms-2' %>
+      </div>
     </div>
   </div>
 
   <div class="card mb-4">
     <div class="card-body">
-      <h5 class="card-title">Attachments</h5>
+      <h5 class="card-title"><%= t('medical_records.attachments_title') %></h5>
       <% if @medical_record.attachments.any? %>
         <table class="table table-hover table-responsive">
           <thead>
             <tr>
-              <th scope="col">File Name</th>
-              <th scope="col">Actions</th>
+              <th scope="col"><%= t('medical_records.file_name') %></th>
+              <th scope="col"><%= t('medical_records.actions') %></th>
             </tr>
           </thead>
           <tbody>
             <% @medical_record.attachments.each do |attachment| %>
               <tr>
                 <td><%= attachment.filename.to_s %></td>
-                
                 <td class="d-flex flex-row">
-                  <%= link_to 'Preview', rails_blob_path(attachment,disposition: "_inline"),target: '_blank', class: 'btn btn-sm btn-outline-primary me-2' %>
-      
-                  <%= link_to 'Download', rails_blob_path(attachment, disposition: "attachment"), class: 'btn btn-sm btn-outline-secondary me-2' %>
-                   <%= button_to 'Delete', 
+                  <%= link_to t('medical_records.preview'), rails_blob_path(attachment, disposition: "inline"), target: '_blank', class: 'btn btn-sm btn-outline-primary me-2' %>
+                  <%= link_to t('medical_records.download'), rails_blob_path(attachment, disposition: "attachment"), class: 'btn btn-sm btn-outline-secondary me-2' %>
+                  <%= button_to t('medical_records.delete'), 
                       user_medical_record_delete_attachment_path(
                         user_id: @medical_record.patient.id, 
                         medical_record_id: @medical_record.id, 
                         attachment_id: attachment.id
                       ), 
                       method: :delete, 
-                      data: { confirm: 'Are you sure?' }, 
+                      data: { confirm: t('medical_records.delete_confirm') }, 
                       class: 'btn btn-sm btn-outline-danger' %>
-               </td>
-
-
-
+                </td>
               </tr>
             <% end %>
           </tbody>
         </table>
       <% else %>
-        <p class="text-muted">No attachments available.</p>
+        <p class="text-muted"><%= t('medical_records.no_attachments') %></p>
       <% end %>
       <div class="mt-4">
         <button type="button" class="btn btn-success ms-2" data-bs-toggle="modal" data-bs-target="#addAttachmentModal">
-          Add Attachment
+          <%= t('medical_records.add_attachment') %>
         </button>
       </div>
     </div>
@@ -86,18 +87,17 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="addAttachmentModalLabel">Add Attachment</h5>
+        <h5 class="modal-title" id="addAttachmentModalLabel"><%= t('medical_records.add_attachment') %></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-       <%= form_with(model: [@patient, @medical_record], url: user_medical_record_path(@medical_record.patient.id, @medical_record), method: :patch, local: true, multipart: true) do |f| %>
- 
-        <div class="mb-3">
-            <%= f.label :attachments, 'Upload Files' %>
+        <%= form_with(model: [@patient, @medical_record], url: user_medical_record_path(@medical_record.patient.id, @medical_record), method: :patch, local: true, multipart: true) do |f| %>
+          <div class="mb-3">
+            <%= f.label :attachments, t('medical_records.upload_files') %>
             <%= f.file_field :attachments, multiple: true, class: 'form-control' %>
           </div>
           <div class="mb-3">
-            <%= f.submit 'Upload Files', class: 'btn btn-primary' %>
+            <%= f.submit t('medical_records.upload_files_button'), class: 'btn btn-primary' %>
           </div>
         <% end %>
       </div>
@@ -110,7 +110,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="addCommentModalLabel">Add Comment</h5>
+        <h5 class="modal-title" id="addCommentModalLabel"><%= t('medical_records.add_comment') %></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -119,11 +119,11 @@
             <%= f.label :description %>
             <%= f.text_area :description, class: 'form-control', required: true %>
             <div class="invalid-feedback">
-              Description can't be empty.
+              <%= t('comments.description_error') %>
             </div>
           </div>
           <div class="form-group mt-3">
-            <%= f.submit 'Add Comment', class: 'btn btn-primary' %>
+            <%= f.submit t('comments.add_button'), class: 'btn btn-primary' %>
           </div>
         <% end %>
       </div>

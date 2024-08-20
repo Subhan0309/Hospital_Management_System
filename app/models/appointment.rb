@@ -55,7 +55,9 @@ class Appointment < ApplicationRecord
       AppointmentMailer.reminder_email(appointment).deliver_now
     end
   end
-
+  def translated_status
+    I18n.t("appointments.statuses.#{status}")
+  end
 
 
 end

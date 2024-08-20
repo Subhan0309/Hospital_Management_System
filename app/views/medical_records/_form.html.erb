@@ -1,29 +1,30 @@
 <div class="container">
   <h1 class="text-center mb-4 text-primary">
-    Create New Medical Record
+    <%= t('medical_records.create_title') %>
   </h1>
-  <%binding.pry%>
+
   <%= form_with(model: [@patient, @medical_record], url: user_medical_records_path(@patient), local: true) do |form| %>
-   <% if @medical_record.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@medical_record.errors.count, "error") %> prohibited this medical record from being saved:</h2>
-      <ul>
-        <% @medical_record.errors.full_messages.each do |message| %>
-          <li class="text-danger"><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+    <% if @medical_record.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= pluralize(@medical_record.errors.count, t('errors.error')) %> <%= t('errors.prohibited') %>:</h2>
+        <ul>
+          <% @medical_record.errors.full_messages.each do |message| %>
+            <li class="text-danger"><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
     <div class="card mb-4">
       <div class="card-body">
-        <h5 class="card-title">Patient Information</h5>
+        <h5 class="card-title"><%= t('medical_records.patient_info') %></h5>
         <div class="row">
           <div class="col-md-6">
-            <label>Patient Name</label>
+            <label><%= t('medical_records.patient_name') %></label>
             <p class="form-control-plaintext"><%= @user.name %></p>
           </div>
           <div class="col-md-6">
-            <label>Patient Email</label>
+            <label><%= t('medical_records.patient_email') %></label>
             <p class="form-control-plaintext"><%= @user.email %></p>
           </div>
         </div>
@@ -32,20 +33,18 @@
 
     <div class="form-row">
       <div class="form-group col-md-12">
-        <%= form.label :details, "Medical Record Details" %>
+        <%= form.label :details, t('medical_records.details') %>
         <%= form.text_area :details, class: "form-control", rows: 4 %>
-       
       </div>
     </div>
 
-    <!-- Attachment Field -->
     <div class="form-group mt-5">
-      <%= form.label :attachments, "Attachments" %>
+      <%= form.label :attachments, t('medical_records.attachments') %>
       <%= form.file_field :attachments, multiple: true, class: "form-control" %>
     </div>
 
     <%= form.hidden_field :date, value: Time.now %>
 
-    <%= form.submit "Create Medical Record", class: "btn btn-primary mt-4" %>
+    <%= form.submit t('medical_records.create_button'), class: "btn btn-primary mt-4" %>
   <% end %>
 </div>

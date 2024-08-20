@@ -1,10 +1,23 @@
 <div class="d-flex flex-column flex-md-row align-items-center justify-content-between bg-light py-2 px-3 border-bottom position-sticky">
-        <h5 class="my-0 mr-md-auto font-weight-normal text-primary"><%= ActsAsTenant.current_tenant.name.capitalize %></h5>
-        <!-- Updated search form using Bootstrap -->
-        <%= form_with url: search_path, method: :get, local: true, class: 'd-flex' do %>
-          <input class="form-control me-2 mt-2" type="search" name="query" placeholder="Search" aria-label="Search" value="<%= params[:query] %>">
-          <button class="btn btn-outline-primary" type="submit">
-                  <i class="bi bi-search"></i>
-                </button>
-        <% end %>
-      </div>
+  <h5 class="my-0 mr-md-auto font-weight-normal text-primary">
+    <%= ActsAsTenant.current_tenant.name.capitalize %>
+  </h5>
+  <!-- Updated search form using Bootstrap -->
+  <%= form_with url: search_path, method: :get, local: true, class: 'd-flex' do %>
+    <input class="form-control me-2 mt-2" type="search" name="query" placeholder="Search" aria-label="Search" value="<%= params[:query] %>">
+    <button class="btn btn-outline-primary" type="submit">
+      <i class="bi bi-search"></i>
+    </button>
+  <% end %>
+
+  <!-- Language Dropdown -->
+  <div class="dropdown ms-2" >
+  <button class="btn btn-outline-primary dropdown-toggle" type="button" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+    <i class="bi bi-globe"></i> <%= t('language') %>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+    <li><%= link_to 'English', url_for(locale: :en), class: 'dropdown-item' %></li>
+    <li><%= link_to 'Español', url_for(locale: :es), class: 'dropdown-item' %></li>
+  </ul>
+</div>
+</div>

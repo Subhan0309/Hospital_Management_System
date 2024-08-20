@@ -6,7 +6,7 @@ class User < ApplicationRecord
   scope :doctors, -> { where(role: 'doctor') }
   devise :database_authenticatable, :registerable,
   :recoverable, :rememberable , :validatable
-  searchkick word_middle: [:name, :email, :role], highlight: [:name, :email, :role]
+  # searchkick word_middle: [:name, :email, :role], highlight: [:name, :email, :role]
   has_many :hospitals, dependent: :destroy
   has_one_attached :profile_picture
   enum role:

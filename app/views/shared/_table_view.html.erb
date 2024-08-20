@@ -48,14 +48,24 @@
                   <% end %>
                 <% end %>
 
-                <% if resource_class == Patient || resource_class == Doctor %>
-                  <!-- Appointments -->
-                  <%= link_to show_appointments_path.call(item), class: 'btn btn-outline-success btn-sm' do %>
-                    <span>Appointments</span>
+                  <% if ( (resource_class == Patient || resource_class == Doctor) ) %>
+                    
+                      <!-- Appointments --> 
+                      <% if current_user.role == 'patient'%>
+                      <%= link_to show_appointments_path.call(current_user), class: 'btn btn-outline-success btn-sm' do %>
+                        <span>Appointments</span>
+                        <%end%>
+                        <%else%>
+                         <%= link_to show_appointments_path.call(item), class: 'btn btn-outline-success btn-sm' do %>
+                        <span>Appointments</span>
+                      <% end %>
+                      <%end%>
+                  
                   <% end %>
-                <% end %>
-              </td>
-            <% end %>
+                </td>
+          <% end %>
+
+
 
             <td class="d-flex flex-row justify-content-evenly">
               <% if can?(:update, item) %>

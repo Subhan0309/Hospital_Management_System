@@ -18,17 +18,17 @@ class MedicalRecordsController < ApplicationController
   end
 
   def new
-    @medical_record = @user.medical_records.new
+    @medical_record = @patient.medical_records.new
   end
 
   def create
   
-    @medical_record = @user.medical_records.new(medical_record_params)
+    @medical_record = @patient.medical_records.new(medical_record_params)
     @medical_record.doctor_id=current_user.id
   
     if @medical_record.save
      
-      redirect_to user_medical_records_path(@user), notice: 'Medical record was successfully created.'
+      redirect_to user_medical_records_path(@patient), notice: 'Medical record was successfully created.'
     else
       render :new, alert: @medical_record.errors.full_messages.to_sentence
     end

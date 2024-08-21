@@ -15,23 +15,26 @@
       </div>
     <% end %>
 
-    <div class="card mb-4">
-      <div class="card-body">
-        <h5 class="card-title"><%= t('medical_records.patient_info') %></h5>
-        <div class="row">
-          <div class="col-md-6">
-            <label><%= t('medical_records.patient_name') %></label>
-            <p class="form-control-plaintext"><%= @user.name %></p>
-          </div>
-          <div class="col-md-6">
-            <label><%= t('medical_records.patient_email') %></label>
-            <p class="form-control-plaintext"><%= @user.email %></p>
-          </div>
-        </div>
+   <div class="card mb-4 shadow-sm rounded-lg border-0">
+  <div class="card-body bg-light">
+    <h5 class="card-title text-primary font-weight-bold">
+      <i class="bi bi-info-circle-fill"></i> <%= t('medical_records.patient_info') %>
+    </h5>
+    <div class="row mt-4">
+      <div class="col-md-6">
+        <label class="font-weight-semibold text-muted"><%= t('medical_records.patient_name') %></label>
+        <p class="form-control-plaintext border rounded p-2 bg-white shadow-sm"><%= @patient.name %></p>
+      </div>
+      <div class="col-md-6">
+        <label class="font-weight-semibold text-muted"><%= t('medical_records.patient_email') %></label>
+        <p class="form-control-plaintext border rounded p-2 bg-white shadow-sm"><%= @patient.email %></p>
       </div>
     </div>
+  </div>
+</div>
 
-    <div class="form-row">
+
+   <div class="form-row">
       <div class="form-group col-md-12">
         <%= form.label :details, t('medical_records.details') %>
         <%= form.text_area :details, class: "form-control", rows: 4 %>

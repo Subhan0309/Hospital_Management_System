@@ -49,8 +49,20 @@
             <% end %>
           </li>
         <% end %>
-
-        <li class="d-none d-md-block mt-2">
+         <%if current_user.role == "doctor"%>
+      <div>
+      <%= link_to t('medical_records.view_comments'), doctor_comments_path(current_user), class: 'btn btn-secondary ms-2' %>
+      </div>      
+       <%elsif current_user.role == "patient"%>
+       <div>
+      <%= link_to t('medical_records.view_comments'), patient_comments_path(current_user), class: 'btn btn-secondary ms-2' %>
+      </div>      
+       <%elsif current_user.role == "admin" || current_user.role == "staff"%>
+        <div>
+      <%= link_to t('medical_records.view_comments'), user_comments_path(current_user), class: 'btn btn-secondary ms-2' %>
+      </div>     
+      <%end%>
+      <li class="d-none d-md-block mt-2">
           <a href="#submenu3" data-bs-toggle="collapse" class="nav-link px-0 align-middle text-white">
             <i class="fs-6 bi-people"></i> <span class="ms-1 d-none d-md-inline fs-6"><%= t('sidebar.people') %></span>
           </a>

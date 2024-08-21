@@ -20,7 +20,7 @@ class UsersController < ApplicationController
     @user=User.new(user_params)
     @user.hospital_id=ActsAsTenant.current_tenant.id
     if @user.save
-      UserMailer.welcome_email(@patient).deliver_now 
+      UserMailer.welcome_email(@user).deliver_now 
       redirect_to users_path,notice: "User (#{user_params[:role]}) was Successfully created"
     else
        # Render the new template again with errors

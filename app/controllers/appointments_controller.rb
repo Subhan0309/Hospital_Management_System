@@ -9,14 +9,11 @@ class AppointmentsController < ApplicationController
   
   def index
     if current_user.patient?
-      set_specific_doctor_appointment
-
-      if current_user.id == params[:user_id].to_i
-        @appointments = @user.appointments
-     
-     else
-      @appointments = @specific_doctor.appointments.where(patient_id: current_user.id)
-     end
+        if current_user.id == params[:user_id].to_i
+          @appointments = @user.appointments
+        else
+        @appointments = @specific_doctor.appointments.where(patient_id: current_user.id)
+        end
     elsif current_user.doctor?
       @appointments = if current_user.id == params[:user_id].to_i
                         @user.appointments
@@ -38,67 +35,7 @@ class AppointmentsController < ApplicationController
  
   end
 
-  # def create
-  #   @appointment = @user.appointments.new(appointment_params)
-   
-  #   if @appointment.save
-  #     #email - notifications
-  #     AppointmentMailer.with(appointment: @appointment).appointment_confirmation_patient.deliver_now
-  #     AppointmentMailer.with(appointment: @appointment).appointment_confirmation_doctor.deliver_now
-
-
-   
-  #   ActionCable.server.broadcast("appointment_channel_#{@appointment.doctor_id}", {
-  #     action: 'create',
-  #     appointment: {
-  #       id: @appointment.id,
-  #       date: @appointment.start_time.to_s(:db),
-  #       html: render_to_string( partial: 'appointments/appointment', locals: { appointment: @appointment, user: @user})
-  #     }
-  #   })
-
-  #     redirect_to user_appointments_path(@user), notice: 'Appointment was successfully created.'
-  #   else
-  #     flash.now[:alert] = 'Doctor is not available at this time'
-  #     render :new, status: :unprocessable_entity
-  #   end
-  # end
-
- 
-
-  # def update
-  #   if @appointment.update(appointment_params)
-  #     ActionCable.server.broadcast('appointment_channel', {
-  #       action: 'update',
-  #       appointment: {
-  #         id: @appointment.id,
-  #         date: @appointment.start_time.to_s(:db),
-  #         html: render_to_string(partial: 'appointments/appointment', locals: { appointment: @appointment, user: @user })
-  #       }
-  #     })
-  #     redirect_to user_appointments_path(@user), notice: 'Appointment was successfully updated.'
-  #   else
-  #     render :edit
-  #   end
-  # end
-
-  # def destroy
-  #   @appointment.destroy
-  #   # Broadcast destroy
-   
-  #       ActionCable.server.broadcast('appointment_channel', { 
-  #         action: 'destroy', 
-  #         appointment: {
-  #         id: @appointment.id,
-  #         date: @appointment.start_time.to_s(:db)
-  #         }
-  #       })
-  #   redirect_to user_appointments_path(@user), notice: 'Appointment was successfully destroyed.'
-  # end
-
-
-
-
+  
 
   def create
     @appointment = @user.appointments.new(appointment_params)

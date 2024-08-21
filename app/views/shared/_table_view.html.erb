@@ -51,14 +51,10 @@
                   <% if ( (resource_class == Patient || resource_class == Doctor) ) %>
                     
                       <!-- Appointments --> 
-                      <% if current_user.role == 'patient'%>
-                      <%= link_to show_appointments_path.call(current_user), class: 'btn btn-outline-success btn-sm' do %>
-                        <span>Appointments</span>
-                        <%end%>
-                        <%else%>
+                      
                          <%= link_to show_appointments_path.call(item), class: 'btn btn-outline-success btn-sm' do %>
                         <span>Appointments</span>
-                      <% end %>
+                     
                       <%end%>
                   
                   <% end %>

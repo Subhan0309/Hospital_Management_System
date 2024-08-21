@@ -3,40 +3,43 @@
     <%= t('medical_records.title') %>
   </h1>
 
-  <div class="card mb-4">
-    <div class="card-body">
-      <h5 class="card-title"><%= t('medical_records.record_details') %></h5>
-      <div class="row">
-        <div class="col-md-6 mb-3">
-          <strong><%= t('medical_records.date') %>:</strong>
-          <p><%= @medical_record.date.strftime('%B %d, %Y') %></p>
-        </div>
-        <div class="col-md-6 mb-3">
-          <strong><%= t('medical_records.doctor_name') %>:</strong>
-          <p><%= @doctor.name %></p>
-          <strong><%= t('medical_records.patient_name') %>:</strong>
-          <p><%= @medical_record.patient.name %></p>
-        </div>
-        <div class="col-md-6 mb-3">
-          <strong><%= t('medical_records.doctor_email') %>:</strong>
-          <p><%= @doctor.email %></p>
-          <strong><%= t('medical_records.patient_email') %>:</strong>
-          <p><%= @medical_record.patient.email %></p>
-        </div>
-        <div class="col-md-12">
-          <strong><%= t('medical_records.details') %>:</strong>
-          <p><%= @medical_record.details %></p>
-        </div>
+ <div class="card mb-4 shadow-sm border-0 rounded-lg">
+  <div class="card-body bg-light p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h5 class="card-title text-primary font-weight-bold m-0">
+        <i class="bi bi-file-earmark-text"></i> <%= t('medical_records.record_details') %>
+      </h5>
+      <span class="text-muted"><strong><%= t('medical_records.date') %>:</strong> <%= @medical_record.date.strftime('%B %d, %Y') %></span>
+    </div>
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label class="font-weight-semibold text-muted"><%= t('medical_records.doctor_name') %>:</label>
+        <p class="form-control-plaintext bg-white border rounded p-2 shadow-sm"><%= @doctor.name %></p>
+        <label class="font-weight-semibold text-muted"><%= t('medical_records.patient_name') %>:</label>
+        <p class="form-control-plaintext bg-white border rounded p-2 shadow-sm"><%= @medical_record.patient.name %></p>
       </div>
-      <hr>
-      <div>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCommentModal">
-          <%= t('medical_records.add_comment') %>
-        </button>
-        <%= link_to t('medical_records.view_comments'), user_medical_record_comments_path(current_user, @medical_record), class: 'btn btn-secondary ms-2' %>
+      <div class="col-md-6 mb-3">
+        <label class="font-weight-semibold text-muted"><%= t('medical_records.doctor_email') %>:</label>
+        <p class="form-control-plaintext bg-white border rounded p-2 shadow-sm"><%= @doctor.email %></p>
+        <label class="font-weight-semibold text-muted"><%= t('medical_records.patient_email') %>:</label>
+        <p class="form-control-plaintext bg-white border rounded p-2 shadow-sm"><%= @medical_record.patient.email %></p>
+      </div>
+      <div class="col-md-12">
+        <label class="font-weight-semibold text-muted"><%= t('medical_records.details') %>:</label>
+        <p class="form-control-plaintext bg-white border rounded p-3 shadow-sm"><%= @medical_record.details %></p>
       </div>
     </div>
+    <hr class="my-4">
+    <div>
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCommentModal">
+        <i class="bi bi-plus-circle"></i> <%= t('medical_records.add_comment') %>
+      </button>
+      <%= link_to t('medical_records.view_comments'), user_medical_record_comments_path(current_user, @medical_record), class: 'btn btn-secondary ms-2' %>
+    </div>
   </div>
+</div>
+
+
 
   <div class="card mb-4">
     <div class="card-body">

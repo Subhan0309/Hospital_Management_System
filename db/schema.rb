@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_08_19_173854) do
+ActiveRecord::Schema.define(version: 2024_08_20_185616) do
 
   create_table "Hospitals", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
@@ -60,7 +60,9 @@ ActiveRecord::Schema.define(version: 2024_08_19_173854) do
     t.datetime "updated_at", precision: 6, null: false
     t.datetime "startTime", null: false
     t.datetime "endTime", null: false
+    t.bigint "hospital_id"
     t.index ["doctor_id"], name: "index_appointments_on_doctor_id"
+    t.index ["hospital_id"], name: "index_appointments_on_hospital_id"
     t.index ["patient_id"], name: "index_appointments_on_patient_id"
   end
 
@@ -71,8 +73,10 @@ ActiveRecord::Schema.define(version: 2024_08_19_173854) do
     t.bigint "associated_with_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "hospital_id"
     t.index ["associated_with_type", "associated_with_id"], name: "index_comments_on_associated_with"
     t.index ["created_by_id"], name: "index_comments_on_created_by_id"
+    t.index ["hospital_id"], name: "index_comments_on_hospital_id"
   end
 
   create_table "details", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -94,7 +98,9 @@ ActiveRecord::Schema.define(version: 2024_08_19_173854) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "doctor_id", null: false
+    t.bigint "hospital_id"
     t.index ["doctor_id"], name: "index_medical_records_on_doctor_id"
+    t.index ["hospital_id"], name: "index_medical_records_on_hospital_id"
     t.index ["patient_id"], name: "index_medical_records_on_patient_id"
   end
 
@@ -109,7 +115,7 @@ ActiveRecord::Schema.define(version: 2024_08_19_173854) do
     t.datetime "remember_created_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.bigint "hospital_id", null: false
+    t.bigint "hospital_id"
     t.string "availability_status", default: "Available"
     t.index ["hospital_id"], name: "index_users_on_hospital_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -123,4 +129,5 @@ ActiveRecord::Schema.define(version: 2024_08_19_173854) do
   add_foreign_key "comments", "users", column: "created_by_id"
   add_foreign_key "medical_records", "users", column: "doctor_id"
   add_foreign_key "medical_records", "users", column: "patient_id"
+  add_foreign_key "users", "hospitals"
 end

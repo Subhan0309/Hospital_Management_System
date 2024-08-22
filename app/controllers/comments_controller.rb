@@ -1,9 +1,10 @@
 class CommentsController < ApplicationController
-  before_action :set_user
-  before_action :set_medical_record
+  before_action :authenticate_user!
+  before_action :set_user ,except: :all_comments
+  before_action :set_medical_record,except: :all_comments
   before_action :set_comment, only: [:show, :edit, :update, :destroy]
   before_action :authorize_comment!, only: [:edit, :update, :destroy]
-
+  before_action :authorize_access
   def index
     @comments = @medical_record.comments
 
@@ -60,16 +61,17 @@ class CommentsController < ApplicationController
 
   # DELETE /medical_records/:medical_record_id/comments/:id
   def destroy
-    
     @comment.destroy
     redirect_to user_medical_record_comments_url(@user,@medical_record), notice: 'Comment was successfully destroyed.'
   end
 
+  def all_comments
+    @comments = Comment.includes(:created_by, :associated_with).paginate(page: params[:page], per_page: 10)
+  end
   private
 
   def set_medical_record
     @medical_record = MedicalRecord.find(params[:medical_record_id])
-   
   end
 
   def authorize_comment!
@@ -80,14 +82,15 @@ class CommentsController < ApplicationController
 
   def set_comment
     @comment = @medical_record.comments.find(params[:id])
-    
   end
 
   def set_user
     @user=User.find(params[:user_id])
   end
-
   def comment_params
     params.require(:comment).permit(:description, :created_by_id, :associated_with_id, :associated_with_type)
+  end
+  def authorize_access
+    authorize! :access, :all_comments
   end
 end

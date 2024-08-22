@@ -96,7 +96,7 @@
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('turbolinks:load', function() {
     const editButton = document.getElementById('edit-button');
     const saveButton = document.getElementById('save-button');
     const formFields = document.querySelectorAll('#profile-form input[readonly], #profile-form select[readonly]');
@@ -126,7 +126,10 @@
         reader.readAsDataURL(file);
       }
     });
-    const availabilityStatusField = document.getElementById('availability_status_field');
+  
+  
+  
+  const availabilityStatusField = document.getElementById('availability_status_field');
   const availabilitySwitch = document.getElementById('availability-switch');
 
   if (availabilitySwitch && availabilityStatusField) {

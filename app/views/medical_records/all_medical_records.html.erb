@@ -1,0 +1,74 @@
+<!-- app/views/medical_records/all_medical_records.html.erb -->
+<div class="d-flex flex-row justify-content-between align-items-center mb-3 mt-5 border p-3">
+  <h3 class="text-primary mb-0 fs-4 fs-md-6">All Medical Records</h3>
+</div>
+
+<% if @medical_records.any? %>
+  <div class="table-responsive mt-5">
+    <table class="table table-striped table-responsive overflow-auto">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Date</th>
+          <th>Details</th>
+          <th>Patient</th>
+          <th>Doctor</th>
+          <th>Attachments</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @medical_records.each_with_index do |record, index| %>
+          <tr>
+            <td><%= index + 1 %></td>
+            <td><%= record.date.strftime('%Y-%m-%d') %></td>
+            <td><%= record.details %></td>
+            <td><%= record.patient.name %></td>
+            <td><%= record.doctor.name %></td>
+            <td>
+              <% if record.attachments.attached? %>
+                <%= link_to 'View Attachments', '#', class: 'btn btn-outline-primary' , data: { bs_toggle: 'modal', bs_target: "#attachmentsModal#{record.id}" } %>
+              <% else %>
+                None
+              <% end %>
+            </td>
+            <td>
+              <%= link_to t('medical_records.show'), user_medical_record_path(record.patient, record), class: 'btn btn-outline-primary' %>
+            </td>
+
+
+          </tr>
+
+          <!-- Modal for showing attachments -->
+          <div class="modal fade" id="attachmentsModal<%= record.id %>" tabindex="-1" aria-labelledby="attachmentsModalLabel<%= record.id %>" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header bg-secondary text-light">
+                  <h5 class="modal-title" id="attachmentsModalLabel<%= record.id %>">Attachments for Medical Record</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <% record.attachments.each do |attachment| %>
+                    <%= link_to attachment.filename.to_s, url_for(attachment), target: '_blank', class: 'd-block mb-2' %>
+                  <% end %>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        <% end %>
+      </tbody>
+    </table>
+
+    <div class="position-absolute bottom-0">
+      <%= will_paginate @medical_records, class: "pagination justify-content-center mt-4" %>
+    </div>
+  </div>
+<% else %>
+  <div class="alert alert-warning" role="alert">
+    No medical records found.
+  </div>
+<% end %>

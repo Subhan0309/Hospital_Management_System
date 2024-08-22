@@ -1,6 +1,7 @@
 class Hospital < ApplicationRecord
-
-  
+   has_many :users, dependent: :nullify
+   belongs_to :user, optional: true
+   has_one_attached :logo
    # Validations
    validates :name, presence: { message: "Hospital name can't be blank" }, length: { 
       minimum: 3, too_short: "must have at least %{count} characters",

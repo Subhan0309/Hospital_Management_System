@@ -8,7 +8,7 @@
         <%= f.select :doctor_filter, options_for_select([['My Doctors', 'my_doctors'], ['All Doctors', 'all_doctors']], params[:doctor_filter]), { prompt: 'Filter by Doctors' }, class: "form-select mr-2" %>
       <% end %>
       <!-- Speciality Filter Dropdown -->
-      <%= f.select :speciality, options_for_select(@specialities, params[:speciality]), { prompt: 'Filter by Speciality' }, class: "form-select mr-2" %>
+      <%= f.select :speciality, options_for_select(@specialities, params[:speciality]), { prompt: 'None' }, class: "form-select mr-2" %>
       <%= f.submit 'Filter', class: "btn btn-outline-primary fs-6 fs-md-6" %>
     <% end %>
   <% end %>

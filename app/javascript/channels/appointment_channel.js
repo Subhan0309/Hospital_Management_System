@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Subscribe to the doctor's channel
     consumer.subscriptions.create({ channel: "AppointmentChannel", doctor_id: doctorId }, {
       connected() {
-        console.log(`Connected to doctor channel ${doctorId}`);
+       alert(`Connected to doctor channel ${doctorId}`);
       },
 
       disconnected() {
@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Subscribe to the patient's channel
     consumer.subscriptions.create({ channel: "AppointmentChannel", patient_id: patientId }, {
       connected() {
-        console.log(`Connected to patient channel ${patientId}`);
+        alert(`Connected to patient channel ${patientId}`);
       },
 
       disconnected() {
@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Subscribe to the OAS channel
     consumer.subscriptions.create({ channel: "AppointmentChannel", role: Userrole }, {
       connected() {
-        console.log(`Connected to OAS channel ${OASId}`);
+       alert(`Connected to OAS channel ${OASId}`);
       },
       disconnected() {
         // Called when the subscription has been terminated by the server
@@ -186,20 +186,20 @@ function handleAppointmentUpdate(data) {
         const appointmentElement = dateElement.querySelector(`#appointment_${data.appointment.id}`);
         if (appointmentElement) {
           appointmentElement.remove();
-          console.log('Destroyed appointment:', data);
+          alert('Destroyed appointment:', data);
         }
       }
     } else if (data.action === 'create') {
       if (dateElement) {
         dateElement.insertAdjacentHTML('beforeend', data.appointment.html);
-        console.log('Created appointment:', data);
+       alert('Created appointment:', data);
       }
     } else if (data.action === 'update') {
       if (dateElement) {
         const appointmentElement = dateElement.querySelector(`#appointment_${data.appointment.id}`);
         if (appointmentElement) {
           appointmentElement.outerHTML = data.appointment.html;
-          console.log('Updated appointment:', data);
+         alert('Updated appointment:', data);
         }
       }
     }

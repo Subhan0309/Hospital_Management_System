@@ -158,3 +158,7 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
+.nav-item i,span{
+  font-size: 14px;
+}

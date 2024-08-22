@@ -28,13 +28,13 @@ class ApplicationController < ActionController::Base
   #   end
   # end
   # Handle Record Not Found
-  rescue_from ActiveRecord::RecordNotFound do
-    respond_to do |format|
-      format.html { redirect_to hospital_dashboard_path, alert: 'The record you were looking for could not be found.' }
-      format.json { render json: { error: 'The record you were looking for could not be found.' }, status: :not_found }
-      format.js   { render json: { error: 'The record you were looking for could not be found.' }, status: :not_found }
-    end
-  end
+  # rescue_from ActiveRecord::RecordNotFound do
+  #   respond_to do |format|
+  #     format.html { redirect_to hospital_dashboard_path, alert: 'The record you were looking for could not be found.' }
+  #     format.json { render json: { error: 'The record you were looking for could not be found.' }, status: :not_found }
+  #     format.js   { render json: { error: 'The record you were looking for could not be found.' }, status: :not_found }
+  #   end
+  # end
 
   private
 

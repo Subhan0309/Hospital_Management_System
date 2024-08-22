@@ -2,11 +2,15 @@ require 'rails_helper'
 require 'aasm/rspec'
 
 RSpec.describe Appointment, type: :model do
-  let(:hospital) { create(:hospital) }
-  let(:doctor) { create(:user, role: :doctor, hospital: hospital ,  email: 'doctor@example.com') }
-  let(:patient) { create(:user, role: :patient, hospital: hospital , email: 'patient@example.com') }
+  before do
+    ActsAsTenant.current_tenant = hospital
+  end
+  let!(:hospital) { create(:hospital) }
 
-  subject { create(:appointment, doctor: doctor, patient: patient) }
+  let(:doctor) { create(:user, role: :doctor, hospital: hospital,email: 'doctor@example.com') }
+  let(:patient) { create(:user, role: :patient, hospital: hospital,email: 'patient@example.com') }
+
+  subject { create(:appointment, doctor: doctor, patient: patient, hospital: hospital) }
 
   context 'Validations' do
     it 'is valid with all required attributes' do
@@ -62,3 +66,21 @@ RSpec.describe Appointment, type: :model do
     end
   end
 end
+
+
+# require 'rails_helper'
+
+# RSpec.describe Appointment, type: :model do
+#   before do
+#     ActsAsTenant.current_tenant = hospital
+#   end
+#   let!(:hospital) { create(:hospital) }
+#   let(:doctor) { create(:user, role: :doctor, hospital: hospital, email: 'doctor@example.com') }
+#   let(:patient) { create(:user, role: :patient, hospital: hospital, email: 'patient@example.com') }
+  
+#   subject { create(:appointment, doctor: doctor, patient: patient, hospital: hospital) }
+
+#   it 'is valid with all required attributes' do
+#     expect(subject).to be_valid
+#   end
+# end

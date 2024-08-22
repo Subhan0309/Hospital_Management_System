@@ -37,6 +37,11 @@ class HospitalsController < ApplicationController
    
   end
 
+  def profile
+    
+    @hospital=ActsAsTenant.current_tenant
+  end
+
   def new
     @hospital = Hospital.new
   end
@@ -90,7 +95,7 @@ class HospitalsController < ApplicationController
 
       @today_registrations = {
         staff: User.where(role: 'staff').where('created_at >= ?', Time.zone.now.beginning_of_day).count,
-        admins: User.where(role: 'staff').where('created_at >= ?', Time.zone.now.beginning_of_day).count,
+        admins: User.where(role: 'admin').where('created_at >= ?', Time.zone.now.beginning_of_day).count,
         doctors: User.where(role: 'doctor').where('created_at >= ?', Time.zone.now.beginning_of_day).count,
         patients: User.where(role: 'patient').where('created_at >= ?', Time.zone.now.beginning_of_day).count
       }
@@ -118,6 +123,6 @@ class HospitalsController < ApplicationController
   end
 
   def hospital_params
-    params.require(:hospital).permit(:name, :location, :email, :license_no,:user_id)
+    params.require(:hospital).permit(:name, :location, :email, :license_no,:user_id,:logo)
   end
 end

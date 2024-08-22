@@ -45,23 +45,27 @@
 require 'rails_helper'
 
 RSpec.describe Comment, type: :model do
+  before do
+    ActsAsTenant.current_tenant = hospital
+  end
+  let!(:hospital) { create(:hospital) }
   let(:user) { create(:user) }
   let(:medical_record) { create(:medical_record) }
   
   context 'validations' do
     it 'is valid with valid attributes' do
-      comment = build(:comment, created_by: user, associated_with: medical_record)
+      comment = build(:comment, created_by: user, associated_with: medical_record,hospital: hospital)
       expect(comment).to be_valid
     end
 
     it 'is invalid without a description' do
-      comment = build(:comment, description: nil, created_by: user, associated_with: medical_record)
+      comment = build(:comment, description: nil, created_by: user, associated_with: medical_record,hospital: hospital)
       expect(comment).not_to be_valid
       expect(comment.errors[:description]).to include("can't be empty")
     end
 
     it 'is invalid without a created_by_id' do
-      comment = build(:comment, created_by: nil, associated_with: medical_record)
+      comment = build(:comment, created_by: nil, associated_with: medical_record,hospital: hospital)
       expect(comment).not_to be_valid
       expect(comment.errors[:created_by_id]).to include("can't be blank")
     end

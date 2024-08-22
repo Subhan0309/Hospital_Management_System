@@ -45,6 +45,7 @@ RSpec.configure do |config|
       with.library :active_record
     end
   end
+  config.include Devise::Test::ControllerHelpers, type: :controller
   # You can uncomment this line to turn off ActiveRecord support entirely.
   # config.use_active_record = false
 

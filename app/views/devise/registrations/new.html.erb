@@ -1,79 +1,95 @@
+<div class="container my-5">
+  <div class="row justify-content-center">
+        <h2 class="text-center mb-4 text-primary display-4">Sign up</h2>
 
+        <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "form-horizontal" }) do |f| %>
+          <%= render "devise/shared/error_messages", resource: resource %>
 
+          <div class="mb-3">
+            <%= f.label :name, 'Name *', class: 'fw-bold' %>
+            <div class="input-group mt-2">
+              <span class="input-group-text"><i class="bi bi-person"></i></span>
+              <%= f.text_field :name, class: 'form-control', autofocus: true, required: true, minlength: 3, maxlength: 20 %>
+            </div>
+          </div>
 
-<div class="container d-flex justify-content-center mt-5 mb-5">
-  <div class="col-md-8 col-lg-6">
-    <div class="bg-white p-4 rounded shadow-sm">
-      <h2 class="text-center mb-4 text-success display-4">Sign up</h2>
-       
-       
+          <div class="mb-3">
+            <%= f.label :email, 'Email *', class: 'fw-bold' %>
+            <div class="input-group mt-2">
+              <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+              <%= f.email_field :email, class: 'form-control', autocomplete: "email", required: true %>
+            </div>
+          </div>
 
-      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "form-horizontal" }) do |f| %>
-        <%= render "devise/shared/error_messages", resource: resource %>
+          <div class="mb-3">
+            <%= f.label :password, 'Password *', class: 'fw-bold' %>
+            <div class="input-group mt-2">
+              <span class="input-group-text"><i class="bi bi-lock"></i></span>
+              <%= f.password_field :password, class: 'form-control', autocomplete: "new-password", required: true %>
+            </div>
+            <% if @minimum_password_length %>
+              <em class="text-muted mt-2"><%= @minimum_password_length %> characters minimum</em>
+            <% end %>
+          </div>
 
+          <div class="mb-3">
+            <%= f.label :password_confirmation, 'Confirm Password *', class: 'fw-bold' %>
+            <div class="input-group mt-2">
+              <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+              <%= f.password_field :password_confirmation, class: 'form-control', autocomplete: "new-password", required: true %>
+            </div>
+          </div>
 
-       
+          <div class="mb-3">
+            <%= f.label :gender, 'Gender *', class: 'fw-bold' %>
+            <div class="input-group mt-2">
+              <span class="input-group-text"><i class="bi bi-gender-ambiguous"></i></span>
+              <%= f.select :gender, options_for_select([['Male', 'male'], ['Female', 'female'], ['Other', 'other']]), {}, class: "form-control", required: true %>
+            </div>
+          </div>
 
-        <div class="form-group">
-          <%= f.label :name, class: "form-label" %>
-          <%= f.text_field :name, class: "form-control", autofocus: true , required: true, minlength: 3, maxlength: 20  %>
-        </div>
+          <%= f.hidden_field :role, value: 'owner' %>
 
-        <div class="form-group">
-          <%= f.label :email, class: "form-label" %>
-          <%= f.email_field :email, class: "form-control", autocomplete: "email", required: true %>
-        </div>
+          <h3 class="text-center mb-4 mt-5 text-primary">Hospital Details</h3>
 
+          <div class="mb-3">
+            <%= f.label :hospital_name, 'Hospital Name *', class: 'fw-bold' %>
+            <div class="input-group mt-2">
+              <span class="input-group-text"><i class="bi bi-building"></i></span>
+              <%= f.text_field :hospital_name, class: 'form-control', required: true, minlength: 3, maxlength: 20 %>
+            </div>
+          </div>
 
-        <div class="form-group">
-          <%= f.label :password ,class: "form-label"%> 
-          <%= f.password_field :password, class: "form-control",  autocomplete: "new-password" %>
-          <% if @minimum_password_length %>
-            <br />
-            <em><%= @minimum_password_length %> characters minimum</em>
-          <% end %>
-        </div>
+          <div class="mb-3">
+            <%= f.label :hospital_location, 'Hospital Location *', class: 'fw-bold' %>
+            <div class="input-group mt-2">
+              <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
+              <%= f.text_field :hospital_location, class: 'form-control', required: true %>
+            </div>
+          </div>
 
-      <div class="form-group">
-        <%= f.label :password_confirmation , class: "form-label" %><br />
-        <%= f.password_field :password_confirmation, class: "form-control",  autocomplete: "new-password" %>
+          <div class="mb-3">
+            <%= f.label :hospital_email, 'Hospital Email *', class: 'fw-bold' %>
+            <div class="input-group mt-2">
+              <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+              <%= f.email_field :hospital_email, class: 'form-control',required: true %>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :license_no, 'License Number *', class: 'fw-bold' %>
+            <div class="input-group mt-2">
+              <span class="input-group-text"><i class="bi bi-card-checklist"></i></span>
+              <%= f.text_field :license_no, class: 'form-control', required: true %>
+            </div>
+          </div>
+
+          <div class="text-end mt-4">
+            <%= f.submit "Sign up & Create Hospital", class: "btn btn-primary" %>
+          </div>
+        <% end %>
+
+        <%= render "devise/shared/links" %>
       </div>
-
-        <div class="form-group">
-          <%= f.label :gender, class: "form-label" %>
-          <%= f.select :gender, options_for_select([['Male', 'male'], ['Female', 'female'], ['Other', 'other']]), {}, class: "form-control", required: true %>
-        </div>
-
-        <%= f.hidden_field :role, value: 'owner' %>
-
-        <h3 class="text-center mb-4 mt-5 text-primary">Hospital Details</h3>
-
-        <div class="form-group">
-          <%= f.label :hospital_name, "Hospital Name", class: 'form-label' %>
-          <%= f.text_field :hospital_name, class: 'form-control', placeholder: 'Hospital Name', required: true,, minlength: 3, maxlength: 20  %>
-        </div>
-
-        <div class="form-group mt-3">
-          <%= f.label :hospital_location, "Hospital Location", class: 'form-label' %>
-          <%= f.text_field :hospital_location, class: 'form-control', placeholder: 'Location', required: true %>
-        </div>
-
-        <div class="form-group mt-3">
-          <%= f.label :hospital_email, "Hospital Email", class: 'form-label' %>
-          <%= f.email_field :hospital_email, class: 'form-control', placeholder: 'Email', required: true %>
-        </div>
-
-        <div class="form-group mt-3">
-          <%= f.label :license_no, class: 'form-label' %>
-          <%= f.text_field :license_no, class: 'form-control', placeholder: 'License Number', required: true %>
-        </div>
-
-        <div class="form-group mt-5 text-center">
-          <%= f.submit "Sign up & Create Hospital", class: "btn btn-success btn-block mt-4" %>
-        </div>
-      <% end %>
-
-      <%= render "devise/shared/links" %>
-    </div>
-  </div>
 </div>
+

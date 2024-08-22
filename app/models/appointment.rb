@@ -5,8 +5,8 @@ class Appointment < ApplicationRecord
   belongs_to :patient, class_name: 'User', foreign_key: 'patient_id'
   belongs_to :doctor, class_name: 'User', foreign_key: 'doctor_id'
   validates :startTime, :endTime, :doctor_id, :patient_id, presence: true
-  validate :end_time_after_start_time
-
+  validate :end_time_after_start_time, :start_time_in_future
+  acts_as_tenant :hospital
   enum status: { scheduled: 'scheduled', canceled: 'canceled', completed: 'completed' }
   
   include AASM
@@ -36,16 +36,6 @@ class Appointment < ApplicationRecord
       errors.add(:endTime, "must be after the start time")
     end
   end
-
-
-  
-  # def no_conflicting_appointments
-  #    conflicts = Appointment.where(doctor_id: doctor_id).where.not(id: id)
-  #                           .where("startTime < ? AND endTime > ?", endTime, startTime)
-  #   if conflicts.exists?
-  #       errors.add(:base, 'Doctor is not available at this time')
-  #   end  
-  # end
 
   def self.send_daily_reminders
     tomorrow = Date.tomorrow

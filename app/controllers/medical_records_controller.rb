@@ -1,9 +1,9 @@
 class MedicalRecordsController < ApplicationController
-  before_action :set_user
+  before_action :set_user ,except: :all_medical_records
   before_action :set_medical_record, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!
   before_action :set_medical_record_doctor, only: [:show]
-  
+  before_action :authorize_access,only: :all_medical_records
   def index
     if current_user.doctor?
       @medical_records = @patient.medical_records.where(doctor_id: current_user.id)
@@ -18,17 +18,17 @@ class MedicalRecordsController < ApplicationController
   end
 
   def new
-    @medical_record = @user.medical_records.new
+    @medical_record = @patient.medical_records.new
   end
 
   def create
   
-    @medical_record = @user.medical_records.new(medical_record_params)
+    @medical_record = @patient.medical_records.new(medical_record_params)
     @medical_record.doctor_id=current_user.id
   
     if @medical_record.save
      
-      redirect_to user_medical_records_path(@user), notice: 'Medical record was successfully created.'
+      redirect_to user_medical_records_path(@patient), notice: 'Medical record was successfully created.'
     else
       render :new, alert: @medical_record.errors.full_messages.to_sentence
     end
@@ -76,6 +76,11 @@ class MedicalRecordsController < ApplicationController
     attachment.purge
     redirect_to user_medical_record_path(params[:user_id], @medical_record), notice: 'Attachment was successfully deleted.'
   end
+
+  def all_medical_records
+    @medical_records = MedicalRecord.includes(:doctor, :patient).paginate(page: params[:page], per_page: 10)
+  end
+
   
 
   private
@@ -91,6 +96,10 @@ class MedicalRecordsController < ApplicationController
   
   def medical_record_params
     params.require(:medical_record).permit(:date, :details, :patient_id, :doctor_id, attachments: [])
+  end
+
+  def authorize_access
+    authorize! :access , :all_medical_records
   end
 
 end

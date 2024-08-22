@@ -1,0 +1,76 @@
+<div class="d-flex flex-row justify-content-between align-items-center mb-3 mt-5 border p-3">
+  <h3 class="text-primary mb-0 fs-4 fs-md-6">Appointments</h3>
+  
+  <!-- Status Filter Dropdown -->
+  <div>
+    <select id="filterStatus" class="form-select">
+      <option value="">All Statuses</option>
+      <option value="completed">Completed</option>
+      <option value="canceled">Canceled</option>
+      <option value="scheduled">Scheduled</option>
+    </select>
+  </div>
+</div>
+
+<% if @appointments.any? %>
+  <div class="table-responsive mt-5">
+    <table class="table table-striped table-responsive overflow-auto" id="appointmentsTable">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Doctor Name</th>
+          <th>Patient Name</th>
+          <th>Start Time</th>
+          <th>End Time</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @appointments.each_with_index do |appointment, index| %>
+          <tr data-status="<%= appointment[:status] %>">
+            <th scope="row"><%= index + 1 %></th>
+            <td><%= appointment[:doctor_name] %></td>
+            <td><%= appointment[:patient_name] %></td>
+            <td><%= appointment[:start_time].strftime("%B %d, %Y %I:%M %p") %></td>
+            <td><%= appointment[:end_time].strftime("%B %d, %Y %I:%M %p") %></td>
+            <td>
+              <span class="badge 
+                <%= case appointment[:status]
+                      when 'completed' then 'bg-success'
+                      when 'canceled' then 'bg-danger'
+                      else 'bg-warning'
+                     end %>">
+                <%= appointment[:status].capitalize %>
+              </span>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <div class="alert alert-warning mt-4" role="alert">
+    No appointments found.
+  </div>
+<% end %>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const filterStatus = document.getElementById("filterStatus");
+    const tableRows = document.querySelectorAll("#appointmentsTable tbody tr");
+
+    filterStatus.addEventListener("change", function() {
+      const selectedStatus = filterStatus.value;
+
+      tableRows.forEach(row => {
+        const status = row.getAttribute("data-status");
+
+        if (selectedStatus === "" || status === selectedStatus) {
+          row.style.display = "";
+        } else {
+          row.style.display = "none";
+        }
+      });
+    });
+  });
+</script>

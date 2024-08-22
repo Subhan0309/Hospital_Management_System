@@ -7,7 +7,6 @@ class Ability
    
     user ||= User.new 
 
-    puts "Hi i am a "+ user.inspect
 
    
     if user.owner?
@@ -15,11 +14,10 @@ class Ability
     end
 
     if user.admin?
-      puts "Hi i am an admin"
-      
       cannot :manage, User, role: 'owner'
       cannot [:destroy,:create,:update], User, role: 'admin'
-
+      # cannot :manage,Hospital
+      # can :read , Hospital
       can :manage,User,role: 'staff'
       can :manage, User, role: 'patient'
       can :manage, User, role: 'doctor'
@@ -35,18 +33,21 @@ class Ability
       can :manage , Comment
       can :manage, MedicalRecord
   
-      # # can :manage, Attachment
-      
+     
+      can :access, :all_appointments
+      can :access, :all_medical_records
+      can :access, :all_comments
     
     end
 
     if user.staff?
-      puts "Hi i am staff"
+     
 
       cannot :manage, User ,role:'owner'
       cannot [:create,:delete,:update] , User, role: 'admin'
       cannot [:create,:delete,:update] , User, role: 'staff'
-     
+      # cannot :manage,Hospital
+      # can :read , Hospital
 
       # can read others staff
       can :read,User,role:'staff'
@@ -66,7 +67,7 @@ class Ability
 
 
     if user.doctor?
-      puts "Hi I am a doctor"
+     
       
       # Cannot manage users with specific roles
       cannot :manage, User, role: 'owner'
@@ -74,7 +75,8 @@ class Ability
       cannot [:create, :delete, :update], User, role: 'staff'
       cannot [:create, :delete, :update], User, role: 'patient'
       cannot [:create, :delete, :update], User, role: 'doctor'
-    
+      # cannot :manage,Hospital
+      # can :read , Hospital
       # Can read users with specific roles
       can :read, User, role: 'admin'
       can :read, User, role: 'staff'
@@ -93,12 +95,13 @@ class Ability
 
     if user.patient?
       
-      puts "Hi i am patient"
+     
       cannot :manage, User, role: 'owner'
       cannot [:create,:delete,:update] , User, role: 'admin'
       cannot [:create,:delete,:update] , User, role: 'staff'
       cannot [:create,:delete,:update] , User, role: 'doctor'
-
+      # cannot :manage,Hospital
+      # can :read , Hospital
 
       can :read , User, role: 'admin'
       can :read , User, role: 'staff'

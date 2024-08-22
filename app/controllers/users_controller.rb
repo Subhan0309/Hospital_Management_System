@@ -21,10 +21,15 @@ class UsersController < ApplicationController
     @user.hospital_id=ActsAsTenant.current_tenant.id
     if @user.save
       UserMailer.welcome_email(@user).deliver_now 
-      redirect_to users_path,notice: "User (#{user_params[:role]}) was Successfully created"
+      redirect_to users_path, notice: "User (#{user_params[:role]}) was Successfully created"
     else
-       # Render the new template again with errors
-       render :new, alert: @user.errors.full_messages.to_sentence
+      #  # Render the new template again with errors
+      #  flash[alert:]=@user.errors.full_messages.to_sentence
+      #  render :new
+       # Inside the controller action
+        flash[:alert] = @user.errors.full_messages.to_sentence
+        render :new
+
     end
 
   end

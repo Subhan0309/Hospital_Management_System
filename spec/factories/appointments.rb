@@ -5,5 +5,6 @@ FactoryBot.define do
     association :doctor, factory: :user
     association :patient, factory: :user
     status { :scheduled }
+    association :hospital 
   end
 end

@@ -17,8 +17,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def create
-    
-  binding.pry
     @hospital = Hospital.new(hospital_params)
     
     respond_to do |format|
@@ -26,20 +24,17 @@ class Users::RegistrationsController < Devise::RegistrationsController
         # After creating the hospital, create the user
         @user = User.new(user_params)
         @user.hospital_id = @hospital.id
-        # binding.pry
         if @user.save
           # Construct the subdomain
           @hospital.update(user_id:@user.id)
           host_with_subdomain = "#{@hospital.subdomain}.localhost"
           port = 3000
-          # binding.pry
           # Construct the URL with the subdomain using URI module
           url_with_subdomain = URI::HTTP.build(
             host: host_with_subdomain,
             port: port,
-            # path: new_user_session_path,  ADD THE ROUTE TO HOSPITAL DASHBOARD HERE
+            path: new_user_session_path,
           ).to_s
-          # binding.pry
           # Redirect to the sign-in page with the subdomain
           format.html { redirect_to url_with_subdomain, notice: 'User and hospital were successfully created.' }
           format.json { render :show, status: :created, location: @user }

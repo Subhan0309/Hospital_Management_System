@@ -4,6 +4,6 @@ FactoryBot.define do
     location { "Sample Location" }
     email { "hospital@example.com" }
     license_no { "123456" }
-    sequence(:subdomain) { |n| "hospital#{n}" }
+    sequence(:subdomain) {|n| "hospital#{n}" }
   end
 end

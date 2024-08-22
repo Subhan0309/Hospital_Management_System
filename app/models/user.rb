@@ -1,13 +1,13 @@
 class User < ApplicationRecord
-  
+  has_many :hospitals, dependent: :destroy
   attr_accessor :hospital_name, :hospital_location, :hospital_email, :license_no
   acts_as_tenant :hospital
   scope :patients, -> { where(role: 'patient') }
   scope :doctors, -> { where(role: 'doctor') }
   devise :database_authenticatable, :registerable,
   :recoverable, :rememberable , :validatable
-  # searchkick word_middle: [:name, :email, :role], highlight: [:name, :email, :role]
-  has_many :hospitals, dependent: :destroy
+  searchkick word_middle: [:name, :email, :role], highlight: [:name, :email, :role]
+  
   has_many :comments, as: :associated_with, dependent: :destroy
   has_one_attached :profile_picture
   enum role:

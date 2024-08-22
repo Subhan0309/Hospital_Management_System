@@ -1,10 +1,11 @@
 class CommentsController < ApplicationController
-  before_action :set_user
+  before_action :authenticate_user!
+  before_action :set_user ,except: :all_comments
   before_action :set_commentable, only: [:index, :new, :create, :destroy, :edit, :update]
-   before_action :set_medical_record
+   before_action :set_medical_record,except: :all_comments
   before_action :set_comment, only: [:show, :edit, :update, :destroy]
   before_action :authorize_comment!, only: [:edit, :update, :destroy]
-
+  before_action :authorize_access ,only: :all_comments
   def index
     @comments = @commentable.comments
 
@@ -85,6 +86,9 @@ class CommentsController < ApplicationController
      end
   end
 
+  def all_comments
+    @comments = Comment.includes(:created_by, :associated_with).paginate(page: params[:page], per_page: 10)
+  end
   private
 
   def set_medical_record
@@ -117,11 +121,8 @@ class CommentsController < ApplicationController
             end
   
   end
-
   def set_commentable
-
     @commentable = if params[:medical_record_id]
-          
                      MedicalRecord.find(params[:medical_record_id])
                    elsif params[:patient_id]
                      Patient.find(params[:patient_id])
@@ -130,10 +131,11 @@ class CommentsController < ApplicationController
                    elsif params[:user_id]
                      User.find(params[:user_id])
                    end
-   
   end
-
   def comment_params
     params.require(:comment).permit(:description, :created_by_id, :associated_with_id, :associated_with_type)
+  end
+  def authorize_access
+    authorize! :access, :all_comments
   end
 end

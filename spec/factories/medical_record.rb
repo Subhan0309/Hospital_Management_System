@@ -5,5 +5,6 @@ FactoryBot.define do
     details { "Patient diagnosed with condition X. Follow-up required." }
     association :patient, factory: :user
     association :doctor, factory: :user
+   
   end
 end

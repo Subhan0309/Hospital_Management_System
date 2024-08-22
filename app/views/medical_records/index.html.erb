@@ -38,6 +38,8 @@
       </tbody>
     </table>
   <% else %>
-    <p><%= t('medical_records.no_records') %></p>
+  <div class="alert alert-warning" role="alert">
+      <%= t('medical_records.no_records') %>
+    </div>
   <% end %>
 </div>

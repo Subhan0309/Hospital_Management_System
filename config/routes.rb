@@ -44,6 +44,13 @@ Rails.application.routes.draw do
         get 'dashboard', to: 'hospitals#dashboard', as: 'hospital_dashboard'
         get 'search', to: 'search#index'
         get 'profile', to: 'users#profile', as: 'profile'
+
+        get 'hospital_profile', to: 'hospitals#profile'
+
+
+        get 'all_appointments' , to: 'appointments#all_appointments' # Route for getting all appointment
+        get 'all_medical_records' , to: 'medical_records#all_medical_records' # Route for getting all medical records
+        get 'all_comments' , to: 'comments#all_comments' # Route for getting all comments
     end
  end
 end

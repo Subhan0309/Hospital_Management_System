@@ -81,9 +81,10 @@ RSpec.describe User, type: :model do
     end
 
     it "is not valid without a hospital_id" do
-      expect {
-        subject.update(hospital_id: nil)
-      }.to raise_error(ActsAsTenant::Errors::TenantIsImmutable)
+      ActsAsTenant.current_tenant = hospital1
+      subject.hospital_id = nil
+      expect(subject).to_not be_valid
+      expect(subject.errors[:hospital]).to include("must exist")
     end
     
 

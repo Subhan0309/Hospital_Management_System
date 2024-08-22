@@ -1,3 +1,7 @@
+
+
+
+
 <div class="container">
   <h1 class="text-center my-4 text-primary">
     <%= t('medical_records.title') %>
@@ -59,14 +63,14 @@
                 <td class="d-flex flex-row">
                   <%= link_to t('medical_records.preview'), rails_blob_path(attachment, disposition: "inline"), target: '_blank', class: 'btn btn-sm btn-outline-primary me-2' %>
                   <%= link_to t('medical_records.download'), rails_blob_path(attachment, disposition: "attachment"), class: 'btn btn-sm btn-outline-secondary me-2' %>
-                  <%= button_to t('medical_records.delete'), 
+                  <%= button_to t('medical_records.delete'),
                       user_medical_record_delete_attachment_path(
-                        user_id: @medical_record.patient.id, 
-                        medical_record_id: @medical_record.id, 
+                        user_id: @medical_record.patient.id,
+                        medical_record_id: @medical_record.id,
                         attachment_id: attachment.id
-                      ), 
-                      method: :delete, 
-                      data: { confirm: t('medical_records.delete_confirm') }, 
+                      ),
+                      method: :delete,
+                      data: { confirm: t('medical_records.delete_confirm') },
                       class: 'btn btn-sm btn-outline-danger' %>
                 </td>
               </tr>
@@ -84,7 +88,6 @@
     </div>
   </div>
 </div>
-
 <!-- Add Attachment Modal -->
 <div class="modal fade" id="addAttachmentModal" tabindex="-1" aria-labelledby="addAttachmentModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -107,7 +110,6 @@
     </div>
   </div>
 </div>
-
 <!-- Add Comment Modal -->
 <div class="modal fade" id="addCommentModal" tabindex="-1" aria-labelledby="addCommentModalLabel" aria-hidden="true">
   <div class="modal-dialog">

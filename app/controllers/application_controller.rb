@@ -11,13 +11,13 @@ class ApplicationController < ActionController::Base
     raise ActionController::RoutingError, 'Page not found'
   end
 
-  rescue_from CanCan::AccessDenied do
-    respond_to do |format|
-      format.html { redirect_to hospital_dashboard_path, alert: 'You are not authorized to access this page.' }
-      format.json { render json: { error: 'You are not authorized to access this page.' }, status: :forbidden }
-      format.js   { render json: { error: 'You are not authorized to access this page.' }, status: :forbidden }
-    end
-  end
+  # rescue_from CanCan::AccessDenied do
+  #   respond_to do |format|
+  #     format.html { redirect_to hospital_dashboard_path, alert: 'You are not authorized to access this page.' }
+  #     format.json { render json: { error: 'You are not authorized to access this page.' }, status: :forbidden }
+  #     format.js   { render json: { error: 'You are not authorized to access this page.' }, status: :forbidden }
+  #   end
+  # end
   # Handle Routing Errors
   # rescue_from ActionController::RoutingError do
   #   respond_to do |format|
@@ -28,13 +28,13 @@ class ApplicationController < ActionController::Base
   #   end
   # end
   # Handle Record Not Found
-  rescue_from ActiveRecord::RecordNotFound do
-    respond_to do |format|
-      format.html { redirect_to hospital_dashboard_path, alert: 'The record you were looking for could not be found.' }
-      format.json { render json: { error: 'The record you were looking for could not be found.' }, status: :not_found }
-      format.js   { render json: { error: 'The record you were looking for could not be found.' }, status: :not_found }
-    end
-  end
+  # rescue_from ActiveRecord::RecordNotFound do
+  #   respond_to do |format|
+  #     format.html { redirect_to hospital_dashboard_path, alert: 'The record you were looking for could not be found.' }
+  #     format.json { render json: { error: 'The record you were looking for could not be found.' }, status: :not_found }
+  #     format.js   { render json: { error: 'The record you were looking for could not be found.' }, status: :not_found }
+  #   end
+  # end
 
   private
 

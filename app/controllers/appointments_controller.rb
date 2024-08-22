@@ -1,10 +1,10 @@
 class AppointmentsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_user
+  before_action :set_user ,except: :all_appointments
   before_action :set_specific_doctor_appointment, :set_specific_patient_appointment, only: [:index]
   before_action :set_doctors, only: [:new, :edit, :create, :update]
   before_action :set_appointment, only: [:show, :edit, :update, :destroy]
-
+  before_action :authorize_access ,only: :all_appointments
 
   
   def index
@@ -35,8 +35,6 @@ class AppointmentsController < ApplicationController
  
   end
 
-  
-
   def create
     @appointment = @user.appointments.new(appointment_params)
    
@@ -50,7 +48,6 @@ class AppointmentsController < ApplicationController
       render :new, status: :unprocessable_entity
     end
   end
-
 
   def update
     case params[:appointment][:status]
@@ -80,8 +77,6 @@ class AppointmentsController < ApplicationController
     end
   end
 
-
-
   def delete_all
 
     Appointment.where(doctor_id: current_user.id).destroy_all
@@ -104,6 +99,37 @@ class AppointmentsController < ApplicationController
     render json: doctors
   end
   
+  def all_appointments
+   
+    if current_user.owner? || current_user.admin?
+      appointments = Appointment.all
+
+      # Paginate the ActiveRecord relation
+      @paginated_appointments = appointments.paginate(page: params[:page], per_page: 12)
+
+      # Map the paginated appointments to the desired hash structure
+      @appointments = @paginated_appointments.map do |appointment|
+        {
+          id: appointment.id,
+          start_time: appointment.start_time,
+          end_time: appointment.end_time,
+          status: appointment.status,
+          patient_name: appointment.patient.name,
+          doctor_name: appointment.doctor.name,
+          patient_email: appointment.patient.email,
+          doctor_email: appointment.doctor.email,
+          hospital_id: appointment.hospital_id
+        }
+      end
+
+    else
+      redirect_to root_path, alert: 'You do not have access to this resource'
+    end
+  end
+  
+  
+
+
   private
 
   def set_user
@@ -112,24 +138,18 @@ class AppointmentsController < ApplicationController
     @user=Doctor.find(params[:user_id])
    else
     @user=Patient.find(params[:user_id])
-  end
+    end
   end
   def set_doctors
     @doctors = User.where(hospital_id: current_user.hospital_id, role:"doctor")
   end
   
   def set_specific_doctor_appointment
-
     @specific_doctor = Doctor.find(params[:user_id])
-
   end
   def set_specific_patient_appointment
-
     @specific_patient = Patient.find(params[:user_id])
-
   end
-
-  
   def set_appointment
     @appointment = @user.appointments.find(params[:id])
 
@@ -139,7 +159,6 @@ class AppointmentsController < ApplicationController
     params.require(:appointment).permit(:patient_id, :doctor_id, :start_time, :end_time, :status)
   end
   
-
   def notify_users(action, appointment)
     # Broadcast to the doctor's channel
     ActionCable.server.broadcast("appointment_channel_#{appointment.doctor_id}", {
@@ -180,6 +199,9 @@ class AppointmentsController < ApplicationController
       })
     end
 
+  end
+  def authorize_access
+    authorize! :access, :all_appointments
   end
 
 end

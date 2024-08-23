@@ -2,24 +2,7 @@ class DoctorsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_doctor, only: [:show, :edit, :update, :destroy, :update_availability_status]
 
- # GET /doctors
-# def index
-#   # Filtering doctors by speciality if a speciality is selected
-#   if params[:speciality].present?
-    
-#     @doctors = Doctor.joins(:detail).paginate(page: params[:page], per_page: 2)
-#   else
-   
-#     # Retrieving all doctors associated with the current tenant
-#     @doctors = User.where(hospital_id: ActsAsTenant.current_tenant, role: "doctor")
-#                    .paginate(page: params[:page], per_page: 2)
-#   end
-
-#   # Retrieving all distinct specialities for filtering options
-#   @specialities = Doctor.joins(:detail)
-#                       .distinct.pluck('details.specialization')
-# end
-# 
+ 
 def index
   # Initialize the query scope for doctors
   doctor_query = Doctor.joins(:detail)
@@ -60,17 +43,10 @@ def index
                         .pluck('details.specialization')
 end
 
-
-  
-
-
-
-  # GET /doctors/1
   def show
     
   end
 
-  # GET /doctors/new
   def new
     @doctor = Doctor.new
     @doctor.build_detail
@@ -87,16 +63,13 @@ end
       render :new
     end
   end
-  # GET /doctors/1/edit
   def edit
+
   end
 
-  # POST /doctors
-  
 
-  # PATCH/PUT /doctors/1
   def update
-    binding.pry
+
     if @doctor.update(doctor_params)
       redirect_to doctors_path, notice: 'Doctor was successfully updated.'
     else
@@ -104,7 +77,6 @@ end
     end
   end
 
-  # DELETE /doctors/1
   def destroy
     if  @doctor.destroy
       redirect_to doctors_path, notice: 'Doctor was successfully deleted.' 

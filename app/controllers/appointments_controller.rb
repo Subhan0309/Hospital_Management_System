@@ -9,14 +9,11 @@ class AppointmentsController < ApplicationController
   
   def index
     if current_user.patient?
-      set_specific_doctor_appointment
-
-      if current_user.id == params[:user_id].to_i
-        @appointments = @user.appointments
-     
-     else
-      @appointments = @specific_doctor.appointments.where(patient_id: current_user.id)
-     end
+        if current_user.id == params[:user_id].to_i
+          @appointments = @user.appointments
+        else
+        @appointments = @specific_doctor.appointments.where(patient_id: current_user.id)
+        end
     elsif current_user.doctor?
       @appointments = if current_user.id == params[:user_id].to_i
                         @user.appointments

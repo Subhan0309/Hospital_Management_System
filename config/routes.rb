@@ -18,22 +18,26 @@ Rails.application.routes.draw do
   end
   constraints subdomain: /.*/ do
         resources :doctors, only: [:index, :show, :edit, :update, :destroy ,:new , :create ] do
+          resources :comments, only: [:index, :show, :new, :create,:edit, :update, :destroy]
           member do
             patch :update_availability_status
           end
         end
-        resources :patients, only: [:index, :show, :edit, :update, :destroy ,:new , :create ]
+        resources :patients, only: [:index, :show, :edit, :update, :destroy ,:new , :create ] do
+           resources :comments, only: [:index, :show, :new, :create,:edit, :update, :destroy]
+        end
         resources :users, only: [:index, :show, :edit, :update, :destroy ,:new , :create ] do
-          resources :appointments, only: [:index, :show,:new, :create, :edit, :update, :destroy] do
-            collection do
-              get :available_doctors
-              delete :delete_all
-            end
-          end
-          resources :medical_records, only: [:index, :show, :new, :create,:edit, :update, :destroy] do
             resources :comments, only: [:index, :show, :new, :create,:edit, :update, :destroy]
-            delete 'delete_attachment/:attachment_id', to: 'medical_records#delete_attachment', as: 'delete_attachment'
-          end
+            resources :appointments, only: [:index, :show,:new, :create, :edit, :update, :destroy] do
+              collection do
+                get :available_doctors
+                delete :delete_all
+              end
+            end
+            resources :medical_records, only: [:index, :show, :new, :create,:edit, :update, :destroy] do
+              resources :comments, only: [:index, :show, :new, :create,:edit, :update, :destroy]
+              delete 'delete_attachment/:attachment_id', to: 'medical_records#delete_attachment', as: 'delete_attachment'
+            end
         end
         # Search route
         resources :hospitals

@@ -11,13 +11,13 @@ class ApplicationController < ActionController::Base
     raise ActionController::RoutingError, 'Page not found'
   end
 
-  rescue_from CanCan::AccessDenied do
-    respond_to do |format|
-      format.html { redirect_to hospital_dashboard_path, alert: 'You are not authorized to access this page.' }
-      format.json { render json: { error: 'You are not authorized to access this page.' }, status: :forbidden }
-      format.js   { render json: { error: 'You are not authorized to access this page.' }, status: :forbidden }
-    end
-  end
+  # rescue_from CanCan::AccessDenied do
+  #   respond_to do |format|
+  #     format.html { redirect_to hospital_dashboard_path, alert: 'You are not authorized to access this page.' }
+  #     format.json { render json: { error: 'You are not authorized to access this page.' }, status: :forbidden }
+  #     format.js   { render json: { error: 'You are not authorized to access this page.' }, status: :forbidden }
+  #   end
+  # end
   # Handle Routing Errors
   # rescue_from ActionController::RoutingError do
   #   respond_to do |format|

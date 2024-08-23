@@ -29,7 +29,7 @@
           <%= button_to t('appointments.delete_all'), delete_all_user_appointments_path, method: :delete, class: 'btn btn-danger', data: { confirm: 'Are you sure you want to delete all appointments?' } %>
         </div>
       <% elsif current_user.role == 'patient' %>
-        <%= link_to t('appointments.new'), new_user_appointment_path(@user), class: 'btn btn-primary' %>
+        <%= link_to t('appointments.new'), new_user_appointment_path(current_user.id), class: 'btn btn-primary' %>
       <% end %>
     </div>
 

@@ -8,6 +8,7 @@ class User < ApplicationRecord
   :recoverable, :rememberable , :validatable
   searchkick word_middle: [:name, :email, :role], highlight: [:name, :email, :role]
   
+  has_many :comments, as: :associated_with, dependent: :destroy
   has_one_attached :profile_picture
   enum role:
   {

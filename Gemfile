@@ -82,4 +82,5 @@ end
 gem 'whenever', require: false
 gem 'aasm'
 
+gem 'rails-controller-testing'
 

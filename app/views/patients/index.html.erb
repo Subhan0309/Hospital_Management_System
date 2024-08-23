@@ -7,6 +7,8 @@
   new_path: new_patient_path,
   edit_path: ->(item) { edit_patient_path(item) },
   destroy_path: ->(item) { patient_path(item) },
+  comment_path: ->(item) {patient_comments_path(item)},
   show_medical_record_path: -> (item) {user_medical_records_path(item)},
-  show_appointments_path: ->(item) {user_appointments_path(item)}
+  show_appointments_path: ->(item) {user_appointments_path(item)},
+  add_comment_path: ->(item) { patients_comments_path(item) } # Path for adding comments
 } %>

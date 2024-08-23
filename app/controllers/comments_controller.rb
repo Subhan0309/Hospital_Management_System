@@ -29,17 +29,18 @@ class CommentsController < ApplicationController
       if @comment.save
        CommentMailer.comment_notification(@commentable, @comment).deliver_now
         format.js   
-        case @commentable
-        when Patient
-          format.html { redirect_to edit_patient_path(@commentable), notice: 'Comment was successfully created.' }
-        when Doctor
-          format.html { redirect_to edit_doctor_path(@commentable), notice: 'Comment was successfully created.' }
-        when User
-            format.html { redirect_to edit_user_path(@commentable), notice: 'Comment was successfully created.' }    
+     
+        case current_user.role
+        when "patient"
+          format.html { redirect_to patient_comments_path(current_user), notice: 'Comment was successfully created.' }
+        when "doctor"
+          format.html { redirect_to doctor_comments_path(current_user), notice: 'Comment was successfully created.' }
+        when "admin", "staff"
+          format.html { redirect_to user_comments_path(current_user), notice: 'Comment was successfully created.' }
         else
           format.html { redirect_to user_medical_record_comments_url(@user, @medical_record), notice: 'Comment was successfully created.' }
-      
         end
+        
       else
         flash[:alert] = 'Failed to add comment. Please try again.'
       end

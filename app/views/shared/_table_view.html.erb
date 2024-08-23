@@ -63,74 +63,111 @@
 
 
 
-            <td class="d-flex flex-row justify-content-evenly">
+            <td class="d-flex flex-row gap-2 justify-content-center align-items-center">
               <% if can?(:update, item) %>
-                <%= link_to edit_path.call(item), class: 'btn btn-outline-success btn-sm' do %>
+                <%= link_to edit_path.call(item), class: 'btn btn-outline-success btn-sm ' ,title: 'Edit' , data: { toggle: 'tooltip' } do %>
                   <i class="bi bi-pencil-square"></i>
                 <% end %>
               <% end %>
 
               <% if can?(:destroy, item) %>
-                <%= button_to destroy_path.call(item), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-outline-danger btn-sm ml-3' do %>
+                <%= button_to destroy_path.call(item), method: :delete, data: { confirm: 'Are you sure?' ,toggle: 'tooltip'}, class: 'btn btn-outline-danger btn-sm'  ,title: 'Delete' do %>
                   <i class="bi bi-trash"></i>
                 <% end %>
               <% end %>
 
               <% if can?(:read, item) %>
-                <button class="btn btn-outline-info btn-sm ml-3" data-bs-toggle="modal" data-bs-target="#showItemModal<%= item.id %>">
+                <%= link_to '#', class: 'btn btn-outline-info btn-sm ', data: { bs_toggle: 'modal', bs_target: "#showItemModal#{item.id}" } do %>
                   <i class="bi bi-eye"></i>
-                </button>
+                <% end %>
+
               <% end %>
+               <button type="button" class="btn btn-outline-primary btn-sm " data-bs-toggle="modal" data-bs-target="#addCommentModal<%= item.id %>">
+                  <span style="font-size:12px"> <%= t('medical_records.add_comment') %></span>
+                </button>
+              <%= link_to comment_path.call(item), class: 'btn btn-outline-success btn-sm' do %>
+                  view comment
+                <% end %>
             </td>
           </tr>
              <div class="modal fade" id="showItemModal<%= item.id %>" tabindex="-1" aria-labelledby="showItemModalLabel<%= item.id %>" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header bg-secondary text-light">
-        <h5 class="modal-title" id="showItemModalLabel<%= item.id %>"><%= title.singularize %> Profile</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="card shadow-lg">
-          <div class="card-body">
-            <div class="text-center mb-3">
-              <% if item.respond_to?(:profile_picture) && item.profile_picture.attached? %>
-                <%= image_tag item.profile_picture, id: 'profile-picture-preview', class: 'rounded-circle shadow', size: '150x150' %>
-              <% else %>
-                <%= image_tag 'default-profile.jpeg', id: 'profile-picture-preview', class: 'rounded-circle shadow', size: '150x150' %>
-              <% end %>
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header bg-secondary text-light">
+                    <h5 class="modal-title" id="showItemModalLabel<%= item.id %>"><%= title.singularize %> Profile</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="card shadow-lg">
+                      <div class="card-body">
+                        <div class="text-center mb-3">
+                          <% if item.respond_to?(:profile_picture) && item.profile_picture.attached? %>
+                            <%= image_tag item.profile_picture, id: 'profile-picture-preview', class: 'rounded-circle shadow', size: '150x150' %>
+                          <% else %>
+                            <%= image_tag 'default-profile.jpeg', id: 'profile-picture-preview', class: 'rounded-circle shadow', size: '150x150' %>
+                          <% end %>
+                        </div>
+
+                        <% fields.each do |field| %>
+                          <div class="mb-3">
+                            <h6 class="text-primary"><%= field.capitalize %>:</h6>
+                            <p><%= item.send(field) %></p>
+                          </div>
+                        <% end %>
+
+                        <!-- Add the details section -->
+                        <% details = Detail.find_by(associated_with_id: item.id) %>
+                        <% if details.present? %>
+                          <div class="mb-3">
+                            <h6 class="text-primary">Details:</h6>
+                            <% if resource_class == Doctor %>
+                            <p><strong>Specialization:</strong> <%= details.specialization %></p>
+                            <p><strong>Qualification:</strong> <%= details.qualification %></p>
+                            <%elsif resource_class == Patient %>
+                            <p><strong>Disease:</strong> <%= details.disease %></p>
+                            <%end%>
+                          
+                          </div>
+                        <% end %>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <% fields.each do |field| %>
-              <div class="mb-3">
-                <h6 class="text-primary"><%= field.capitalize %>:</h6>
-                <p><%= item.send(field) %></p>
+            <!-- Comment Modal -->
+            <div class="modal fade" id="addCommentModal<%= item.id %>" tabindex="-1" aria-labelledby="addCommentModalLabel<%= item.id %>" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="addCommentModalLabel<%= item.id %>"><%= t('medical_records.add_comment') %></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                      <%= form_with(model: [item, Comment.new], url:add_comment_path(item),local: true, method: :post, html: { id: "new_comment_form_#{item.id}" }) do |f| %>
+                        <div class="form-group">
+                          <%= f.label :description %>
+                          <%= f.text_area :description, class: 'form-control', required: true %>
+                          <div class="invalid-feedback">
+                            <%= t('comments.description_error') %>
+                          </div>
+                        </div>
+                        <div class="form-group mt-3">
+                          <%= f.submit t('comments.add_button'), class: 'btn btn-primary' %>
+                        </div>
+                      <% end %>
+                  </div>
+                </div>
               </div>
-            <% end %>
+            </div>
 
-            <!-- Add the details section -->
-            <% details = Detail.find_by(associated_with_id: item.id) %>
-            <% if details.present? %>
-              <div class="mb-3">
-                <h6 class="text-primary">Details:</h6>
-                <% if resource_class == Doctor %>
-                <p><strong>Specialization:</strong> <%= details.specialization %></p>
-                <p><strong>Qualification:</strong> <%= details.qualification %></p>
-                <%elsif resource_class == Patient %>
-                <p><strong>Disease:</strong> <%= details.disease %></p>
-                <%end%>
-               
-              </div>
-            <% end %>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
+
+
+
         <% end %>
       </tbody>
     </table>
@@ -146,3 +183,7 @@
     No <%= title.pluralize %> found.
   </div>
 <% end %>
+
+
+
+

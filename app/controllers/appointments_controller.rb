@@ -41,10 +41,10 @@ class AppointmentsController < ApplicationController
     if @appointment.save
       # Notify both doctor and patient
       notify_users('create', @appointment)
-      
+      AppointmentMailer.with(appointment: @appointment).appointment_confirmation_patient.deliver_now
+      AppointmentMailer.with(appointment: @appointment).appointment_confirmation_doctor.deliver_now
       redirect_to user_appointments_path(@user), notice: 'Appointment was successfully created.'
     else
-      flash.now[:alert] = 'Doctor is not available at this time'
       render :new, status: :unprocessable_entity
     end
   end
@@ -105,7 +105,7 @@ class AppointmentsController < ApplicationController
       appointments = Appointment.all
 
       # Paginate the ActiveRecord relation
-      @paginated_appointments = appointments.paginate(page: params[:page], per_page: 12)
+      @paginated_appointments = appointments.paginate(page: params[:page], per_page: 2)
 
       # Map the paginated appointments to the desired hash structure
       @appointments = @paginated_appointments.map do |appointment|

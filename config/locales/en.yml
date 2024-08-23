@@ -51,7 +51,7 @@ en:
     patient: "Patient"
     details: "Details"
     actions: "Actions"
-    show: "Show"
+    show: "View"
     no_records: "No medical records found for this Patient."
     create_title: "Create New Medical Record"
     patient_info: "Patient Information"

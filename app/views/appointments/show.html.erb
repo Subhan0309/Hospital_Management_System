@@ -1,41 +1,41 @@
-<h1 class="mb-4"><%= t('appointments.title') %></h1>
+
+
+
 
 <% if @appointment.present? %>
-  <table class="table table-striped table-bordered">
-    <thead class="thead-dark">
-      <tr>
-        <th><%= t('appointments.start_time') %></th>
-        <th><%= t('appointments.end_time') %></th>
-        <th><%= t('appointments.status') %></th>
-        <th><%= current_user.role == 'patient' ? t('appointments.doctor') : t('appointments.patient') %></th>
-        <th><%= t('appointments.actions') %></th>
-      </tr>
-    </thead>
-    <tbody>
+  <div class="card mb-4 mt-5">
+    <div class="card-header  d-flex justify-content-between align-items-center">
+      <span><%= Appointment %></span>
+      <span class="text-muted"><%= @appointment.created_at.strftime('%B %d, %Y %H:%M') %></span>
+    </div>
+    <div class="card-body">
+      <div class="d-flex flex-row justify-content-between">
+          <p><strong><%= t('appointments.start_time') %>:</strong> <%= @appointment.startTime.strftime('%H:%M %B %d, %Y ') %></p>
+          <p><strong><%= t('appointments.end_time') %>:</strong> <%= @appointment.endTime.strftime('%H:%M %B %d, %Y ') %></p>
+      </div>
 
-      <tr>
-    <td><%= @appointment.startTime.strftime('%Y-%m-%d %H:%M') %></td>
-        <td><%= @appointment.endTime.strftime('%Y-%m-%d %H:%M') %></td>
-        <td><%= t("appointments.statuses.#{@appointment.status}") %></td>
-        <td><%= current_user.role == 'patient' ? @appointment.doctor.name : @appointment.patient.name %></td>
-        <td>
-          <div class="row">
-            <div class="col-md-2">
-          <%if @appointment.status != 'completed'%>
-          <%= link_to edit_user_appointment_path(current_user, @appointment), class: 'btn btn-sm btn-warning', title: t('appointments.edit') do %>
-            <i class="bi bi-pencil"></i>
+        <p><strong><%= t('appointments.status') %>:</strong> <%= t("appointments.statuses.#{@appointment.status}") %></p>
+        <p><strong><%= current_user.role == 'patient' ? t('appointments.doctor') : t('appointments.patient') %>:</strong> <%= current_user.role == 'patient' ? @appointment.doctor.name : @appointment.patient.name %></p>
+     
+    </div>
+    <% if current_user.doctor? || current_user.patient? %>
+      <div class="card-footer d-flex justify-content-end">
+        <% if @appointment.status != 'completed' %>
+          <%= link_to edit_user_appointment_path(current_user, @appointment), class: 'btn btn-warning btn-sm me-2', title: t('appointments.edit') do %>
+            <i class="bi bi-pencil"></i> <%= t('appointments.edit') %>
           <% end %>
-          <%end%>
-          </div>
-          <div class="col-md-2">
-<%= button_to user_appointment_path(current_user, @appointment), method: :delete, data: { confirm: t('appointments.confirm_delete') }, class: 'btn btn-sm btn-danger', title: t('appointments.delete') do %>            <i class="bi bi-trash"></i>
-          <% end %>
-          </div>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+        <% end %>
+        <%= button_to user_appointment_path(current_user, @appointment), method: :delete, data: { confirm: t('appointments.confirm_delete') }, class: 'btn btn-danger btn-sm', title: t('appointments.delete') do %>
+          <i class="bi bi-trash"></i> <%= t('appointments.delete') %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
 <% else %>
   <p class="alert alert-info"><%= t('appointments.no_appointments') %></p>
 <% end %>
+
+
+
+
+

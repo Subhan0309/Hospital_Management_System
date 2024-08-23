@@ -5,7 +5,7 @@ class User < ApplicationRecord
   scope :patients, -> { where(role: 'patient') }
   scope :doctors, -> { where(role: 'doctor') }
   devise :database_authenticatable, :registerable,
-  :recoverable, :rememberable , :validatable
+  :recoverable, :rememberable 
   searchkick word_middle: [:name, :email, :role], highlight: [:name, :email, :role]
   
   has_many :comments, as: :associated_with, dependent: :destroy

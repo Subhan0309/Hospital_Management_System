@@ -51,6 +51,24 @@ Rails.application.routes.draw do
         get 'all_appointments' , to: 'appointments#all_appointments' # Route for getting all appointment
         get 'all_medical_records' , to: 'medical_records#all_medical_records' # Route for getting all medical records
         get 'all_comments' , to: 'comments#all_comments' # Route for getting all comments
-    end
+  end
+
+
+
  end
+
+  # Define custom error routes
+  match '/404', to: 'errors#not_found', via: :all
+  match '/422', to: 'errors#unprocessable_entity', via: :all
+  match '/403', to: 'errors#forbidden', via: :all
+  match '/500', to: 'errors#internal_server_error', via: :all
+
+  # Catch-all route for unmatched paths (after other routes)
+  match '*path', to: 'errors#not_found', via: :all, constraints: lambda { |req|
+    req.path.exclude?('/rails/active_storage/')
+  }
+
+
+
+
 end

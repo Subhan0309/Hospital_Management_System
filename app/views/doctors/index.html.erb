@@ -7,5 +7,7 @@
   new_path: new_doctor_path,
   edit_path: ->(item) { edit_doctor_path(item) },
   destroy_path: ->(item) { doctor_path(item) },
-  show_appointments_path: ->(item) {user_appointments_path(item)}
+  comment_path: ->(item) {doctor_comments_path(item)},
+  show_appointments_path: ->(item) {user_appointments_path(item)},
+  add_comment_path: ->(item) { doctor_comments_path(item) } # Path for adding comments
 } %>

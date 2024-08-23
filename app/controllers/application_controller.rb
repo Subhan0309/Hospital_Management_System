@@ -2,39 +2,15 @@ class ApplicationController < ActionController::Base
   set_current_tenant_through_filter
   set_current_tenant_by_subdomain(:hospital, :subdomain)
 
-  before_action :log_current_tenant
   before_action :set_locale
 
-  
-  
-  def routing_error
-    raise ActionController::RoutingError, 'Page not found'
-  end
+  rescue_from ActiveRecord::RecordNotFound, with: :not_found
+  rescue_from ActionController::RoutingError, with: :not_found
+  rescue_from ActionController::InvalidAuthenticityToken, with: :forbidden
+  rescue_from ActionController::ParameterMissing, with: :unprocessable_entity
+  rescue_from StandardError, with: :internal_server_error
+rescue_from CanCan::AccessDenied , with: :forbidden
 
-  # rescue_from CanCan::AccessDenied do
-  #   respond_to do |format|
-  #     format.html { redirect_to hospital_dashboard_path, alert: 'You are not authorized to access this page.' }
-  #     format.json { render json: { error: 'You are not authorized to access this page.' }, status: :forbidden }
-  #     format.js   { render json: { error: 'You are not authorized to access this page.' }, status: :forbidden }
-  #   end
-  # end
-  # Handle Routing Errors
-  # rescue_from ActionController::RoutingError do
-  #   respond_to do |format|
-  #     format.html { redirect_to hospital_dashboard_path, alert: 'Page not found.' }
-  #     format.json { render json: { error: 'Page not found.' }, status: :not_found }
-  #     format.js   { render json: { error: 'Page not found.' }, status: :not_found }
-  #     format.any  { render plain: 'Page not found.', status: :not_found }
-  #   end
-  # end
-  # Handle Record Not Found
-  # rescue_from ActiveRecord::RecordNotFound do
-  #   respond_to do |format|
-  #     format.html { redirect_to hospital_dashboard_path, alert: 'The record you were looking for could not be found.' }
-  #     format.json { render json: { error: 'The record you were looking for could not be found.' }, status: :not_found }
-  #     format.js   { render json: { error: 'The record you were looking for could not be found.' }, status: :not_found }
-  #   end
-  # end
 
   private
 
@@ -57,6 +33,21 @@ class ApplicationController < ActionController::Base
     I18n.available_locales.map(&:to_s).include?(parsed_locale) ?
       parsed_locale.to_sym :
       nil
+  end
+  def not_found
+    redirect_to '/404'
+  end
+
+  def forbidden
+    redirect_to '/403'
+  end
+
+  def unprocessable_entity
+    redirect_to '/422'
+  end
+
+  def internal_server_error
+    redirect_to '/500'
   end
 end
 

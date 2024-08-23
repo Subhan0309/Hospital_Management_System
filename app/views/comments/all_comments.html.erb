@@ -5,8 +5,8 @@
 </div>
 
 <% if @comments.any? %>
-  <div class="table-responsive mt-5">
-    <table class="table table-striped table-responsive overflow-auto">
+  <div class="table-responsive mt-5 ">
+    <table class="table table-striped table-responsive overflow-auto border">
       <thead>
         <tr>
           <th>#</th>
@@ -25,7 +25,8 @@
               <% if comment.associated_with_type == 'MedicalRecord' %>
                 <%= link_to 'Medical Record', user_medical_record_path(comment.associated_with.patient_id, comment.associated_with), class: 'btn btn-outline-primary btn-sm' %>
               <% else %>
-                <%= comment.associated_with_type %>
+                <%user = User.find(comment.associated_with_id)%>
+                <%= link_to user.role.capitalize, user_path(user), class: 'btn btn-outline-primary btn-sm' %>
               <% end %>
             </td>
           </tr>

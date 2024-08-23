@@ -6,5 +6,7 @@
   resource_class: User,
   new_path: new_user_path,
   edit_path: ->(item) { edit_user_path(item) },
-  destroy_path: ->(item) { user_path(item) }
+  comment_path: ->(item) {user_comments_path(item)},
+  destroy_path: ->(item) { user_path(item) },
+  add_comment_path: ->(item) { user_comments_path(item) } # Path for adding comments
 } %>

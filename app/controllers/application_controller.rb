@@ -9,16 +9,10 @@ class ApplicationController < ActionController::Base
   rescue_from ActionController::InvalidAuthenticityToken, with: :forbidden
   rescue_from ActionController::ParameterMissing, with: :unprocessable_entity
   rescue_from StandardError, with: :internal_server_error
-rescue_from CanCan::AccessDenied , with: :forbidden
+  rescue_from CanCan::AccessDenied , with: :forbidden
 
 
   private
-
-  def log_current_tenant
-    Rails.logger.info "Current tenant is: #{current_tenant.inspect}" if current_tenant
-    Rails.logger.info "Current user is: #{current_user.inspect}" if current_user
-  end
-
 
   def default_url_options
     {locale: I18n.locale}

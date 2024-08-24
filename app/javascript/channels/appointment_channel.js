@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Subscribe to the doctor's channel
     consumer.subscriptions.create({ channel: "AppointmentChannel", doctor_id: doctorId }, {
       connected() {
-       alert(`Connected to doctor channel ${doctorId}`);
+     
       },
 
       disconnected() {
@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Subscribe to the patient's channel
     consumer.subscriptions.create({ channel: "AppointmentChannel", patient_id: patientId }, {
       connected() {
-        alert(`Connected to patient channel ${patientId}`);
+       
       },
 
       disconnected() {
@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Subscribe to the OAS channel
     consumer.subscriptions.create({ channel: "AppointmentChannel", role: Userrole }, {
       connected() {
-       alert(`Connected to OAS channel ${OASId}`);
+     
       },
       disconnected() {
         // Called when the subscription has been terminated by the server

@@ -15,18 +15,12 @@ class HospitalsController < ApplicationController
 
     respond_to do |format|
       if @hospitals.empty?
-        # Redirect to the sign-up page if no hospitals are found
+     
         format.html { redirect_to new_user_registration_path and return }
         format.json { render json: { error: 'No hospitals found' }, status: :not_found }
-      # elsif @hospitals.size == 1 #change happen here
-      #   format.html {
-      #     subdomain = @hospitals[0].subdomain
-      #     redirect_to "http://#{subdomain}.localhost:3000/users/sign_in" and return
-      #   }
-      #   format.json { render json: @hospitals }
-      
+   
       else
-        # Render the index view or JSON response as appropriate
+      
         format.html { render :index }
         format.json { render json: @hospitals }
       end

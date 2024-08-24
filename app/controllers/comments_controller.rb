@@ -24,12 +24,13 @@ class CommentsController < ApplicationController
   def create
     @comment = @commentable.comments.build(comment_params)
     @comment.created_by = current_user
-  
     respond_to do |format|
       if @comment.save
        CommentMailer.comment_notification(@commentable, @comment).deliver_now
-        format.js   
-     
+        format.js
+        if @commentable.is_a?(MedicalRecord)
+          format.html { redirect_to user_medical_record_comments_url(@user, @medical_record), notice: 'Comment was successfully created.' }
+        else
         case current_user.role
         when "patient"
           format.html { redirect_to patient_comments_path(current_user), notice: 'Comment was successfully created.' }
@@ -37,15 +38,20 @@ class CommentsController < ApplicationController
           format.html { redirect_to doctor_comments_path(current_user), notice: 'Comment was successfully created.' }
         when "admin", "staff"
           format.html { redirect_to user_comments_path(current_user), notice: 'Comment was successfully created.' }
-        else
-          format.html { redirect_to user_medical_record_comments_url(@user, @medical_record), notice: 'Comment was successfully created.' }
+        when "owner"
+          format.html { redirect_to all_comments_path, notice: 'Comment was successfully created.' }
         end
-        
+      end
       else
         flash[:alert] = 'Failed to add comment. Please try again.'
       end
     end
   end
+
+
+
+
+
   
   # GET /medical_records/:medical_record_id/comments/:id/edit
   def edit

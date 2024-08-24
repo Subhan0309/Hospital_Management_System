@@ -1,7 +1,7 @@
 class LandingPagesController < ApplicationController
   before_action :redirect_if_subdomain_present
   def index
-    # Render the global landing page
+   
   end
 
   private

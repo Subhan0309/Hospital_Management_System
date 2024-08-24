@@ -23,10 +23,6 @@ class UsersController < ApplicationController
       UserMailer.welcome_email(@user).deliver_now 
       redirect_to users_path, notice: "User (#{user_params[:role]}) was Successfully created"
     else
-      #  # Render the new template again with errors
-      #  flash[alert:]=@user.errors.full_messages.to_sentence
-      #  render :new
-       # Inside the controller action
         flash[:alert] = @user.errors.full_messages.to_sentence
         render :new
 

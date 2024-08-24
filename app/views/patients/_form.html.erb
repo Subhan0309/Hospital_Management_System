@@ -12,7 +12,7 @@
           <%= f.label :name, 'Name *', class: 'fw-bold' %>
           <div class="input-group mt-2">
             <span class="input-group-text"><i class="bi bi-person"></i></span>
-            <%= f.text_field :name, class: 'form-control', autofocus: true, required: true, minlength: 3, maxlength: 20 %>
+            <%= f.text_field :name, class: 'form-control', autofocus: true, required: true, minlength: 3, maxlength: 20 , disabled: current_user.role == 'doctor'%>
           </div>
         </div>
         
@@ -21,7 +21,7 @@
             <%= f.label :email, 'Email *', class: 'fw-bold' %>
             <div class="input-group mt-2">
               <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-              <%= f.email_field :email, class: 'form-control', autocomplete: 'email', required: true %>
+              <%= f.email_field :email, class: 'form-control', autocomplete: 'email', required: true , disabled: current_user.role == 'doctor' %>
             </div>
           </div>
         
@@ -49,7 +49,7 @@
           <%= f.label :gender, 'Gender *', class: 'fw-bold' %>
           <div class="input-group mt-2">
             <span class="input-group-text"><i class="bi bi-gender-ambiguous"></i></span>
-            <%= f.select :gender, options_for_select([['Male', 'male'], ['Female', 'female'], ['Other', 'other']]), {}, class: 'form-control', required: true %>
+            <%= f.select :gender, options_for_select([['Male', 'male'], ['Female', 'female'], ['Other', 'other']],f.object.gender), {}, class: 'form-control', required: true,disabled: current_user.role == 'doctor' %>
           </div>
         </div>
         
@@ -58,7 +58,7 @@
             <%= detail_form.label :disease, 'Disease', class: 'fw-bold' %>
             <div class="input-group mt-2">
               <span class="input-group-text"><i class="bi bi-file-earmark-text"></i></span>
-              <%= detail_form.text_field :disease, class: 'form-control' %>
+              <%= detail_form.text_field :disease, class: 'form-control'  , disabled: current_user.role == 'doctor' %>
             </div>
           </div>
 
@@ -67,7 +67,7 @@
               <%= detail_form.label :status, 'Status', class: 'fw-bold' %>
               <div class="input-group mt-2">
                 <span class="input-group-text"><i class="bi bi-check-circle"></i></span>
-                <%= detail_form.select :status, options_for_select([['Alive', 'alive'], ['Disease', 'disease'], ['Dead', 'dead']]), {}, class: 'form-control' %>
+                <%= detail_form.select :status, options_for_select([['Alive', 'alive'], ['Disease', 'disease'], ['Dead', 'dead']],detail_form.object.status), {}, class: 'form-control' ,disabled: detail_form.object.status=='dead' %>
               </div>
             </div>
           <% end %>

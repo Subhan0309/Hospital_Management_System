@@ -73,14 +73,14 @@ class Ability
       cannot :manage, User, role: 'owner'
       cannot [:create, :delete, :update], User, role: 'admin'
       cannot [:create, :delete, :update], User, role: 'staff'
-      cannot [:create, :delete, :update], User, role: 'patient'
+      cannot [:create, :delete], User, role: 'patient'
       cannot [:create, :delete, :update], User, role: 'doctor'
       # cannot :manage,Hospital
       # can :read , Hospital
       # Can read users with specific roles
       can :read, User, role: 'admin'
       can :read, User, role: 'staff'
-      can :read, User, role: 'patient'
+      can [:read,:update], User, role: 'patient'
       can :read, User, role: 'doctor'
       
       # Can update only their own profile
